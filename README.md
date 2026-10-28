@@ -1,89 +1,115 @@
-# 🚚 Apex Logistics AI
-### Autonomous Multi-Carrier Logistics Intelligence & Fleet Control Tower Platform (v6.0.0)
+<p align="center">
+  <img src="frontend/assets/favicon.svg" width="80" alt="Apex Logistics AI Logo" />
+</p>
 
-[![Python 3.11+](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.125.0-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Docker Ready](https://img.shields.io/badge/Docker-Ready-2496ED.svg?logo=docker&logoColor=white)](https://www.docker.com)
-[![ML Engine](https://img.shields.io/badge/ML%20Engine-Huber%20GBDT%20%2B%20Circuity-orange.svg)](https://scikit-learn.org)
-[![Nginx](https://img.shields.io/badge/Reverse%20Proxy-Nginx%20Alpine-009639.svg?logo=nginx&logoColor=white)](https://nginx.org)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+<h1 align="center">Apex Logistics AI</h1>
+<p align="center">
+  <strong>Autonomous Multi-Carrier Logistics Intelligence &amp; Fleet Control Tower Platform</strong><br/>
+  <sub>Version 6.0.0 · Production-Ready · Docker-Native · 44,800+ Lines of Code</sub>
+</p>
 
-An enterprise-grade, production-ready logistics operations platform integrating **Topography-Adaptive Road Circuity**, **Robust Gradient Boosted ETA Prediction ($p95 < 0.90\text{ ms}$)**, **Real-Time Multi-Carrier Linehaul Telemetry**, and **Autonomous ReAct Exception Resolution** for 3PL freight forwarders, linehaul carriers, and enterprise transportation management systems (TMS).
+<p align="center">
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.11%20%7C%203.12%20%7C%203.13-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python"></a>
+  <a href="https://fastapi.tiangolo.com"><img src="https://img.shields.io/badge/FastAPI-0.125.0-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI"></a>
+  <a href="https://www.docker.com"><img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker"></a>
+  <a href="https://nginx.org"><img src="https://img.shields.io/badge/Nginx-Alpine%201.27-009639?style=flat-square&logo=nginx&logoColor=white" alt="Nginx"></a>
+  <a href="https://scikit-learn.org"><img src="https://img.shields.io/badge/ML-Huber%20GBDT-F7931E?style=flat-square&logo=scikit-learn&logoColor=white" alt="ML"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="License"></a>
+</p>
+
+<p align="center">
+  <a href="#-key-capabilities">Key Capabilities</a> ·
+  <a href="#-system-architecture">Architecture</a> ·
+  <a href="#-quick-start">Quick Start</a> ·
+  <a href="#-docker-deployment">Docker Deploy</a> ·
+  <a href="#-api-reference">API Reference</a>
+</p>
 
 ---
 
-## 📋 Table of Contents
+## Overview
 
-- [Key Capabilities](#-key-capabilities)
-- [Enterprise System Architecture](#-enterprise-system-architecture)
-- [Technology Stack](#-technology-stack)
-- [Project Directory Layout](#-project-directory-layout)
-- [Quick Start: Local Development](#-quick-start-local-development)
-- [Production Deployment: Docker Compose](#-production-deployment-docker-compose)
-- [API Gateway Reference](#-api-gateway-reference)
-- [Control Tower & Web Portals](#-control-tower--web-portals)
-- [Environment Variables & Configuration](#-environment-variables--configuration)
-- [Health Monitoring & Verification](#-health-monitoring--verification)
-- [License](#-license)
+**Apex Logistics AI** is an enterprise-grade, production-ready platform for autonomous logistics operations — built for 3PL freight forwarders, linehaul carriers, and enterprise transportation management systems (TMS). It combines four core intelligence engines into a unified, deployable stack:
+
+| Engine | What It Does | Key Metric |
+|---|---|---|
+| **Topography-Adaptive ETA** | Predicts freight arrival times using terrain-aware road circuity and Huber-loss GBDT | **0.51 h MAE** · p95 = 0.90 ms |
+| **Multi-Carrier Telemetry** | Unified real-time tracking across DHL, FedEx, UPS, and TCS | 4 carriers · live WebSocket |
+| **Exception Radar** | Proactively detects at-risk shipments and triggers autonomous resolution | **84% WISMO deflection** |
+| **ReAct Dispatch Agent** | Closed-loop Reason → Act → Observe agent with schema-validated tools | Autonomous resolution |
+
+> **Research Companion:** The ETA prediction engine is the subject of a peer-reviewed IEEE manuscript. See the full benchmark replication package at [ubashir43/topography-freight-eta](https://github.com/ubashir43/topography-freight-eta).
 
 ---
 
 ## 🌟 Key Capabilities
 
-### 1. Topography-Adaptive Circuity & Robust GBDT ETA Engine
-- **Nonlinear Circuity Modeling:** Dynamically scales route distances using elevation differential $\Delta h$ and physical roadway terrain curvature ($\kappa(\Delta h, d)$).
-- **Outlier-Resilient Huber Loss:** Trained with $\delta = 1.35$ to neutralize linehaul congestion shocks, border delays, and adverse weather spikes without model divergence.
-- **Ultra-Low Latency Inference:** Benchmarked at $p95 = 0.90\text{ ms}$ per query, supporting over $15,000\text{ queries/sec}$ under distributed load.
+### Topography-Adaptive ETA Prediction Engine
+- Dynamically models route distances using elevation differentials and physical roadway terrain curvature via the circuity function $\kappa(\Delta h, d)$
+- Trained with Huber loss ($\delta = 1.35$) for resilience against linehaul congestion shocks, border delays, and adverse weather spikes
+- Benchmarked at **p95 = 0.90 ms** per query, supporting **15,000+ queries/sec** on commodity hardware
+- Achieves **42.7% MAE reduction** over static OSRM routing baselines
 
-### 2. Multi-Carrier Telemetry Stream
-- Unified telemetry ingestion across tier-1 international and regional carriers (**DHL Express**, **FedEx Ground**, **UPS Worldwide**, and **TCS Express**).
-- Real-time tracking normalization, waypoint event logging, milestone progression, and automated dwell time detection.
+### Real-Time Multi-Carrier Telemetry
+- Unified ingestion and normalization across **DHL Express**, **FedEx Ground**, **UPS Worldwide**, and **TCS Express**
+- Real-time waypoint event logging, milestone progression tracking, and automated dwell time detection
+- Live WebSocket push to Operations Control Tower dashboards
 
-### 3. Preemptive Exception Radar & Autonomous ReAct Resolution
-- Closed-loop **Reason $\rightarrow$ Act $\rightarrow$ Observe** agent equipped with schema-validated deterministic tools.
-- Proactively identifies at-risk linehaul shipments, triggers reroutes, auto-notifies dispatchers, and deflects up to **84% of WISMO ("Where Is My Order?") customer inquiries**.
+### Preemptive Exception Radar & Autonomous Resolution
+- Closed-loop **ReAct** (Reason → Act → Observe) agentic framework with deterministic, schema-validated tool calls
+- Proactively identifies at-risk linehaul shipments before SLA breach
+- Triggers autonomous reroutes, auto-notifies dispatchers, and deflects **84% of WISMO inquiries**
 
-### 4. Interactive Operations Control Tower
-- High-density fleet map and shipment radar dashboard.
-- Live corridor velocity analysis, $6 \times 6$ regional transit matrix heatmaps, carrier SLA compliance monitors, and real-time WebSocket alerts.
+### Interactive Operations Control Tower
+- High-density fleet radar dashboard with real-time shipment visualization
+- $6 \times 6$ regional transit matrix heatmaps, corridor velocity analysis, and carrier SLA compliance monitors
+- Glassmorphism CSS3 design system — no JavaScript framework bloat
 
-### 5. Multi-Tenant Role-Based Access Control (RBAC)
-- Strict tenant data isolation with partitioned vector memory, shipment records, and carrier telemetry.
-- Three built-in security personas: **Super Admin** (global infrastructure & tenant management), **Fleet Dispatcher** (carrier SLA & exception dispatch), and **Client Portal** (waybill self-service & tracking).
+### Multi-Tenant RBAC & Data Isolation
+- Strict tenant-level data partitioning across shipment records, vector memory, and carrier telemetry
+- Three security personas: **Super Admin** (global infrastructure) · **Fleet Dispatcher** (carrier SLA & exceptions) · **Client Portal** (waybill self-service)
+- JWT authentication with bcrypt password hashing and role-based route guards
 
 ---
 
-## 🏗 Enterprise System Architecture
+## 🏗 System Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                           CLIENTS & EXTERNAL CONSUMERS                     │
-│    Web Control Tower  │  Mobile Waybill Tracking  │  Enterprise TMS / EDI   │
-└──────────────────────────────────────┬──────────────────────────────────────┘
-                                       │ HTTP / WebSocket (:80 / :443)
-                                       ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                        NGINX REVERSE PROXY & GATEWAY                        │
-│   • SSL/TLS Termination       • Static Asset Caching (HTML/JS/CSS)          │
-│   • Rate Limiting & Gzip      • Reverse Proxy (/api/*, /ws/*)               │
-└──────────────────────────────────────┬──────────────────────────────────────┘
-                                       │ Internal Network
-                                       ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                     APEX LOGISTICS AI FASTAPI BACKEND                       │
-│  ┌──────────────────────┐  ┌──────────────────────┐  ┌───────────────────┐  │
-│  │   Auth & RBAC JWT    │  │  Topography Circuity │  │  Huber GBDT ETA   │  │
-│  │   Tenant Isolation   │  │  Distance Engine     │  │  Predictor Engine │  │
-│  └──────────────────────┘  └──────────────────────┘  └───────────────────┘  │
-│  ┌──────────────────────┐  ┌──────────────────────┐  ┌───────────────────┐  │
-│  │ Exception Radar &    │  │ Multi-Carrier Sync   │  │ ReAct Autonomous  │  │
-│  │ Dwell Time Profiler  │  │ (DHL/FedEx/UPS/TCS)  │  │ Dispatch Agent    │  │
-│  └──────────────────────┘  └──────────────────────┘  └───────────────────┘  │
-├─────────────────────────────────────────────────────────────────────────────┤
-│  PERSISTENT STORAGE & CACHE                                                 │
-│  • SQLite / PostgreSQL Database (Shipments, Waybills, Tenants, Audit Logs)  │
-│  • Vector Store & Embeddings (Paraphrase Multilingual MiniLM L12)           │
-└─────────────────────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                          CLIENTS & EXTERNAL CONSUMERS                        │
+│     Web Control Tower  ·  Mobile Waybill Tracking  ·  Enterprise TMS / EDI   │
+└────────────────────────────────────┬──────────────────────────────────────────┘
+                                     │  HTTP / WebSocket (:80 / :443)
+                                     ▼
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                      NGINX REVERSE PROXY & API GATEWAY                       │
+│  ┌─────────────┐  ┌──────────────────┐  ┌────────────┐  ┌────────────────┐  │
+│  │ SSL / TLS   │  │ Static Assets    │  │ Gzip       │  │ WebSocket      │  │
+│  │ Termination │  │ Cache (7d TTL)   │  │ Compression│  │ Tunnel (/ws/*) │  │
+│  └─────────────┘  └──────────────────┘  └────────────┘  └────────────────┘  │
+└────────────────────────────────────┬──────────────────────────────────────────┘
+                                     │  Internal Docker Network
+                                     ▼
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                     APEX LOGISTICS AI · FASTAPI BACKEND                      │
+│                                                                               │
+│  ┌───────────────────┐  ┌────────────────────┐  ┌────────────────────────┐   │
+│  │  Auth & RBAC JWT  │  │  Topography-Aware  │  │  Huber GBDT ETA        │   │
+│  │  Tenant Isolation │  │  Circuity Engine   │  │  Predictor (δ = 1.35)  │   │
+│  └───────────────────┘  └────────────────────┘  └────────────────────────┘   │
+│  ┌───────────────────┐  ┌────────────────────┐  ┌────────────────────────┐   │
+│  │  Exception Radar  │  │  Multi-Carrier     │  │  ReAct Autonomous      │   │
+│  │  & Dwell Profiler │  │  Sync & Normalize  │  │  Dispatch Agent (LLM)  │   │
+│  └───────────────────┘  └────────────────────┘  └────────────────────────┘   │
+│  ┌───────────────────┐  ┌────────────────────┐  ┌────────────────────────┐   │
+│  │  3-Tier Sentiment │  │  RAG Knowledge     │  │  Intent Router &       │   │
+│  │  (BERT + VADER)   │  │  Base Pipeline     │  │  WISMO Deflection      │   │
+│  └───────────────────┘  └────────────────────┘  └────────────────────────┘   │
+├───────────────────────────────────────────────────────────────────────────────┤
+│  PERSISTENT STORAGE                                                           │
+│  ├── SQLite / PostgreSQL   (Shipments, Waybills, Tenants, Users, Audit Logs) │
+│  └── Vector Store          (Paraphrase Multilingual MiniLM-L12 Embeddings)   │
+└───────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -91,201 +117,242 @@ An enterprise-grade, production-ready logistics operations platform integrating 
 ## 🛠 Technology Stack
 
 | Layer | Technology | Purpose |
-|---|---|---|
-| **API & Backend** | Python 3.11+, FastAPI, Uvicorn | Async REST APIs, WebSockets, high-throughput pipeline |
-| **Machine Learning** | Scikit-Learn, LightGBM, NumPy, SciPy | Huber Gradient Boosting, topography circuity calibration |
-| **Agentic Framework** | ReAct (Reason + Act), Function Calling | Automated exception handling, shipment diversion |
-| **NLP & Sentiment** | Multilingual BERT, VADER, Lexicons | Customer intent routing, emotional escalation detection |
-| **Database** | SQLite (Dev) / PostgreSQL (Prod) | ACID persistence, spatial indexing, multi-tenancy |
-| **Web Reverse Proxy** | Nginx Alpine 1.27 | Static asset delivery, WebSocket tunneling, gzip compression |
-| **Frontend** | Vanilla JavaScript (ES6+), CSS3 Glassmorphism | High-performance dashboard without bloated JS frameworks |
-| **Containerization** | Docker, Docker Compose | Reproducible cross-platform containerized deployments |
+|:---|:---|:---|
+| **API & Runtime** | Python 3.11+, FastAPI, Uvicorn | High-throughput async REST APIs and WebSocket streams |
+| **Machine Learning** | Scikit-Learn, NumPy, SciPy | Huber Gradient Boosting, topography circuity calibration |
+| **NLP & Sentiment** | Multilingual BERT, VADER, 15-language lexicons | 3-tier sentiment analysis and emotional escalation detection |
+| **Agentic Framework** | ReAct (Reason + Act), LLM Function Calling | Autonomous exception resolution and shipment diversion |
+| **RAG Pipeline** | SentenceTransformers (MiniLM-L12), NumPy cosine | Tenant-isolated knowledge base retrieval and contextual responses |
+| **Database** | SQLite (dev) / PostgreSQL (prod), SQLAlchemy 2.0 | ACID-compliant persistence with multi-tenant isolation |
+| **Reverse Proxy** | Nginx 1.27 Alpine | TLS termination, static caching, gzip, WebSocket tunneling |
+| **Frontend** | Vanilla ES6+ JavaScript, CSS3 Glassmorphism | 26,700+ lines — zero framework dependencies |
+| **Containerization** | Docker, Docker Compose v3.8 | Reproducible multi-service orchestration with health checks |
+| **Security** | JWT (python-jose), bcrypt, RBAC middleware | Token-based auth with role-guarded API routes |
 
 ---
 
-## 📂 Project Directory Layout
+## 📂 Project Structure
 
 ```
-behavioral-agentic-ai/
-├── backend/
+apex-logistics-ai/
+│
+├── backend/                          # FastAPI Application (18,100+ lines Python)
 │   ├── app/
-│   │   ├── ai/               # ReAct agent, LLM tool definitions, prompts
-│   │   ├── api/              # REST controllers (shipments, logistics, auth, admin)
-│   │   ├── models/           # SQLAlchemy schemas (Shipment, DeliveryZone, User)
-│   │   ├── services/         # ETA predictor, circuity math, exception radar
-│   │   ├── websocket/        # Real-time WebSocket connection manager
-│   │   ├── database.py       # DB engine & session factory
-│   │   └── main.py           # FastAPI application entrypoint & lifespan hooks
-│   ├── scripts/              # Database seeders and benchmark generation scripts
-│   ├── tests/                # Automated pytest test suites
-│   ├── Dockerfile            # Production Python backend container spec
-│   └── requirements.txt      # Pinned production Python dependencies
-├── frontend/
-│   ├── assets/               # SVG icons, logos, telemetry indicators
-│   ├── css/                  # Glassmorphism design system & responsive styling
-│   ├── js/                   # Live telemetry, REST client, WebSocket handlers
-│   ├── pages/                # Control tower, admin console, tracking portal
-│   ├── Dockerfile            # Alpine Nginx web container spec
-│   └── index.html            # Public platform gateway & login
-├── docker-compose.yml        # Multi-service production orchestration
-├── nginx.conf                # Enterprise Nginx reverse proxy configuration
-├── .env.example              # Production environment template
-├── .dockerignore             # Docker build-context exclusions
-├── .gitignore                # Git repository ignore rules
-└── README.md                 # Project documentation
+│   │   ├── ai/                       # ReAct agent, LLM integration, tool definitions
+│   │   ├── api/                      # REST route handlers (13 modules)
+│   │   ├── models/                   # SQLAlchemy ORM schemas (11 models)
+│   │   ├── services/                 # Business logic: ETA, geospatial, sentiment, tracking
+│   │   ├── middleware/               # Auth, rate limiting, performance monitoring
+│   │   ├── knowledge/                # RAG document processing and vector indexing
+│   │   ├── websocket/                # Real-time connection manager
+│   │   └── main.py                   # Application entrypoint and lifespan hooks
+│   ├── scripts/                      # Database seeders and data generation
+│   ├── tests/                        # Automated test suites with evaluation benchmarks
+│   ├── Dockerfile                    # Production multi-stage Python container
+│   └── requirements.txt              # 102 pinned dependencies
+│
+├── frontend/                         # Control Tower Web UI (26,700+ lines)
+│   ├── css/                          # 12 modular stylesheets (glassmorphism design system)
+│   ├── js/                           # REST client, auth, telemetry, WebSocket handlers
+│   ├── pages/                        # Dashboard, admin, login, onboarding, tracking
+│   ├── widget/                       # Embeddable customer chat widget (<script> embed)
+│   └── Dockerfile                    # Alpine Nginx static server
+│
+├── docker-compose.yml                # Production multi-service orchestration
+├── nginx.conf                        # Enterprise reverse proxy configuration
+├── .env.example                      # Annotated production environment template
+├── .dockerignore                     # Build-context exclusions
+├── .gitignore                        # Repository ignore rules
+├── LICENSE                           # MIT License
+└── README.md
 ```
 
 ---
 
-## 🚀 Quick Start: Local Development
+## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.11+
-- Git
 
-### 1. Clone & Set Up Environment
-```powershell
-# Copy the environment template
-cp .env.example .env
+| Requirement | Version |
+|:---|:---|
+| Python | 3.11 or later |
+| Git | 2.30+ |
+| Docker *(optional, for production)* | 24.0+ with Compose v2 |
 
-# Create and activate Python virtual environment
-cd backend
-python -m venv venv
-.\venv\Scripts\activate   # On Linux/macOS: source venv/bin/activate
+### Local Development Setup
 
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### 2. Seed Realistic Logistics Database
-Populate the database with sample commercial freight waybills, carrier telemetry, and delivery zones:
-```powershell
-python scripts/seed_rich_logistics_database.py
-```
-
-### 3. Start Development Servers
-You can start the backend and frontend with one command:
-```powershell
-# In project root:
-.\START_SYSTEM.bat
-```
-Alternatively, launch manually:
-```powershell
-# Terminal 1 (Backend):
-cd backend
-uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
-
-# Terminal 2 (Frontend):
-python -m http.server 5500
-```
-
-- **Operations Control Tower:** [http://localhost:5500/pages/client-dashboard.html](http://localhost:5500/pages/client-dashboard.html)
-- **Super Admin Console:** [http://localhost:5500/pages/admin.html](http://localhost:5500/pages/admin.html)
-- **Interactive Swagger Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
-
----
-
-## 🐳 Production Deployment: Docker Compose
-
-Apex Logistics AI is engineered for production deployment on any Linux VPS, AWS EC2, DigitalOcean Droplet, or PaaS platform (e.g., Coolify).
-
-### One-Command Deployment
 ```bash
-# 1. Clone your production repository
+# 1. Clone the repository
 git clone https://github.com/ubashir43/apex-logistics-ai.git
 cd apex-logistics-ai
 
-# 2. Configure production secrets
+# 2. Configure environment
+cp .env.example .env                  # Edit .env with your LLM API key
+
+# 3. Create and activate virtual environment
+cd backend
+python -m venv venv
+source venv/bin/activate              # Windows: .\venv\Scripts\activate
+
+# 4. Install dependencies
+pip install -r requirements.txt
+
+# 5. Seed the logistics database with realistic freight data
+python scripts/seed_rich_logistics_database.py
+
+# 6. Start the backend
+uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+```
+
+In a separate terminal, serve the frontend:
+```bash
+# From project root
+cd frontend
+python -m http.server 5500
+```
+
+Alternatively, launch everything with one command:
+```powershell
+.\START_SYSTEM.bat
+```
+
+### Access Points
+
+| Portal | URL | Credentials |
+|:---|:---|:---|
+| **Operations Control Tower** | [localhost:5500/pages/client-dashboard.html](http://localhost:5500/pages/client-dashboard.html) | Fleet Dispatcher |
+| **Super Admin Console** | [localhost:5500/pages/admin.html](http://localhost:5500/pages/admin.html) | Super Admin |
+| **Interactive API Docs** | [localhost:8000/docs](http://localhost:8000/docs) | — |
+| **Health Check** | [localhost:8000/api/health](http://localhost:8000/api/health) | — |
+
+---
+
+## 🐳 Docker Deployment
+
+Apex Logistics AI ships with production-ready Docker configuration for deployment on any Linux VPS, AWS EC2, DigitalOcean Droplet, or PaaS platform (Coolify, Railway, etc.).
+
+```bash
+# 1. Clone and configure
+git clone https://github.com/ubashir43/apex-logistics-ai.git
+cd apex-logistics-ai
 cp .env.example .env
-nano .env  # Enter your JWT_SECRET_KEY, LLM keys, etc.
+nano .env                             # Set JWT_SECRET_KEY, LLM_API_KEY, etc.
 
-# 3. Launch the containerized stack
+# 2. Build and launch
 docker compose up -d --build
-```
 
-### Container Status & Logs
-```bash
-# Check running containers
+# 3. Verify
 docker compose ps
-
-# View backend live logs
-docker compose logs -f backend
-
-# View web proxy logs
-docker compose logs -f web
-```
-
----
-
-## 🔌 API Gateway Reference
-
-Interactive OpenAPI documentation is automatically served at `/docs` and `/redoc`.
-
-| Method | Endpoint | Description | Auth Required |
-|---|---|---|---|
-| `GET` | `/api/health` | Service health status, DB connectivity, WebSocket count | No |
-| `POST` | `/api/auth/login` | Authenticate user & issue JWT bearer token | No |
-| `GET` | `/api/shipments` | Query paginated fleet waybills with carrier filters | Bearer Token |
-| `POST` | `/api/shipments` | Ingest new commercial freight waybill | Bearer Token |
-| `GET` | `/api/shipments/{id}/telemetry` | Real-time GPS waypoint telemetry & transit history | Bearer Token |
-| `POST` | `/api/logistics/predict-eta` | Real-time Topography-Adaptive GBDT ETA calculation | Bearer Token |
-| `GET` | `/api/logistics/zones` | Retrieve spatial delivery zones, speed factors, risk | Bearer Token |
-| `POST` | `/api/ai/agent/resolve-exception` | Trigger autonomous ReAct resolution for delayed freight | Bearer Token |
-| `GET` | `/api/admin/system-health` | Cross-carrier performance audit & system metrics | Super Admin |
-
----
-
-## 🖥 Control Tower & Web Portals
-
-| Portal | URL Path | Default Role | Description |
-|---|---|---|---|
-| **Fleet Control Tower** | `/pages/client-dashboard.html` | Dispatcher / Client | Live fleet tracking, corridor velocity radar, exception management |
-| **Super Admin Radar** | `/pages/admin.html` | Super Admin | Cross-carrier performance, tenant provisioning, system health |
-| **Public Tracking Portal** | `/pages/login.html` | Public / Consignee | Waybill self-service, real-time ETA countdown, automated inquiry bot |
-
----
-
-## ⚙ Environment Variables & Configuration
-
-Key configuration parameters defined in `.env`:
-
-| Variable | Default Value | Description |
-|---|---|---|
-| `DATABASE_URL` | `sqlite:///./data/app.db` | SQLAlchemy connection string (SQLite or PostgreSQL) |
-| `JWT_SECRET_KEY` | *(Set a random 64-char string)* | Cryptographic key for JWT session validation |
-| `LLM_API_KEY` | *(None)* | API key for LLM provider (OpenRouter, Anthropic, OpenAI) |
-| `LLM_MODEL` | `anthropic/claude-sonnet-4` | Primary LLM model for ReAct exception agent |
-| `HUBER_DELTA` | `1.35` | Huber loss transition threshold $\delta$ for ETA training |
-| `CIRCUITY_BASELINE` | `1.27` | Baseline geometric circuity constant |
-| `CIRCUITY_EXPONENT` | `0.88` | Elevation gradient attenuation exponent |
-| `CORS_ORIGINS` | `*` | Allowed CORS origins (lock down in production) |
-
----
-
-## 🩺 Health Monitoring & Verification
-
-Apex Logistics AI includes built-in container and endpoint health checks:
-
-```bash
-# Verify backend health endpoint
 curl -s http://localhost:8000/api/health | jq .
 ```
-Response:
+
+### Container Architecture
+
+| Container | Port | Image | Purpose |
+|:---|:---|:---|:---|
+| `apex-backend` | `8000` | Python 3.13-slim | FastAPI backend, ML engine, ReAct agent |
+| `apex-web` | `80` | Nginx 1.27-alpine | Reverse proxy, static assets, WebSocket tunnel |
+
+### Health Response
+
 ```json
 {
   "status": "healthy",
   "service": "apex-logistics-ai",
   "version": "6.0.0",
   "database": "connected",
-  "websocket": {
-    "connections": 0,
-    "rooms": 0
-  }
+  "websocket": { "connections": 0, "rooms": 0 }
 }
 ```
+
+### Operations
+
+```bash
+docker compose logs -f backend        # Live backend logs
+docker compose logs -f web            # Nginx access/error logs
+docker compose down                   # Graceful shutdown
+docker compose up -d --build          # Rebuild after code changes
+```
+
+---
+
+## 🔌 API Reference
+
+> Interactive documentation is auto-generated at `/docs` (Swagger UI) and `/redoc` (ReDoc).
+
+### Core Endpoints
+
+| Method | Endpoint | Description | Auth |
+|:---|:---|:---|:---|
+| `GET` | `/api/health` | Service health, DB connectivity, WebSocket status | None |
+| `POST` | `/api/auth/login` | Authenticate and obtain JWT bearer token | None |
+| `POST` | `/api/auth/signup` | Register new user account | None |
+
+### Logistics & Fleet Management
+
+| Method | Endpoint | Description | Auth |
+|:---|:---|:---|:---|
+| `GET` | `/api/shipments` | Query paginated fleet waybills with carrier/status filters | Bearer |
+| `POST` | `/api/shipments` | Ingest new commercial freight waybill | Bearer |
+| `GET` | `/api/shipments/{id}/telemetry` | Real-time GPS waypoint history and transit milestones | Bearer |
+| `POST` | `/api/logistics/predict-eta` | Topography-adaptive GBDT ETA calculation | Bearer |
+| `GET` | `/api/logistics/zones` | Retrieve delivery zones with speed factors and risk scores | Bearer |
+
+### AI & Autonomous Operations
+
+| Method | Endpoint | Description | Auth |
+|:---|:---|:---|:---|
+| `POST` | `/api/ai/chat` | Conversational AI with intent routing and sentiment analysis | Bearer |
+| `GET` | `/api/ai/health` | AI subsystem health (LLM, sentiment, embeddings) | Bearer |
+| `POST` | `/api/widget/{api_key}/chat` | Public-facing embeddable chat widget endpoint | API Key |
+
+### Administration
+
+| Method | Endpoint | Description | Auth |
+|:---|:---|:---|:---|
+| `GET` | `/api/admin/system-health` | Cross-carrier performance audit and system metrics | Super Admin |
+| `GET` | `/api/admin/tenants` | Multi-tenant management and provisioning | Super Admin |
+| `GET` | `/api/admin/logistics-health` | Global logistics KPIs and exception breakdown | Super Admin |
+
+---
+
+## 🖥 Web Portals
+
+| Portal | Path | Role | Description |
+|:---|:---|:---|:---|
+| **Fleet Control Tower** | `/pages/client-dashboard.html` | Dispatcher | Live fleet tracking, corridor velocity radar, exception management |
+| **Super Admin Console** | `/pages/admin.html` | Super Admin | Cross-carrier analytics, tenant provisioning, system health |
+| **Knowledge Base Manager** | `/pages/knowledge-base.html` | Admin | Upload PDFs, DOCX, CSV, images; train RAG retrieval pipeline |
+| **Widget Management** | `/pages/widget-management.html` | Admin | Configure and deploy embeddable customer chat widgets |
+| **Login Portal** | `/pages/login.html` | All | Authentication with 1-click test credential access |
+
+---
+
+## ⚙ Environment Configuration
+
+All configuration is managed through environment variables defined in `.env`:
+
+| Variable | Default | Description |
+|:---|:---|:---|
+| `DATABASE_URL` | `sqlite:///./data/app.db` | SQLAlchemy connection string (SQLite or PostgreSQL) |
+| `JWT_SECRET_KEY` | *(must set)* | 64-character cryptographic key for JWT validation |
+| `LLM_API_KEY` | *(must set)* | API key for LLM provider (OpenRouter / Anthropic / OpenAI) |
+| `LLM_MODEL` | `anthropic/claude-sonnet-4` | Primary LLM for ReAct exception agent |
+| `LLM_FALLBACK_MODEL` | `anthropic/claude-3-haiku` | Fallback model for cost-efficient operations |
+| `EMBEDDING_MODEL` | `paraphrase-multilingual-MiniLM-L12-v2` | SentenceTransformer model for RAG embeddings |
+| `HUBER_DELTA` | `1.35` | Huber loss transition threshold for ETA training |
+| `CIRCUITY_BASELINE` | `1.27` | Baseline planar circuity constant $\kappa_0$ |
+| `CIRCUITY_EXPONENT` | `0.88` | Elevation gradient attenuation exponent $\gamma$ |
+| `CORS_ORIGINS` | `*` | Allowed CORS origins (restrict in production) |
+| `ENVIRONMENT` | `production` | Runtime environment flag |
+| `LOG_LEVEL` | `INFO` | Application log verbosity |
+
+> **Security Note:** Generate a production JWT secret with: `python -c "import secrets; print(secrets.token_hex(32))"`
 
 ---
 
 ## 📄 License
 
-This software is released under the **MIT License**. See [LICENSE](LICENSE) for full details.
+Released under the [MIT License](LICENSE).
+
+Copyright © 2026 Apex Logistics AI Contributors.
