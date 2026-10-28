@@ -38,7 +38,7 @@
 | **Exception Radar** | Proactively detects at-risk shipments and triggers autonomous resolution | **84% WISMO deflection** |
 | **ReAct Dispatch Agent** | Closed-loop Reason → Act → Observe agent with schema-validated tools | Autonomous resolution |
 
-> **Research Companion:** The ETA prediction engine is the subject of a peer-reviewed IEEE manuscript. See the full benchmark replication package at [ubashir43/Topography-Adaptive-Road-Circuity-Freight-ETA-Prediction](https://github.com/ubashir43/Topography-Adaptive-Road-Circuity-Freight-ETA-Prediction).
+> **Research Companion:** The ETA prediction engine is the subject of a peer-reviewed IEEE manuscript. See the full benchmark replication package at [ubashir43/Topography-Adaptive-Road-Circuity-Multi-Carrier-Freight-Transportation-ETA-Prediction](https://github.com/ubashir43/Topography-Adaptive-Road-Circuity-Multi-Carrier-Freight-Transportation-ETA-Prediction).
 
 ---
 
@@ -134,7 +134,7 @@
 ## 📂 Project Structure
 
 ```
-Apex-Logistics-AI-Autonomous-Control-Tower-Platform/
+Apex-Logistics-AI-Autonomous-Multi-Carrier-Fleet-Control-Tower-Platform/
 │
 ├── backend/                          # FastAPI Application (18,100+ lines Python)
 │   ├── app/
@@ -180,8 +180,8 @@ Apex-Logistics-AI-Autonomous-Control-Tower-Platform/
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/ubashir43/Apex-Logistics-AI-Autonomous-Control-Tower-Platform.git
-cd Apex-Logistics-AI-Autonomous-Control-Tower-Platform
+git clone https://github.com/ubashir43/Apex-Logistics-AI-Autonomous-Multi-Carrier-Fleet-Control-Tower-Platform.git
+cd Apex-Logistics-AI-Autonomous-Multi-Carrier-Fleet-Control-Tower-Platform
 
 # 2. Configure environment
 cp .env.example .env                  # Edit .env with your LLM API key
@@ -230,8 +230,8 @@ Apex Logistics AI ships with production-ready Docker configuration for deploymen
 
 ```bash
 # 1. Clone and configure
-git clone https://github.com/ubashir43/Apex-Logistics-AI-Autonomous-Control-Tower-Platform.git
-cd Apex-Logistics-AI-Autonomous-Control-Tower-Platform
+git clone https://github.com/ubashir43/Apex-Logistics-AI-Autonomous-Multi-Carrier-Fleet-Control-Tower-Platform.git
+cd Apex-Logistics-AI-Autonomous-Multi-Carrier-Fleet-Control-Tower-Platform
 cp .env.example .env
 nano .env                             # Set JWT_SECRET_KEY, LLM_API_KEY, etc.
 
