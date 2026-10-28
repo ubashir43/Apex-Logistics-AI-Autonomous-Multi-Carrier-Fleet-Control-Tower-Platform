@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 # Realistic data pools
 FIRST_NAMES = [
     "Ahmed", "Fatima", "John", "Sarah", "Ali", "Maria", "Hassan", "Ayesha",
-    "David", "Emily", "Muhammad", "Zainab", "James", "Sophia", "Usman",
+    "David", "Emily", "Muhammad", "Zainab", "James", "Sophia", "Umer",
     "Hira", "Michael", "Emma", "Omar", "Aisha", "Robert", "Olivia",
     "Ibrahim", "Maryam", "William", "Ava", "Hamza", "Khadija",
 ]
