@@ -1,0 +1,2203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Apex Logistics AI — Autonomous Fleet & Dispatch Intelligence Setup Wizard">
+    <title>Fleet Setup Wizard | Apex Logistics AI</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/components.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #07070d;
+            height: 100vh;
+            overflow: hidden;
+            color: #fff;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           BACKGROUND
+           ═══════════════════════════════════════════════════════ */
+        #grainCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .ambient-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .ambient-glow .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.18;
+        }
+
+        .ambient-glow .orb--1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #667eea, #764ba2);
+            top: -15%;
+            left: -10%;
+            animation: orbFloat1 30s ease-in-out infinite;
+        }
+
+        .ambient-glow .orb--2 {
+            width: 420px;
+            height: 420px;
+            background: radial-gradient(circle, #f093fb, #c471f5);
+            bottom: -12%;
+            right: -8%;
+            animation: orbFloat2 28s ease-in-out infinite;
+        }
+
+        .ambient-glow .orb--3 {
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, #2ed573, #17c0eb);
+            top: 40%;
+            right: 25%;
+            animation: orbFloat1 24s ease-in-out infinite 8s;
+        }
+
+        @keyframes orbFloat1 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(40px, 60px) scale(1.08);
+            }
+
+            66% {
+                transform: translate(-30px, 30px) scale(0.95);
+            }
+        }
+
+        @keyframes orbFloat2 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(-50px, -40px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(20px, -20px) scale(0.92);
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           LAYOUT
+           ═══════════════════════════════════════════════════════ */
+        .onboarding-wrap {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            padding: 1.75rem;
+        }
+
+        /* ── Background logo ─────────────────────────────────── */
+        .bg-logo {
+            position: fixed;
+            top: 1.5rem;
+            left: 1.75rem;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .bg-logo:hover {
+            opacity: 0.85;
+        }
+
+        .bg-logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.25);
+        }
+
+        .bg-logo-icon svg {
+            width: 20px;
+            height: 20px;
+            color: #fff;
+        }
+
+        .bg-logo-text {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           MACBOOK FRAME
+           ═══════════════════════════════════════════════════════ */
+        .mac-frame {
+            width: 100%;
+            max-width: 920px;
+            display: flex;
+            flex-direction: column;
+            animation: cardEntry 0.7s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes cardEntry {
+            from {
+                opacity: 0;
+                transform: translateY(18px) scale(0.97);
+                filter: blur(4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        /* ── Title bar ───────────────────────────────────────── */
+        .mac-titlebar {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.15rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: none;
+            border-radius: 16px 16px 0 0;
+            backdrop-filter: blur(20px);
+        }
+
+        .mac-dots {
+            display: flex;
+            gap: 7px;
+            margin-right: 1rem;
+        }
+
+        .mac-dots span {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+        }
+
+        .mac-dots span:nth-child(1) {
+            background: #ff5f57;
+        }
+
+        .mac-dots span:nth-child(2) {
+            background: #febc2e;
+        }
+
+        .mac-dots span:nth-child(3) {
+            background: #28c840;
+        }
+
+        .mac-titlebar-text {
+            flex: 1;
+            text-align: center;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            margin-right: 3rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* ── Card body ───────────────────────────────────────── */
+        .wizard-card {
+            display: flex;
+            flex: 1;
+            min-height: 520px;
+            background: rgba(255, 255, 255, 0.025);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 0 0 16px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-top: none;
+            box-shadow:
+                0 32px 64px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+                0 1px 0 rgba(255, 255, 255, 0.06) inset;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ── Diagonal glow sweep ─────────────────────────────── */
+        .wizard-card::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 700px;
+            top: -120px;
+            left: -120px;
+            background: linear-gradient(135deg,
+                    transparent 0%,
+                    rgba(102, 126, 234, 0.05) 40%,
+                    rgba(167, 139, 250, 0.07) 50%,
+                    rgba(102, 126, 234, 0.05) 60%,
+                    transparent 100%);
+            transform: rotate(45deg);
+            animation: diagonalSweep 5s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes diagonalSweep {
+            0% {
+                transform: rotate(45deg) translateX(-350px) translateY(-250px);
+            }
+
+            50% {
+                transform: rotate(45deg) translateX(900px) translateY(500px);
+            }
+
+            100% {
+                transform: rotate(45deg) translateX(-350px) translateY(-250px);
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           LEFT SIDEBAR
+           ═══════════════════════════════════════════════════════ */
+        .wizard-sidebar {
+            flex: 0 0 210px;
+            background: rgba(255, 255, 255, 0.012);
+            border-right: 1px solid rgba(255, 255, 255, 0.04);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar-brand {
+            margin-bottom: 2.25rem;
+        }
+
+        .sidebar-brand h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.35rem;
+        }
+
+        .sidebar-brand p {
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.3);
+            line-height: 1.45;
+        }
+
+        .sidebar-label {
+            font-size: 0.55rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            color: rgba(255, 255, 255, 0.15);
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            flex: 1;
+        }
+
+        .sidebar-step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.5rem 0;
+            cursor: default;
+            transition: all 0.3s;
+        }
+
+        .sidebar-step-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1.5px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.2);
+            transition: all 0.4s ease;
+            flex-shrink: 0;
+        }
+
+        .sidebar-step.active .sidebar-step-dot {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: #667eea;
+            color: #fff;
+            box-shadow: 0 0 16px rgba(102, 126, 234, 0.45);
+        }
+
+        .sidebar-step.completed .sidebar-step-dot {
+            background: #2ed573;
+            border-color: #2ed573;
+            color: #fff;
+        }
+
+        .sidebar-step-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.18);
+            transition: color 0.3s;
+        }
+
+        .sidebar-step.active .sidebar-step-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .sidebar-step.completed .sidebar-step-label {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .sidebar-connector {
+            width: 1.5px;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            margin-left: 13px;
+            transition: background 0.4s;
+        }
+
+        .sidebar-connector.completed {
+            background: rgba(46, 213, 115, 0.35);
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           RIGHT CONTENT
+           ═══════════════════════════════════════════════════════ */
+        .wizard-content {
+            flex: 1;
+            padding: 2.25rem 2.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-width: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-panel {
+            display: none;
+            animation: fadeIn 0.35s ease;
+            flex: 1;
+        }
+
+        .step-panel.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.15rem;
+            letter-spacing: -0.01em;
+            color: #fff;
+        }
+
+        .step-description {
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 0.82rem;
+            margin-bottom: 1.35rem;
+        }
+
+        .step-fields {
+            flex: 1;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           FORM — login-identical colors
+           ═══════════════════════════════════════════════════════ */
+        .form-group {
+            margin-bottom: 0.9rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.55);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.35rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem 1.1rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-family: inherit;
+            transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+        }
+
+        /* ── Fix dropdown arrows: pad right for the native arrow ── */
+        .form-group select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            padding-right: 2.5rem;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.35)' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 12px;
+        }
+
+        .form-group select option {
+            background: #12122a;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.06);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: none;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.85rem;
+        }
+
+        /* Focus underline — login-identical */
+        .form-group .focus-line {
+            position: absolute;
+            bottom: 0;
+            left: 12px;
+            right: 12px;
+            height: 2px;
+            border-radius: 1px;
+            background: linear-gradient(90deg, #667eea, #a78bfa, #667eea);
+            background-size: 200% 100%;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            transform-origin: left;
+        }
+
+        .form-group input:focus~.focus-line,
+        .form-group textarea:focus~.focus-line,
+        .form-group select:focus~.focus-line {
+            transform: scaleX(1);
+            animation: lineSlide 2s linear infinite;
+        }
+
+        @keyframes lineSlide {
+            0% {
+                background-position: 0% 0%;
+            }
+
+            100% {
+                background-position: 200% 0%;
+            }
+        }
+
+        /* ── COLOR PICKER ────────────────────────────────────── */
+        .color-row {
+            display: flex;
+            gap: 0.85rem;
+        }
+
+        .color-row .form-group {
+            flex: 1;
+        }
+
+        .color-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .color-input-wrap input[type="color"] {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: none;
+            padding: 0;
+        }
+
+        .color-input-wrap span {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.85rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           PLATFORM CARDS — minimal white SVG icons
+           ═══════════════════════════════════════════════════════ */
+        /* ── Order import 2-col grid (Step 5) ──────────────── */
+        .order-import-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .order-import-grid>div {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 1.2rem;
+        }
+
+        .order-import-grid h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .order-import-grid p {
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 0.8rem;
+        }
+
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.6rem;
+            margin-bottom: 1.1rem;
+        }
+
+        .platform-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 0.9rem 0.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1.5px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .platform-card:hover {
+            border-color: rgba(102, 126, 234, 0.3);
+            background: rgba(102, 126, 234, 0.04);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.08);
+        }
+
+        .platform-card.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.06);
+            box-shadow: 0 0 16px rgba(102, 126, 234, 0.15);
+        }
+
+        .platform-card.selected::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 14px;
+            height: 14px;
+            background: #667eea;
+            border-radius: 50%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+            background-size: 9px;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .platform-card-icon {
+            width: 22px;
+            height: 22px;
+            opacity: 0.55;
+            transition: opacity 0.3s;
+        }
+
+        .platform-card:hover .platform-card-icon,
+        .platform-card.selected .platform-card-icon {
+            opacity: 0.9;
+        }
+
+        .platform-card-name {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .platform-card:hover .platform-card-name,
+        .platform-card.selected .platform-card-name {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .platform-card-sub {
+            font-size: 0.52rem;
+            color: rgba(255, 255, 255, 0.2);
+            line-height: 1;
+        }
+
+        #storePlatform {
+            display: none;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           COMPLETION — REDESIGNED
+           ═══════════════════════════════════════════════════════ */
+        .complete-section {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+        }
+
+        .complete-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1.15rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 28px rgba(102, 126, 234, 0.35);
+            animation: completePop 0.5s ease both;
+        }
+
+        @keyframes completePop {
+            from {
+                transform: scale(0.5) rotate(-10deg);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .complete-icon svg {
+            width: 30px;
+            height: 30px;
+            color: #fff;
+        }
+
+        .complete-section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.4rem;
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .complete-section .complete-subtitle {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.82rem;
+            margin-bottom: 1.25rem;
+            max-width: 380px;
+            line-height: 1.5;
+        }
+
+        /* Embed Code Box — redesigned as mini MacBook window */
+        .embed-window {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .embed-window-bar {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 0.45rem 0.7rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .embed-window-bar span {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        .embed-window-bar span:nth-child(1) {
+            background: #ff5f57;
+        }
+
+        .embed-window-bar span:nth-child(2) {
+            background: #febc2e;
+        }
+
+        .embed-window-bar span:nth-child(3) {
+            background: #28c840;
+        }
+
+        .embed-window-bar .embed-window-label {
+            margin-left: 8px;
+            width: auto;
+            height: auto;
+            background: none;
+            border-radius: 0;
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.25);
+            font-weight: 500;
+            letter-spacing: 0.04em;
+        }
+
+        .embed-code {
+            padding: 0.85rem 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.72rem;
+            color: #a5b4fc;
+            word-break: break-all;
+            text-align: left;
+            line-height: 1.55;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            color: #fff;
+            padding: 0.55rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .copy-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #764ba2, #c471f5);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .copy-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .copy-btn:hover::before {
+            opacity: 1;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(102, 126, 234, 0.3);
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           STEP ACTIONS
+           ═══════════════════════════════════════════════════════ */
+        .step-actions {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 1.1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .btn-back,
+        .btn-next,
+        .btn-finish {
+            padding: 0.7rem 1.75rem;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .btn-next,
+        .btn-finish {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-next::before,
+        .btn-finish::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #764ba2, #c471f5);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .btn-next span,
+        .btn-finish span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-next:hover::before,
+        .btn-finish:hover::before {
+            opacity: 1;
+        }
+
+        .btn-next:hover,
+        .btn-finish:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-next:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .btn-next:disabled::before {
+            display: none;
+        }
+
+        .btn-skip {
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.7rem 1.75rem;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-skip:hover {
+            background: rgba(245, 158, 11, 0.08);
+            color: rgba(245, 158, 11, 0.85);
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        /* ── TOAST ───────────────────────────────────────────── */
+        .toast {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            padding: 0.65rem 1.1rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            z-index: 1000;
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(12px);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            background: rgba(46, 213, 115, 0.08);
+            border: 1px solid rgba(46, 213, 115, 0.18);
+            color: #2ed573;
+        }
+
+        .toast.error {
+            background: rgba(245, 87, 108, 0.08);
+            border: 1px solid rgba(245, 87, 108, 0.18);
+            color: #f5576c;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           RESPONSIVE — TABLET (≤ 700px)
+           ═══════════════════════════════════════════════════════ */
+        @media (max-width: 700px) {
+            body {
+                overflow-y: auto;
+                height: auto;
+                min-height: 100vh;
+            }
+
+            .ambient-glow .orb--1 {
+                width: 300px;
+                height: 300px;
+            }
+
+            .ambient-glow .orb--2 {
+                width: 250px;
+                height: 250px;
+            }
+
+            .ambient-glow .orb--3 {
+                width: 180px;
+                height: 180px;
+            }
+
+            .onboarding-wrap {
+                height: auto;
+                min-height: 100vh;
+                padding: 1rem;
+            }
+
+            .mac-frame {
+                max-width: 100%;
+            }
+
+            .mac-titlebar {
+                border-radius: 14px 14px 0 0;
+            }
+
+            .wizard-card {
+                flex-direction: column;
+                min-height: auto;
+                border-radius: 0 0 14px 14px;
+            }
+
+            /* Sidebar → horizontal stepper */
+            .wizard-sidebar {
+                flex: 0 0 auto;
+                flex-direction: row;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+                padding: 0.75rem 1rem;
+                overflow-x: auto;
+                align-items: center;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+
+            .wizard-sidebar::-webkit-scrollbar {
+                display: none;
+            }
+
+            .sidebar-brand {
+                display: none;
+            }
+
+            .sidebar-label {
+                display: none;
+            }
+
+            .sidebar-steps {
+                flex-direction: row;
+                gap: 0.5rem;
+                width: 100%;
+                justify-content: center;
+            }
+
+            .sidebar-connector {
+                display: none;
+            }
+
+            .sidebar-step-label {
+                display: none;
+            }
+
+            .sidebar-step-dot {
+                width: 32px;
+                height: 32px;
+                font-size: 0.72rem;
+            }
+
+            /* Wizard content area */
+            .wizard-content {
+                padding: 1.5rem 1.25rem;
+            }
+
+            .step-title {
+                font-size: 1.15rem;
+            }
+
+            .step-description {
+                font-size: 0.78rem;
+                margin-bottom: 1rem;
+            }
+
+            /* Forms */
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .color-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .form-group {
+                margin-bottom: 0.75rem;
+            }
+
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                padding: 0.7rem 0.95rem;
+                font-size: 0.85rem;
+                border-radius: 10px;
+            }
+
+            .form-group label {
+                font-size: 0.72rem;
+                margin-bottom: 0.3rem;
+            }
+
+            .form-group textarea {
+                min-height: 80px;
+            }
+
+            /* Order import grid — stack on tablet */
+            .order-import-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .order-import-grid>div {
+                padding: 1rem;
+            }
+
+            .order-import-grid h3 {
+                font-size: 0.88rem;
+            }
+
+            .order-import-grid p {
+                font-size: 0.72rem;
+            }
+
+            /* Platform grid */
+            .platform-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.5rem;
+            }
+
+            .platform-card {
+                padding: 0.7rem 0.4rem;
+                border-radius: 10px;
+            }
+
+            .platform-card-icon {
+                width: 20px;
+                height: 20px;
+            }
+
+            .platform-card-name {
+                font-size: 0.65rem;
+            }
+
+            .platform-card-sub {
+                font-size: 0.48rem;
+            }
+
+            /* Step actions */
+            .step-actions {
+                padding-top: 0.9rem;
+            }
+
+            .btn-back,
+            .btn-next,
+            .btn-finish {
+                padding: 0.65rem 1.25rem;
+                font-size: 0.82rem;
+                border-radius: 10px;
+            }
+
+            /* Completion */
+            .complete-section h2 {
+                font-size: 1.2rem;
+            }
+
+            .complete-section .complete-subtitle {
+                font-size: 0.78rem;
+                max-width: 100%;
+            }
+
+            .embed-window {
+                max-width: 100%;
+            }
+
+            .embed-code {
+                font-size: 0.65rem;
+                padding: 0.7rem 0.85rem;
+                word-break: break-all;
+            }
+
+            .copy-btn {
+                padding: 0.5rem 1.25rem;
+                font-size: 0.78rem;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           RESPONSIVE — PHONE (≤ 480px)
+           ═══════════════════════════════════════════════════════ */
+        @media (max-width: 480px) {
+            .onboarding-wrap {
+                padding: 0.5rem;
+            }
+
+            .bg-logo {
+                top: 0.6rem;
+                left: 0.6rem;
+            }
+
+            .bg-logo-icon {
+                width: 28px;
+                height: 28px;
+                border-radius: 8px;
+            }
+
+            .bg-logo-icon svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .bg-logo-text {
+                font-size: 0.82rem;
+            }
+
+            .mac-titlebar {
+                padding: 0.4rem 0.65rem;
+            }
+
+            .mac-titlebar-text {
+                font-size: 0.58rem;
+            }
+
+            .mac-dots span {
+                width: 7px;
+                height: 7px;
+            }
+
+            .wizard-sidebar {
+                padding: 0.6rem 0.75rem;
+            }
+
+            .sidebar-step-dot {
+                width: 28px;
+                height: 28px;
+                font-size: 0.65rem;
+            }
+
+            .wizard-content {
+                padding: 1.15rem 0.85rem;
+            }
+
+            .step-title {
+                font-size: 1.02rem;
+            }
+
+            .step-description {
+                font-size: 0.72rem;
+                margin-bottom: 0.85rem;
+            }
+
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                padding: 0.6rem 0.75rem;
+                font-size: 0.82rem;
+            }
+
+            .form-group label {
+                font-size: 0.68rem;
+            }
+
+            .form-group {
+                margin-bottom: 0.65rem;
+            }
+
+            .color-input-wrap {
+                gap: 8px;
+            }
+
+            .color-input-wrap input[type="color"] {
+                width: 34px;
+                height: 34px;
+                border-radius: 8px;
+            }
+
+            .color-input-wrap span {
+                font-size: 0.78rem;
+            }
+
+            /* Platform grid — 2 cols on tiny phones */
+            .platform-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+            }
+
+            .platform-card {
+                padding: 0.6rem 0.3rem;
+                gap: 3px;
+            }
+
+            .platform-card-icon {
+                width: 18px;
+                height: 18px;
+            }
+
+            .platform-card-name {
+                font-size: 0.6rem;
+            }
+
+            .platform-card-sub {
+                display: none;
+            }
+
+            /* Full-width stacked step actions */
+            .step-actions {
+                flex-direction: column-reverse;
+                gap: 0.5rem;
+                padding-top: 0.75rem;
+            }
+
+            .btn-back,
+            .btn-next,
+            .btn-finish {
+                width: 100%;
+                text-align: center;
+                padding: 0.7rem 1rem;
+                font-size: 0.82rem;
+            }
+
+            /* Complete section */
+            .complete-icon {
+                width: 48px;
+                height: 48px;
+            }
+
+            .complete-icon svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            .complete-section h2 {
+                font-size: 1.05rem;
+            }
+
+            .complete-section .complete-subtitle {
+                font-size: 0.72rem;
+            }
+
+            .embed-code {
+                font-size: 0.58rem;
+                padding: 0.55rem 0.65rem;
+                line-height: 1.4;
+            }
+
+            .embed-window-bar {
+                padding: 0.35rem 0.55rem;
+            }
+
+            .embed-window {
+                max-width: 100%;
+            }
+
+            .copy-btn {
+                padding: 0.45rem 1rem;
+                font-size: 0.75rem;
+                border-radius: 8px;
+            }
+
+            .toast {
+                left: 0.75rem;
+                right: 0.75rem;
+                bottom: 0.75rem;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="grainCanvas"></canvas>
+    <div class="ambient-glow">
+        <div class="orb orb--1"></div>
+        <div class="orb orb--2"></div>
+        <div class="orb orb--3"></div>
+    </div>
+
+    <!-- Background Logo -->
+    <a href="/" class="bg-logo" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+        <div class="bg-logo-icon" style="width:36px;height:36px;background:linear-gradient(135deg, #6366f1, #06b6d4);border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 16px rgba(99,102,241,0.4);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" style="width:20px;height:20px;">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+        </div>
+        <span class="bg-logo-text" style="font-weight:700;letter-spacing:-0.02em;background:linear-gradient(135deg, #fff, #94a3b8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Apex Logistics AI</span>
+    </a>
+
+    <div class="onboarding-wrap">
+        <div class="mac-frame">
+            <div class="mac-titlebar">
+                <div class="mac-dots"><span></span><span></span><span></span></div>
+                <span class="mac-titlebar-text">Fleet Onboarding Wizard — Apex Logistics AI</span>
+            </div>
+
+            <div class="wizard-card">
+                <div class="wizard-sidebar">
+                    <div class="sidebar-brand">
+                        <h1>⚡ Fleet Setup Wizard</h1>
+                        <p>Deploy your autonomous logistics intelligence in minutes</p>
+                    </div>
+                    <div class="sidebar-label">Progress</div>
+                    <div class="sidebar-steps">
+                        <div class="sidebar-step active" data-step="1">
+                            <div class="sidebar-step-dot">1</div>
+                            <span class="sidebar-step-label">Fleet Profile</span>
+                        </div>
+                        <div class="sidebar-connector" data-line="1"></div>
+                        <div class="sidebar-step" data-step="2">
+                            <div class="sidebar-step-dot">2</div>
+                            <span class="sidebar-step-label">Carrier / TMS</span>
+                        </div>
+                        <div class="sidebar-connector" data-line="2"></div>
+                        <div class="sidebar-step" data-step="3">
+                            <div class="sidebar-step-dot">3</div>
+                            <span class="sidebar-step-label">Dispatch AI</span>
+                        </div>
+                        <div class="sidebar-connector" data-line="3"></div>
+                        <div class="sidebar-step" data-step="4">
+                            <div class="sidebar-step-dot">4</div>
+                            <span class="sidebar-step-label">Manifests</span>
+                        </div>
+                        <div class="sidebar-connector" data-line="4"></div>
+                        <div class="sidebar-step" data-step="5">
+                            <div class="sidebar-step-dot">5</div>
+                            <span class="sidebar-step-label">Launch</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="wizard-content">
+
+                    <!-- Step 1: Fleet & Logistics Profile -->
+                    <div class="step-panel active" id="step1">
+                        <div>
+                            <h2 class="step-title">Fleet & Logistics Profile</h2>
+                            <p class="step-description">Define your operational profile so the autonomous agent represents your fleet with precision.</p>
+                        </div>
+                        <div class="step-fields">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Logistics Operator / Fleet Name</label>
+                                    <input type="text" id="bizName" placeholder="e.g. Apex Global Trans & Freight">
+                                    <div class="focus-line"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Logistics Sector</label>
+                                    <select id="bizIndustry">
+                                        <option value="">Select operational sector…</option>
+                                        <option value="freight_forwarding">Freight Forwarding & 3PL</option>
+                                        <option value="courier_express">Courier & Last-Mile Express</option>
+                                        <option value="ecommerce_logistics">E-Commerce Fulfillment & Warehousing</option>
+                                        <option value="cold_chain">Cold Chain & Temperature Controlled</option>
+                                        <option value="b2b_industrial">B2B Heavy Freight & Industrial Cargo</option>
+                                        <option value="intermodal">Intermodal (Air / Ocean / Rail)</option>
+                                        <option value="other">Other Logistics Operations</option>
+                                    </select>
+                                    <div class="focus-line"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Dispatch & SLA Overview</label>
+                                <textarea id="bizDesc" rows="3"
+                                    placeholder="Briefly describe your carrier networks, standard delivery SLAs, and key transit corridors."></textarea>
+                                <div class="focus-line"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Operational Timezone</label>
+                                <select id="bizTimezone">
+                                    <option value="UTC">UTC</option>
+                                    <option value="US/Eastern">US Eastern (EST)</option>
+                                    <option value="US/Pacific">US Pacific (PST)</option>
+                                    <option value="Europe/London">Europe/London (GMT)</option>
+                                    <option value="Europe/Berlin">Europe/Berlin (CET)</option>
+                                    <option value="Asia/Dubai">Asia/Dubai (GST)</option>
+                                    <option value="Asia/Karachi">Asia/Karachi (PKT)</option>
+                                    <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+                                    <option value="Asia/Singapore">Asia/Singapore (SGT)</option>
+                                </select>
+                                <div class="focus-line"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Connect TMS / Carrier Dispatch -->
+                    <div class="step-panel" id="step2">
+                        <div>
+                            <h2 class="step-title">Connect Fleet TMS / Carriers</h2>
+                            <p class="step-description">Select your primary dispatch carrier network or Transport Management System (TMS).</p>
+                        </div>
+                        <div class="step-fields">
+                            <select id="storePlatform">
+                                <option value="">Select platform…</option>
+                                <option value="dhl">DHL Express API</option>
+                                <option value="fedex">FedEx Fleet Webhook</option>
+                                <option value="ups">UPS Quantum View</option>
+                                <option value="tcs">TCS Courier Express</option>
+                                <option value="custom">Enterprise TMS / Custom API</option>
+                                <option value="other">Other Fleet Network</option>
+                            </select>
+
+                            <label
+                                style="display:block;font-size:0.8rem;font-weight:500;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.45rem;">Carrier / TMS Network</label>
+                            <div class="platform-grid">
+                                <div class="platform-card" data-platform="dhl"
+                                    onclick="selectPlatform(this,'dhl')">
+                                    <svg class="platform-card-icon" viewBox="0 0 24 24" fill="none" stroke="white"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="1" y="3" width="15" height="13" rx="1"/>
+                                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                                        <circle cx="5.5" cy="18.5" r="2.5"/>
+                                        <circle cx="18.5" cy="18.5" r="2.5"/>
+                                    </svg>
+                                    <span class="platform-card-name">DHL Express</span>
+                                    <span class="platform-card-sub">Air & Global Express</span>
+                                </div>
+                                <div class="platform-card" data-platform="fedex"
+                                    onclick="selectPlatform(this,'fedex')">
+                                    <svg class="platform-card-icon" viewBox="0 0 24 24" fill="none" stroke="white"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                                        <polyline points="2 17 12 22 22 17"/>
+                                        <polyline points="2 12 12 17 22 12"/>
+                                    </svg>
+                                    <span class="platform-card-name">FedEx Fleet</span>
+                                    <span class="platform-card-sub">Ground & Priority</span>
+                                </div>
+                                <div class="platform-card" data-platform="ups"
+                                    onclick="selectPlatform(this,'ups')">
+                                    <svg class="platform-card-icon" viewBox="0 0 24 24" fill="none" stroke="white"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                    </svg>
+                                    <span class="platform-card-name">UPS Quantum</span>
+                                    <span class="platform-card-sub">Freight & Parcel</span>
+                                </div>
+                                <div class="platform-card" data-platform="tcs"
+                                    onclick="selectPlatform(this,'tcs')">
+                                    <svg class="platform-card-icon" viewBox="0 0 24 24" fill="none" stroke="white"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <polyline points="12 6 12 12 16 14"/>
+                                    </svg>
+                                    <span class="platform-card-name">TCS Courier</span>
+                                    <span class="platform-card-sub">Regional Express</span>
+                                </div>
+                                <div class="platform-card" data-platform="custom"
+                                    onclick="selectPlatform(this,'custom')">
+                                    <svg class="platform-card-icon" viewBox="0 0 24 24" fill="none" stroke="white"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                                    </svg>
+                                    <span class="platform-card-name">Custom TMS</span>
+                                    <span class="platform-card-sub">REST / Webhooks</span>
+                                </div>
+                                <div class="platform-card" data-platform="other" onclick="selectPlatform(this,'other')">
+                                    <svg class="platform-card-icon" viewBox="0 0 24 24" fill="none" stroke="white"
+                                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="1" r="1" />
+                                        <circle cx="19" cy="12" r="1" />
+                                        <circle cx="5" cy="12" r="1" />
+                                    </svg>
+                                    <span class="platform-card-name">Manual / CSV</span>
+                                    <span class="platform-card-sub">Direct Manifest</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>TMS Endpoint / Dispatch Portal URL</label>
+                                <input type="url" id="storeUrl" placeholder="https://tms.yourlogistics.com/api/v1">
+                                <div class="focus-line"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Configure Dispatch AI Assistant -->
+                    <div class="step-panel" id="step3">
+                        <div>
+                            <h2 class="step-title">Configure Dispatch AI Assistant</h2>
+                            <p class="step-description">Customize the customer-facing tracking and dispatch resolution widget.</p>
+                        </div>
+                        <div class="step-fields">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Widget Brand Title</label>
+                                    <input type="text" id="widgetTitle" placeholder="e.g. Apex Dispatch Intelligence">
+                                    <div class="focus-line"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Initial Dispatch Greeting</label>
+                                    <input type="text" id="widgetGreeting" placeholder="Hi! Provide your Waybill # (e.g. SHP-20261022-A1B2) for live telemetry.">
+                                    <div class="focus-line"></div>
+                                </div>
+                            </div>
+                            <div class="color-row">
+                                <div class="form-group">
+                                    <label>Brand Theme Color</label>
+                                    <div class="color-input-wrap">
+                                        <input type="color" id="widgetColor" value="#6366f1">
+                                        <span id="colorLabel">#6366f1</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Screen Anchor Position</label>
+                                    <select id="widgetPosition">
+                                        <option value="bottom-right" selected>Bottom Right</option>
+                                        <option value="bottom-left">Bottom Left</option>
+                                    </select>
+                                    <div class="focus-line"></div>
+                                </div>
+                            </div>
+
+                            <!-- Widget Operational Mode -->
+                            <div class="form-group">
+                                <label>Operational Mode</label>
+                                <select id="widgetType">
+                                    <option value="full" selected>Full Autonomous Dispatch (Telemetry Radar + POD Verify + SLA FAQ)</option>
+                                    <option value="telemetry">Live Tracking Radar Only (Waybill Status & ML Delay ETAs)</option>
+                                    <option value="verify">Proof of Delivery Verification (Self-Service POD Confirm)</option>
+                                    <option value="info">Carrier SLA Intelligence (Knowledge Base & Route Policies)</option>
+                                </select>
+                                <div class="focus-line"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Fleet Manifests & Carrier SLAs -->
+                    <div class="step-panel" id="step4">
+                        <div>
+                            <h2 class="step-title">Waybill Manifests & Carrier SLAs</h2>
+                            <p class="step-description">Load your active consignment waybills and service policies so the AI can track shipments and resolve inquiries instantly.</p>
+                        </div>
+                        <div class="step-fields">
+                            <div class="order-import-grid">
+                                <!-- Option A: Carrier Tariff / SLA Upload (LEFT) -->
+                                <div
+                                    style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1.6rem;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;">
+                                    <div>
+                                        <h3 style="font-size:0.95rem;font-weight:600;color:#fff;margin-bottom:0.6rem;">
+                                            📋 Carrier SLA & Policy CSV</h3>
+                                        <p style="font-size:0.78rem;color:rgba(255,255,255,0.4);margin-bottom:1.2rem;">
+                                            Import carrier rate cards, SLA terms, and customs policies for RAG indexing.</p>
+                                    </div>
+                                    <div>
+                                        <div class="form-group" style="margin-bottom:0.8rem;">
+                                            <input type="file" id="productCsvInput" accept=".csv"
+                                                style="font-size:0.8rem;">
+                                        </div>
+                                        <button type="button" class="btn-next" onclick="uploadProductCSV()"
+                                            style="padding:0.5rem 1.2rem;font-size:0.8rem;border:none;cursor:pointer;border-radius:8px;">
+                                            <span>Upload Policy Data</span>
+                                        </button>
+                                        <p style="font-size:0.65rem;color:rgba(255,255,255,0.25);margin-top:0.6rem;">
+                                            Auto-vectorized into RAG Knowledge Base.</p>
+                                    </div>
+                                </div>
+                                <!-- Option B: Waybill Manifest CSV Upload (RIGHT) -->
+                                <div
+                                    style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1.6rem;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;">
+                                    <div>
+                                        <h3 style="font-size:0.95rem;font-weight:600;color:#fff;margin-bottom:0.6rem;">
+                                            🚛 Waybill Manifest CSV</h3>
+                                        <p style="font-size:0.78rem;color:rgba(255,255,255,0.4);margin-bottom:1.2rem;">
+                                            Export consignments from DHL, FedEx, UPS, TCS, or enterprise TMS as CSV.</p>
+                                    </div>
+                                    <div>
+                                        <div class="form-group" style="margin-bottom:0.8rem;">
+                                            <input type="file" id="orderCsvInput" accept=".csv"
+                                                style="font-size:0.8rem;">
+                                        </div>
+                                        <button type="button" class="btn-next" onclick="uploadOrderCSV()"
+                                            style="padding:0.5rem 1.2rem;font-size:0.8rem;border:none;cursor:pointer;border-radius:8px;">
+                                            <span>Upload Manifest</span>
+                                        </button>
+                                        <p style="font-size:0.65rem;color:rgba(255,255,255,0.25);margin-top:0.6rem;">
+                                            Auto-maps waybills, carriers, and delivery zones.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="orderImportStatus"
+                                style="display:none;margin-top:0.8rem;padding:0.6rem 1rem;border-radius:8px;font-size:0.82rem;">
+                            </div>
+                            <div id="productImportStatus"
+                                style="display:none;margin-top:0.8rem;padding:0.6rem 1rem;border-radius:8px;font-size:0.82rem;">
+                            </div>
+                            <p style="color:rgba(255,255,255,0.2);font-size:0.7rem;margin-top:0.5rem;">
+                                You can skip this step and import manifests or simulate live shipments later from your Control Tower.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Complete & Deploy -->
+                    <div class="step-panel" id="step5">
+                        <div class="complete-section">
+                            <div class="complete-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                            </div>
+                            <h2>Dispatch Intelligence Ready!</h2>
+                            <p class="complete-subtitle">Your Apex Logistics AI agent is live. Embed the tracking telemetry snippet into your customer portal, TMS portal, or internal operations console.</p>
+
+                            <div class="embed-window">
+                                <div class="embed-window-bar">
+                                    <span></span><span></span><span></span>
+                                    <span class="embed-window-label">embed.html</span>
+                                </div>
+                                <div class="embed-code" id="embedCode">
+                                    &lt;script src="/widget/embed.js" data-key="YOUR_API_KEY" data-widget-type="full"&gt;&lt;/script&gt;
+                                </div>
+                            </div>
+
+                            <button class="copy-btn" onclick="copyEmbed()"><span>Copy Embed Code</span></button>
+                        </div>
+                    </div>
+
+                    <div class="step-actions">
+                        <button class="btn-back" id="btnBack" onclick="prevStep()" style="visibility:hidden;"><span>←
+                                Back</span></button>
+                        <div style="display:flex;gap:10px;align-items:center">
+                            <button class="btn-skip" id="btnSkip" onclick="skipStep()" style="display:none;"><span>Skip
+                                    →</span></button>
+                            <button class="btn-next" id="btnNext" onclick="nextStep()"><span>Continue →</span></button>
+                        </div>
+                        <button class="btn-finish" id="btnFinish" onclick="goToDashboard()"
+                            style="display:none;"><span>Go to Dashboard →</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script src="/js/auth.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/sidebar.js"></script>
+    <script>
+        // ═══════════════════════════════════════════════════════
+        // PARTICLE GRAIN SYSTEM — 120 grains
+        // ═══════════════════════════════════════════════════════
+        (function () {
+            const canvas = document.getElementById('grainCanvas');
+            const ctx = canvas.getContext('2d');
+            let W, H, mouseX = -9999, mouseY = -9999;
+            const COUNT = 120;
+            const particles = [];
+            const HUES = [235, 255, 270, 295, 320, 340, 200, 185];
+
+            function resize() {
+                W = canvas.width = window.innerWidth;
+                H = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            document.addEventListener('mousemove', e => {
+                mouseX = e.clientX; mouseY = e.clientY;
+            });
+
+            class P {
+                constructor() { this.init(); }
+                init() {
+                    this.x = Math.random() * W; this.y = Math.random() * H;
+                    this.r0 = 0.5 + Math.random() * 1.5; this.r = this.r0;
+                    this.vx = (Math.random() - 0.5) * 0.2;
+                    this.vy = (Math.random() - 0.5) * 0.2;
+                    this.hi = Math.random() * HUES.length;
+                    this.hs = 0.003 + Math.random() * 0.006;
+                    this.sat = 60 + Math.random() * 30;
+                    this.lit = 55 + Math.random() * 20;
+                    this.a0 = 0.12 + Math.random() * 0.3;
+                    this.a = this.a0;
+                    this.tp = Math.random() * 6.28;
+                    this.ts = 0.008 + Math.random() * 0.012;
+                }
+                update() {
+                    this.x += this.vx; this.y += this.vy;
+                    if (this.x < -5) this.x = W + 5;
+                    if (this.x > W + 5) this.x = -5;
+                    if (this.y < -5) this.y = H + 5;
+                    if (this.y > H + 5) this.y = -5;
+                    this.hi = (this.hi + this.hs) % HUES.length;
+                    this.tp += this.ts;
+                    const tw = 0.7 + 0.3 * Math.sin(this.tp);
+                    const dx = this.x - mouseX, dy = this.y - mouseY;
+                    const inf = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / 160);
+                    this.a = this.a0 * tw + inf * 0.45;
+                    this.r = this.r0 + inf * 2.5;
+                }
+                draw() {
+                    const i = Math.floor(this.hi), f = this.hi - i;
+                    const h = HUES[i % HUES.length] + (HUES[(i + 1) % HUES.length] - HUES[i % HUES.length]) * f;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.r, 0, 6.28);
+                    ctx.fillStyle = `hsla(${h},${this.sat}%,${this.lit}%,${this.a})`;
+                    ctx.fill();
+                    if (this.a > 0.3) {
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.r * 2.2, 0, 6.28);
+                        ctx.fillStyle = `hsla(${h},${this.sat}%,${this.lit}%,${(this.a - 0.3) * 0.2})`;
+                        ctx.fill();
+                    }
+                }
+            }
+            for (let i = 0; i < COUNT; i++) particles.push(new P());
+            (function loop() {
+                ctx.clearRect(0, 0, W, H);
+                particles.forEach(p => { p.update(); p.draw(); });
+                requestAnimationFrame(loop);
+            })();
+        })();
+
+
+        // ═══════════════════════════════════════════════════════
+        // PLATFORM CARD SELECTION
+        // ═══════════════════════════════════════════════════════
+        function selectPlatform(card, value) {
+            document.querySelectorAll('.platform-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            document.getElementById('storePlatform').value = value;
+        }
+
+
+        // ═══════════════════════════════════════════════════════
+        // ONBOARDING LOGIC (all backend calls unchanged)
+        // ═══════════════════════════════════════════════════════
+        const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:8000' : window.location.origin;
+
+        if (!Auth.isAuthenticated()) {
+            Auth.redirectToLogin();
+        }
+        const token = Auth.getAccessToken();
+
+        let currentStep = 1;
+        const totalSteps = 5;
+        const uploadedFiles = [];
+        let orderUploaded = false;
+        let productUploaded = false;
+
+        // ── Pre-populate form fields from signup / existing tenant data ──
+        (async function prefillFromExistingData() {
+            try {
+                const freshToken = Auth.getAccessToken();
+                const resp = await fetch(`${API_BASE}/api/onboarding/status`, {
+                    headers: { 'Authorization': `Bearer ${freshToken}` }
+                });
+                if (!resp.ok) return;
+                const data = await resp.json();
+                const tenant = data.tenant || {};
+                const widget = data.widget_config || {};
+
+                // Step 1: Business Profile
+                if (tenant.name) document.getElementById('bizName').value = tenant.name;
+                if (tenant.industry) document.getElementById('bizIndustry').value = tenant.industry;
+                if (tenant.description) document.getElementById('bizDesc').value = tenant.description;
+                if (tenant.timezone) document.getElementById('bizTimezone').value = tenant.timezone;
+
+                // Step 2: Store
+                if (tenant.store_url) document.getElementById('storeUrl').value = tenant.store_url;
+                if (tenant.store_platform) {
+                    document.getElementById('storePlatform').value = tenant.store_platform;
+                    // Highlight the matching platform card
+                    document.querySelectorAll('.platform-card').forEach(c => {
+                        if (c.getAttribute('onclick')?.includes(tenant.store_platform)) {
+                            c.classList.add('selected');
+                        }
+                    });
+                }
+
+                // Step 3: Widget
+                if (widget.bot_name) document.getElementById('widgetTitle').value = widget.bot_name;
+                if (widget.welcome_message) document.getElementById('widgetGreeting').value = widget.welcome_message;
+                if (widget.theme_color) {
+                    document.getElementById('widgetColor').value = widget.theme_color;
+                    const colorLabel = document.getElementById('colorLabel');
+                    if (colorLabel) colorLabel.textContent = widget.theme_color;
+                }
+
+                // Resume from last completed step
+                if (data.current_step && data.current_step > 0 && !data.onboarding_completed) {
+                    currentStep = Math.min(data.current_step + 1, totalSteps);
+                    updateProgress();
+                }
+            } catch (e) {
+                console.warn('Could not prefill onboarding data:', e);
+                // Fallback: try localStorage user data
+                try {
+                    const user = JSON.parse(localStorage.getItem('user') || '{}');
+                    if (user.company_name) document.getElementById('bizName').value = user.company_name;
+                } catch (_) {}
+            }
+        })();
+
+        document.getElementById('widgetColor').addEventListener('input', e => {
+            document.getElementById('colorLabel').textContent = e.target.value;
+        });
+
+        function updateProgress() {
+            document.querySelectorAll('.sidebar-step').forEach(step => {
+                const s = parseInt(step.dataset.step);
+                step.classList.toggle('active', s === currentStep);
+                step.classList.toggle('completed', s < currentStep);
+            });
+            document.querySelectorAll('.sidebar-connector').forEach(line => {
+                const l = parseInt(line.dataset.line);
+                line.classList.toggle('completed', l < currentStep);
+            });
+            document.querySelectorAll('.step-panel').forEach(panel => {
+                panel.classList.toggle('active', panel.id === `step${currentStep}`);
+            });
+
+            document.getElementById('btnBack').style.visibility = currentStep > 1 ? 'visible' : 'hidden';
+            document.getElementById('btnNext').style.display = currentStep < totalSteps ? 'block' : 'none';
+            document.getElementById('btnFinish').style.display = currentStep === totalSteps ? 'block' : 'none';
+
+            // Step 4 (Knowledge Base): disable Continue until at least one CSV uploaded, show Skip
+            const btnNext = document.getElementById('btnNext');
+            const btnSkip = document.getElementById('btnSkip');
+            if (currentStep === 4) {
+                const hasUpload = orderUploaded || productUploaded;
+                btnNext.disabled = !hasUpload;
+                btnNext.title = hasUpload ? '' : 'Upload at least one CSV to continue';
+                btnSkip.style.display = 'inline-block';
+            } else {
+                btnNext.disabled = false;
+                btnNext.title = '';
+                btnSkip.style.display = 'none';
+            }
+        }
+
+        async function nextStep() {
+            try {
+                const freshToken = Auth.getAccessToken();
+                const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${freshToken}` };
+
+                if (currentStep === 1) {
+                    await fetch(`${API_BASE}/api/onboarding/business-profile`, {
+                        method: 'POST', headers,
+                        body: JSON.stringify({
+                            company_name: document.getElementById('bizName').value,
+                            industry: document.getElementById('bizIndustry').value,
+                            description: document.getElementById('bizDesc').value,
+                            timezone: document.getElementById('bizTimezone').value
+                        })
+                    });
+                } else if (currentStep === 2) {
+                    await fetch(`${API_BASE}/api/onboarding/connect-store`, {
+                        method: 'POST', headers,
+                        body: JSON.stringify({
+                            store_url: document.getElementById('storeUrl').value,
+                            platform: document.getElementById('storePlatform').value
+                        })
+                    });
+                } else if (currentStep === 3) {
+                    await fetch(`${API_BASE}/api/onboarding/configure-widget`, {
+                        method: 'POST', headers,
+                        body: JSON.stringify({
+                            bot_name: document.getElementById('widgetTitle').value,
+                            welcome_message: document.getElementById('widgetGreeting').value,
+                            theme_color: document.getElementById('widgetColor').value,
+                            position: document.getElementById('widgetPosition').value,
+                            widget_type: document.getElementById('widgetType').value  // ★ V4
+                        })
+                    });
+                } else if (currentStep === 4) {
+                    // ★ V4: Mark data import step as visited
+                    await fetch(`${API_BASE}/api/onboarding/import-orders-complete`, { method: 'POST', headers });
+
+                    // Call complete onboarding to get embed code
+                    const completeRes = await fetch(`${API_BASE}/api/onboarding/complete`, { method: 'POST', headers });
+                    const completeData = await completeRes.json();
+                    if (completeData.widget_api_key) {
+                        document.getElementById('embedCode').textContent =
+                            `<script src="https://sentimenta.snick.at/widget/embed.js" data-key="${completeData.widget_api_key}" data-widget-type="${completeData.embed_code?.match(/data-widget-type="([^"]*)"/)?.[1] || 'full'}"><\/script>`;
+                    }
+                }
+
+                showToast('Step saved!', 'success');
+            } catch (err) {
+                console.error('Step save error:', err);
+                showToast('Could not save, continuing anyway.', 'error');
+            }
+
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateProgress();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) { currentStep--; updateProgress(); }
+        }
+
+        function goToDashboard() {
+            window.location.href = 'client-dashboard.html';
+        }
+
+        async function skipStep() {
+            if (currentStep === 4) {
+                try {
+                    const freshToken = Auth.getAccessToken();
+                    const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${freshToken}` };
+                    
+                    await fetch(`${API_BASE}/api/onboarding/import-orders-complete`, { method: 'POST', headers });
+                    const completeRes = await fetch(`${API_BASE}/api/onboarding/complete`, { method: 'POST', headers });
+                    const completeData = await completeRes.json();
+                    
+                    if (completeData.widget_api_key) {
+                        document.getElementById('embedCode').textContent =
+                            `<script src="https://sentimenta.snick.at/widget/embed.js" data-key="${completeData.widget_api_key}" data-widget-type="${completeData.embed_code?.match(/data-widget-type="([^"]*)"/)?.[1] || 'full'}"><\\/script>`;
+                    }
+                } catch (err) {
+                    console.error('Skip step completion error:', err);
+                }
+            }
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateProgress();
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════
+        // ★ V4: ORDER IMPORT HELPERS (Step 5)
+        // ═══════════════════════════════════════════════════════
+        async function generateDemoOrders() {
+            const count = document.getElementById('demoOrderCount').value;
+            const statusEl = document.getElementById('orderImportStatus');
+            statusEl.style.display = 'block';
+            statusEl.style.background = 'rgba(102,126,234,0.08)';
+            statusEl.style.border = '1px solid rgba(102,126,234,0.18)';
+            statusEl.style.color = '#a5b4fc';
+            statusEl.textContent = 'Generating orders...';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/orders/simulate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${Auth.getAccessToken()}` },
+                    body: JSON.stringify({ count: parseInt(count) })
+                });
+                const data = await response.json();
+                statusEl.style.background = 'rgba(46,213,115,0.08)';
+                statusEl.style.border = '1px solid rgba(46,213,115,0.18)';
+                statusEl.style.color = '#2ed573';
+                statusEl.textContent = `✅ Generated ${data.count || count} demo orders successfully!`;
+            } catch (error) {
+                statusEl.style.background = 'rgba(245,87,108,0.08)';
+                statusEl.style.border = '1px solid rgba(245,87,108,0.18)';
+                statusEl.style.color = '#f5576c';
+                statusEl.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function uploadOrderCSV() {
+            const fileInput = document.getElementById('orderCsvInput');
+            if (!fileInput.files.length) {
+                showToast('Please select a CSV file first.', 'error');
+                return;
+            }
+
+            const statusEl = document.getElementById('orderImportStatus');
+            statusEl.style.display = 'block';
+            statusEl.style.background = 'rgba(102,126,234,0.08)';
+            statusEl.style.border = '1px solid rgba(102,126,234,0.18)';
+            statusEl.style.color = '#a5b4fc';
+            statusEl.textContent = 'Uploading orders...';
+
+            try {
+                const freshToken = Auth.getAccessToken();
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+                const response = await fetch(`${API_BASE}/api/orders/upload-csv`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${freshToken}` },
+                    body: formData
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.detail || data.message || `Server error (${response.status})`);
+                }
+                statusEl.style.background = 'rgba(46,213,115,0.08)';
+                statusEl.style.border = '1px solid rgba(46,213,115,0.18)';
+                statusEl.style.color = '#2ed573';
+                statusEl.textContent = `✅ Imported ${data.created || 0} orders successfully!`;
+                orderUploaded = true;
+                updateProgress();
+            } catch (error) {
+                statusEl.style.background = 'rgba(245,87,108,0.08)';
+                statusEl.style.border = '1px solid rgba(245,87,108,0.18)';
+                statusEl.style.color = '#f5576c';
+                statusEl.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function uploadProductCSV() {
+            const fileInput = document.getElementById('productCsvInput');
+            if (!fileInput.files.length) {
+                showToast('Please select a CSV file first.', 'error');
+                return;
+            }
+
+            const statusEl = document.getElementById('productImportStatus');
+            statusEl.style.display = 'block';
+            statusEl.style.background = 'rgba(102,126,234,0.08)';
+            statusEl.style.border = '1px solid rgba(102,126,234,0.18)';
+            statusEl.style.color = '#a5b4fc';
+            statusEl.textContent = 'Uploading products...';
+
+            try {
+                const freshToken = Auth.getAccessToken();
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+                const response = await fetch(`${API_BASE}/api/products/upload-csv`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${freshToken}` },
+                    body: formData
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.detail || data.message || `Server error (${response.status})`);
+                }
+                statusEl.style.background = 'rgba(46,213,115,0.08)';
+                statusEl.style.border = '1px solid rgba(46,213,115,0.18)';
+                statusEl.style.color = '#2ed573';
+                statusEl.textContent = `✅ Imported ${data.created || 0} products successfully!`;
+                productUploaded = true;
+                updateProgress();
+            } catch (error) {
+                statusEl.style.background = 'rgba(245,87,108,0.08)';
+                statusEl.style.border = '1px solid rgba(245,87,108,0.18)';
+                statusEl.style.color = '#f5576c';
+                statusEl.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        function copyEmbed() {
+            const code = document.getElementById('embedCode').textContent;
+            navigator.clipboard.writeText(code).then(() => showToast('Copied!', 'success'));
+        }
+
+        function showToast(msg, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (user.company_name) document.getElementById('bizName').value = user.company_name;
+            if (user.onboarding_step && user.onboarding_step > 0) {
+                currentStep = Math.min(user.onboarding_step + 1, totalSteps);
+                updateProgress();
+            }
+        });
+    </script>
+</body>
+
+</html>

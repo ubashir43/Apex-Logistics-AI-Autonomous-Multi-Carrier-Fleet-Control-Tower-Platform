@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Autonomous Logistics Operations Console — Apex Logistics AI (v6.0.0)">
+    <title>Logistics Operations Console | Apex Logistics AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/design-system.css?v=18">
+    <link rel="stylesheet" href="../css/client-dashboard.css?v=18">
+    <link rel="stylesheet" href="../css/analytics.css?v=18">
+    <link rel="stylesheet" href="../css/logistics-dashboard.css?v=20">
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg?v=18">
+
+    <style>
+        .sidebar {
+            width: 260px !important;
+            transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+        .sidebar.collapsed {
+            width: 72px !important;
+        }
+        .main-content {
+            margin-left: 260px !important;
+            transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+        .sidebar.collapsed ~ .main-content {
+            margin-left: 72px !important;
+        }
+        .sidebar .sidebar-title,
+        .sidebar .sidebar-subtitle,
+        .sidebar .nav-section-label,
+        .sidebar .nav-item span,
+        .sidebar .sidebar-user-info {
+            opacity: 1 !important;
+            display: block !important;
+        }
+        .sidebar.collapsed .sidebar-title,
+        .sidebar.collapsed .sidebar-subtitle,
+        .sidebar.collapsed .nav-section-label,
+        .sidebar.collapsed .nav-item span,
+        .sidebar.collapsed .sidebar-user-info {
+            opacity: 0 !important;
+            display: none !important;
+        }
+        .sidebar-logo {
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 10px !important;
+            background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%) !important;
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.45) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        }
+        .sidebar-logo svg {
+            width: 22px !important;
+            height: 22px !important;
+            color: #ffffff !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Gradient BG -->
+    <div class="gradient-bg">
+        <div class="gradient-orb gradient-orb--1"></div>
+        <div class="gradient-orb gradient-orb--2"></div>
+        <div class="gradient-orb gradient-orb--3"></div>
+    </div>
+
+    <!-- Sidebar Overlay (mobile) -->
+    <div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199"></div>
+
+    <div class="dashboard">
+        <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="../index.html" class="sidebar-brand">
+                    <div class="sidebar-logo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                            <polyline points="2 17 12 22 22 17" />
+                            <polyline points="2 12 12 17 22 12" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="sidebar-title">Apex Logistics AI</div>
+                        <div class="sidebar-subtitle">Operations &amp; Fleet</div>
+                    </div>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Main</div>
+                <a class="nav-item active" data-tab="overview">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                    </svg>
+                    <span>Overview</span>
+                </a>
+                <a class="nav-item" data-tab="conversations">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                    </svg>
+                    <span>Conversations</span>
+                    <span class="nav-badge" id="convBadge" style="display:none">0</span>
+                </a>
+
+                <div class="nav-section-label">Logistics Engine</div>
+                <a class="nav-item" data-tab="logistics">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="3" width="15" height="13" />
+                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                        <circle cx="5.5" cy="18.5" r="2.5" />
+                        <circle cx="18.5" cy="18.5" r="2.5" />
+                    </svg>
+                    <span>Control Tower</span>
+                    <span class="nav-badge" id="shipmentAlertBadge" style="display:none;background:var(--danger, #ef4444);color:#fff">0</span>
+                </a>
+                <a class="nav-item" data-tab="zones">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="10" r="3" />
+                        <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z" />
+                    </svg>
+                    <span>Delivery Zones</span>
+                </a>
+
+                <div class="nav-section-label">Knowledge Base</div>
+                <a class="nav-item" data-tab="products">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 01-8 0" />
+                    </svg>
+                    <span>Products</span>
+                </a>
+                <a class="nav-item" data-tab="orders">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="3" width="15" height="13" />
+                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                        <circle cx="5.5" cy="18.5" r="2.5" />
+                        <circle cx="18.5" cy="18.5" r="2.5" />
+                    </svg>
+                    <span>Order Data</span>
+                </a>
+                <a class="nav-item" data-tab="kb-about">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                    <span>Restrictions</span>
+                </a>
+                <a class="nav-item" data-tab="kb-custom">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="12" y1="18" x2="12" y2="12" />
+                        <line x1="9" y1="15" x2="15" y2="15" />
+                    </svg>
+                    <span>Custom Data</span>
+                </a>
+
+                <div class="nav-section-label">Insights</div>
+                <a class="nav-item" data-tab="widget">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2" />
+                        <line x1="8" y1="21" x2="16" y2="21" />
+                        <line x1="12" y1="17" x2="12" y2="21" />
+                    </svg>
+                    <span>Widget Config</span>
+                </a>
+                <a class="nav-item" data-tab="analytics">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                    </svg>
+                    <span>Analytics</span>
+                </a>
+                <a class="nav-item" data-tab="settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3" />
+                        <path
+                            d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
+                    </svg>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="avatar avatar-sm" id="sidebarAvatar">U</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="sidebarName">User</div>
+                        <div class="sidebar-user-role" id="sidebarRole">Client</div>
+                    </div>
+                    <button class="sidebar-logout" id="logoutBtn" title="Logout">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+                            <polyline points="16 17 21 12 16 7" />
+                            <line x1="21" y1="12" x2="9" y2="12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ═══════════════════ MAIN ═══════════════════ -->
+        <main class="main-content">
+            <header class="main-header">
+                <div class="main-header-left">
+                    <button class="mobile-toggle" id="mobileToggle">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <line x1="3" y1="12" x2="21" y2="12" />
+                            <line x1="3" y1="18" x2="21" y2="18" />
+                        </svg>
+                    </button>
+                    <div>
+                        <h1 class="page-title" id="pageTitle">Overview</h1>
+                        <p class="page-subtitle" id="pageSubtitle">Welcome back — here's what's happening today</p>
+                    </div>
+                </div>
+            </header>
+
+            <div class="main-body">
+                <!-- ═══════════ TAB: OVERVIEW ═══════════ -->
+                <div class="tab-panel active" id="panel-overview">
+                    <!-- ── 6 KPI Metric Cards ── -->
+                    <div class="ov-kpi-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon metric-icon--blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+                            <div class="metric-value" id="ovKpiConversations">&mdash;</div>
+                            <div class="metric-label">Total Conversations</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon metric-icon--green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+                            <div class="metric-value" id="ovKpiActive">&mdash;</div>
+                            <div class="metric-label">Active Conversations</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon metric-icon--cyan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+                            <div class="metric-value" id="ovKpiOrders">&mdash;</div>
+                            <div class="metric-label">Total Orders</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon metric-icon--red"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+                            <div class="metric-value" id="ovKpiRevenue">&mdash;</div>
+                            <div class="metric-label">Total Revenue</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon metric-icon--purple"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
+                            <div class="metric-value" id="ovKpiProducts">&mdash;</div>
+                            <div class="metric-label">Products</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon metric-icon--blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+                            <div class="metric-value" id="ovKpiKbDocs">&mdash;</div>
+                            <div class="metric-label">KB Documents</div>
+                        </div>
+                    </div>
+
+                    <!-- ── Widget Cards Grid ── -->
+                    <div class="ov-widgets-grid">
+
+                        <!-- Quick Actions Card -->
+                        <div class="wg-card" id="ovQuickActions">
+                            <div class="wg-card-header">
+                                <div class="wg-card-dots"><span></span><span></span><span></span></div>
+                                <span class="wg-card-title">Quick Actions</span>
+                            </div>
+                            <div class="wg-card-body">
+                                <div class="qa-grid">
+                                    <button class="qa-btn" onclick="switchTab('logistics')">
+                                        <div class="qa-btn-icon" style="background:rgba(99,102,241,0.2);color:#818cf8"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+                                        <span class="qa-btn-label">Control Tower</span>
+                                        <span class="qa-btn-sub">Fleet &amp; Waybills</span>
+                                    </button>
+                                    <button class="qa-btn" onclick="switchTab('products'); setTimeout(()=>document.getElementById('addProductBtn')?.click(),200)">
+                                        <div class="qa-btn-icon qa-btn-icon--green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+                                        <span class="qa-btn-label">Add Product</span>
+                                        <span class="qa-btn-sub">Add to catalog</span>
+                                    </button>
+                                    <button class="qa-btn" onclick="switchTab('orders')">
+                                        <div class="qa-btn-icon qa-btn-icon--blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+                                        <span class="qa-btn-label">Upload Orders</span>
+                                        <span class="qa-btn-sub">CSV import</span>
+                                    </button>
+                                    <button class="qa-btn" onclick="switchTab('kb-custom')">
+                                        <div class="qa-btn-icon qa-btn-icon--purple"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
+                                        <span class="qa-btn-label">Add KB Doc</span>
+                                        <span class="qa-btn-sub">Knowledge base</span>
+                                    </button>
+                                    <button class="qa-btn" onclick="switchTab('widget')">
+                                        <div class="qa-btn-icon qa-btn-icon--cyan"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+                                        <span class="qa-btn-label">Widget Config</span>
+                                        <span class="qa-btn-sub">Setup &amp; deploy</span>
+                                    </button>
+                                    <button class="qa-btn" onclick="switchTab('conversations'); setTimeout(()=>{const b=document.querySelector('.conv-filter-btn[data-status=escalated]'); if(b) b.click();},200)">
+                                        <div class="qa-btn-icon qa-btn-icon--red"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+                                        <span class="qa-btn-label">Escalations</span>
+                                        <span class="qa-btn-sub">View flagged</span>
+                                    </button>
+                                    <button class="qa-btn" onclick="switchTab('analytics')">
+                                        <div class="qa-btn-icon qa-btn-icon--orange"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+                                        <span class="qa-btn-label">Analytics</span>
+                                        <span class="qa-btn-sub">Full insights</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- System Status Card -->
+                        <div class="wg-card" id="ovSystemStatus">
+                            <div class="wg-card-header">
+                                <div class="wg-card-dots"><span></span><span></span><span></span></div>
+                                <span class="wg-card-title">System Health</span>
+                                <span class="ss-last-checked" id="ovSsLastChecked"></span>
+                            </div>
+                            <div class="wg-card-body ss-body">
+                                <!-- Infrastructure Section -->
+                                <div class="ss-section">
+                                    <div class="ss-section-label">Infrastructure</div>
+                                    <div class="ss-row">
+                                        <div class="ss-row-left">
+                                            <span class="ss-dot ss-dot--checking" id="ovSsDotApi"></span>
+                                            <span class="ss-row-label">Backend API</span>
+                                        </div>
+                                        <span class="ss-row-badge ss-row-badge--ok" id="ovSsApi">Checking…</span>
+                                    </div>
+                                    <div class="ss-row">
+                                        <div class="ss-row-left">
+                                            <span class="ss-dot ss-dot--checking" id="ovSsDotWidget"></span>
+                                            <span class="ss-row-label">Chat Widget</span>
+                                        </div>
+                                        <span class="ss-row-badge ss-row-badge--ok" id="ovSsWidget">Checking…</span>
+                                    </div>
+                                    <div class="ss-row">
+                                        <div class="ss-row-left">
+                                            <span class="ss-dot ss-dot--green"></span>
+                                            <span class="ss-row-label">AI Response Time</span>
+                                        </div>
+                                        <span class="ss-row-value" id="ovSsResponseTime">&mdash;</span>
+                                    </div>
+                                </div>
+                                <!-- Quality Section -->
+                                <div class="ss-section">
+                                    <div class="ss-section-label">Quality Metrics</div>
+                                    <div class="ss-row ss-row--bar">
+                                        <div class="ss-row-left">
+                                            <span class="ss-dot" id="ovSsDotEsc"></span>
+                                            <span class="ss-row-label">Escalation Rate</span>
+                                        </div>
+                                        <span class="ss-row-value" id="ovSsEscalation">&mdash;</span>
+                                    </div>
+                                    <div class="ss-gauge-track"><div class="ss-gauge-fill ss-gauge-fill--esc" id="ovSsEscBar" style="width:0%"></div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order Pipeline Card -->
+                        <div class="wg-card" id="ovOrderPipeline">
+                            <div class="wg-card-header">
+                                <div class="wg-card-dots"><span></span><span></span><span></span></div>
+                                <span class="wg-card-title">Order Pipeline</span>
+                                <span class="wg-card-badge" id="ovPipelineTotal"></span>
+                            </div>
+                            <div class="wg-card-body" id="ovPipelineBody">
+                                <div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>
+                            </div>
+                            <!-- Recent Orders List -->
+                            <div class="wg-card-footer" id="ovRecentOrdersWrap">
+                                <div class="ss-section-label" style="padding:12px 16px 6px">Recent Orders</div>
+                                <div id="ovRecentOrders">
+                                    <div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Escalations Card (kept) -->
+                        <div class="wg-card" id="ovRecentEscalations">
+                            <div class="wg-card-header">
+                                <div class="wg-card-dots"><span></span><span></span><span></span></div>
+                                <span class="wg-card-title">Recent Escalations</span>
+                            </div>
+                            <div class="wg-card-body">
+                                <div class="escalation-list" id="recentEscalations">
+                                    <div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ═══════════ TAB: CONVERSATIONS ═══════════ -->
+                <div class="tab-panel" id="panel-conversations">
+                    <div class="conversations-layout">
+                        <div class="conv-list">
+                            <div class="conv-list-header"><input type="text" class="conv-search" id="convSearch"
+                                    placeholder="Search conversations…"></div>
+                            <div class="conv-filters">
+                                <button class="conv-filter-btn active" data-status="all">All</button>
+                                <button class="conv-filter-btn" data-status="active">Active</button>
+                                <button class="conv-filter-btn" data-status="escalated">Escalated</button>
+                                <button class="conv-filter-btn" data-status="resolved">Resolved</button>
+                            </div>
+                            <div class="conv-list-items" id="convListItems">
+                                <div class="loading-state">
+                                    <div class="spinner"></div>
+                                    <p>Loading…</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-panel">
+                            <div class="chat-empty" id="chatEmpty">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                                </svg>
+                                <p>Select a conversation to view messages</p>
+                            </div>
+                            <div id="chatActive" style="display:none;flex-direction:column;height:100%">
+                                <div class="chat-header">
+                                    <div class="chat-header-info">
+                                        <div class="avatar avatar-sm" id="chatAvatar">U</div>
+                                        <div>
+                                            <div class="chat-header-name" id="chatName">Customer</div>
+                                            <div class="chat-header-meta" id="chatMeta">active</div>
+                                        </div>
+                                    </div>
+                                    <div class="chat-header-actions">
+                                        <button class="chat-action-btn chat-action-btn--takeover" id="btnTakeover"><svg
+                                                width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+                                                <circle cx="8.5" cy="7" r="4" />
+                                                <polyline points="17 11 19 13 23 9" />
+                                            </svg><span>Takeover</span></button>
+                                        <button class="chat-action-btn chat-action-btn--escalate" id="btnEscalate"><svg
+                                                width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path
+                                                    d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                                            </svg><span>Escalate</span></button>
+                                        <button class="chat-action-btn chat-action-btn--resolve" id="btnResolve"><svg
+                                                width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <polyline points="20 6 9 17 4 12" />
+                                            </svg><span>Resolve</span></button>
+                                    </div>
+                                </div>
+                                <div class="chat-messages" id="chatMessages"></div>
+                                <div class="chat-input-area">
+                                    <input type="text" class="chat-input" id="chatInput"
+                                        placeholder="Type a response as agent…">
+                                    <button class="chat-send-btn" id="chatSendBtn"><svg width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                                            <line x1="22" y1="2" x2="11" y2="13" />
+                                            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                                        </svg></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- ═══════════ TAB: ORDERS (V4 NEW) ═══════════ -->
+                <div class="tab-panel" id="panel-orders">
+                    <div class="order-stats-grid" id="orderStatsGrid">
+                        <div class="metric-card">
+                            <div class="metric-icon metric-icon--blue"><svg width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="1" y="3" width="15" height="13" />
+                                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                                    <circle cx="5.5" cy="18.5" r="2.5" />
+                                    <circle cx="18.5" cy="18.5" r="2.5" />
+                                </svg></div>
+                            <div class="metric-value" id="orderTotal">0</div>
+                            <div class="metric-label">Total Orders</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon metric-icon--orange"><svg width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12 6 12 12 16 14" />
+                                </svg></div>
+                            <div class="metric-value" id="orderPending">0</div>
+                            <div class="metric-label">Pending</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon metric-icon--purple"><svg width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                                </svg></div>
+                            <div class="metric-value" id="orderShipped">0</div>
+                            <div class="metric-label">Shipped</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon metric-icon--green"><svg width="20" height="20" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg></div>
+                            <div class="metric-value" id="orderDelivered">0</div>
+                            <div class="metric-label">Delivered</div>
+                        </div>
+                    </div>
+
+                    <!-- Upload + Actions -->
+                    <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;align-items:stretch">
+                        <div class="upload-zone" id="orderUploadZone" style="flex:1;min-width:250px">
+                            <div class="upload-zone-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5">
+                                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg></div>
+                            <div class="upload-zone-text">Drop Waybill Manifest CSV here or click to upload</div>
+                            <div class="upload-zone-sub">DHL / FedEx / UPS / TCS / TMS CSV Manifest compatible</div>
+                            <input type="file" id="orderCsvInput" accept=".csv" style="display:none">
+                        </div>
+
+                    </div>
+
+                    <!-- Search + Filter -->
+                    <div class="orders-header">
+                        <input type="text" class="conv-search" id="orderSearch"
+                            placeholder="Search by order ID, email, name…">
+                        <select class="config-input" id="orderStatusFilter" style="max-width:160px">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                        <select class="config-input" id="orderSourceFilter" style="max-width:160px">
+                            <option value="">All Sources</option>
+                            <option value="csv">📄 CSV Upload</option>
+                            <option value="widget">🛍️ Widget</option>
+                            <option value="api">🔌 API Push</option>
+                            <option value="sync">🔄 Sync</option>
+                            <option value="simulator">🎮 Simulator</option>
+                        </select>
+                    </div>
+
+                    <!-- Order Table -->
+                    <div class="order-table-wrap">
+                        <table class="order-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Source</th>
+                                    <th>Total</th>
+                                    <th>Date</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="orderTableBody">
+                                <tr>
+                                    <td colspan="8" style="text-align:center;color:var(--text-muted);padding:32px">No
+                                        orders loaded yet</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="orderPagination"></div>
+                </div>
+
+                <!-- ═══════════ TAB: PRODUCTS (V4 NEW) ═══════════ -->
+                <div class="tab-panel" id="panel-products">
+                    <div class="products-header">
+                        <input type="text" class="conv-search" id="productSearch" placeholder="Search products…"
+                            style="max-width:300px">
+                        <select class="config-input" id="productCategoryFilter" style="max-width:160px">
+                            <option value="">All Categories</option>
+                        </select>
+                        <button class="btn btn-primary" id="addProductBtn"><svg width="14" height="14"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                style="margin-right:4px">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>Add Product</button>
+                        <button class="btn btn-secondary" id="importProductCsvBtn"><svg width="14" height="14"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                style="margin-right:4px">
+                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                                <polyline points="17 8 12 3 7 8" />
+                                <line x1="12" y1="3" x2="12" y2="15" />
+                            </svg>Import CSV</button>
+                        <input type="file" id="productCsvInput" accept=".csv" style="display:none">
+                    </div>
+
+                    <!-- Add/Edit Product Form (hidden by default) -->
+                    <div id="productFormWrap" style="display:none;margin-bottom:16px">
+                        <div class="kb-add-section">
+                            <div class="kb-add-title" id="productFormTitle">Add Product</div>
+                            <div class="kb-form-row">
+                                <div class="kb-form-group"><label class="kb-form-label">Product Name *</label><input
+                                        type="text" class="kb-form-input" id="prodName" placeholder="Product name">
+                                </div>
+                                <div class="kb-form-group"><label class="kb-form-label">SKU</label><input type="text"
+                                        class="kb-form-input" id="prodSku" placeholder="SKU-001"></div>
+                            </div>
+                            <div class="kb-form-row">
+                                <div class="kb-form-group"><label class="kb-form-label">Price</label><input
+                                        type="number" class="kb-form-input" id="prodPrice" placeholder="29.99"
+                                        step="0.01"></div>
+                                <div class="kb-form-group"><label class="kb-form-label">Category</label><input
+                                        type="text" class="kb-form-input" id="prodCategory" placeholder="Electronics">
+                                </div>
+                            </div>
+                            <div class="kb-form-row">
+                                <div class="kb-form-group"><label class="kb-form-label">Stock Quantity</label><input
+                                        type="number" class="kb-form-input" id="prodStock" placeholder="100"></div>
+                                <div class="kb-form-group"
+                                    style="display:flex;flex-direction:row;align-items:center;gap:12px;padding-top:20px">
+                                    <label class="config-label" style="margin:0">In Stock</label><label
+                                        class="toggle-switch"><input type="checkbox" id="prodInStock" checked><span
+                                            class="toggle-slider"></span></label>
+                                </div>
+                            </div>
+                            <div class="kb-form-group"><label class="kb-form-label">Image URL</label><input type="text"
+                                    class="kb-form-input" id="prodImageUrl"
+                                    placeholder="https://example.com/product-image.jpg"></div>
+                            <div class="kb-form-group"><label class="kb-form-label">Description</label><textarea
+                                    class="kb-form-textarea" id="prodDescription"
+                                    placeholder="Product description…"></textarea></div>
+                            <div style="display:flex;gap:8px;margin-top:var(--space-md)">
+                                <button class="btn btn-primary" id="saveProductBtn">Save Product</button>
+                                <button class="btn btn-secondary" id="cancelProductBtn">Cancel</button>
+                            </div>
+                            <input type="hidden" id="prodEditId" value="">
+                        </div>
+                    </div>
+
+                    <div class="product-grid" id="productGrid">
+                        <div class="loading-state">
+                            <div class="spinner"></div>
+                            <p>Loading products…</p>
+                        </div>
+                    </div>
+                    <div class="pagination" id="productPagination"></div>
+                </div>
+
+                <!-- ═══════════ KB TABS (V4.3) ═══════════ -->
+                <div class="tab-panel" id="panel-kb-about">
+                    <div class="kb-panel kb-restrictions-panel" data-doctype="restrictions"></div>
+                </div>
+                <div class="tab-panel" id="panel-kb-custom">
+                    <div class="kb-panel kb-custom-panel" data-doctype="general"></div>
+                </div>
+
+                <!-- ═══════════ TAB: WIDGET ═══════════ -->
+                <div class="tab-panel" id="panel-widget">
+                    <div class="widget-layout">
+                        <div class="widget-config-section">
+                            <div class="config-group">
+                                <div class="config-group-title">Widget Configuration</div>
+                                <div class="config-field"><label class="config-label">Bot Name</label><input type="text"
+                                        class="config-input" id="widgetBotName" placeholder="AI Assistant"></div>
+                                <div class="config-field"><label class="config-label">Welcome Message</label><input
+                                        type="text" class="config-input" id="widgetWelcome"
+                                        placeholder="Hi! How can I help you?"></div>
+                                <div class="config-field"><label class="config-label">Brand Color</label>
+                                    <div class="config-color-row"><input type="color" class="config-color-input"
+                                            id="widgetColor" value="#3b82f6"><input type="text" class="config-input"
+                                            id="widgetColorText" value="#3b82f6" style="flex:1"></div>
+                                </div>
+                                <div class="config-field"><label class="config-label">Position</label><select
+                                        class="config-input" id="widgetPosition">
+                                        <option value="bottom-right">Bottom Right</option>
+                                        <option value="bottom-left">Bottom Left</option>
+                                    </select></div>
+                                <div class="config-field"><label class="config-label">Widget Type</label><select
+                                        class="config-input" id="widgetType">
+                                        <option value="full">Full (Chat + Orders + Verify)</option>
+                                        <option value="info">Info Only (FAQ/General)</option>
+                                        <option value="order">Order Tracking</option>
+                                        <option value="verify">Self-Service Verify</option>
+                                    </select></div>
+                                <div class="config-field"
+                                    style="display:flex;align-items:center;justify-content:space-between"><label
+                                        class="config-label" style="margin:0">Widget Enabled</label><label
+                                        class="toggle-switch"><input type="checkbox" id="widgetEnabled" checked><span
+                                            class="toggle-slider"></span></label></div>
+                            </div>
+                            <button class="btn btn-primary w-full" id="saveWidgetBtn">Save Configuration</button>
+                        </div>
+                        <div class="widget-preview-section">
+                            <div class="widget-preview-container">
+                                <div class="widget-preview-frame">
+                                    <div class="widget-preview-head" id="widgetPreviewHead"
+                                        style="background:#3b82f6;color:white">
+                                        <div class="avatar avatar-sm" style="background:rgba(255,255,255,.2)">AI</div>
+                                        <div>
+                                            <div style="font-weight:600;font-size:.875rem" id="previewBotName">AI
+                                                Assistant</div>
+                                            <div style="font-size:.6875rem;opacity:.8">Online</div>
+                                        </div>
+                                    </div>
+                                    <div class="widget-preview-chat">
+                                        <div style="padding:8px 12px;background:rgba(59,130,246,.1);border-radius:var(--radius-md);font-size:.75rem;color:var(--text-secondary);max-width:80%"
+                                            id="previewWelcome">Hi! How can I help you?</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="embed-code-box">
+                                <div class="embed-code-title"><span
+                                        style="font-size:.9375rem;font-weight:600;color:var(--text-primary)">Embed
+                                        Code</span><button class="btn btn-sm btn-secondary" id="copyEmbedBtn"><svg
+                                            width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <rect x="9" y="9" width="13" height="13" rx="2" />
+                                            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                                        </svg>Copy</button></div>
+                                <pre class="embed-code-pre" id="embedCodePre">Loading embed code…</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══════════ TAB: ANALYTICS (Redesigned) ═══════════ -->
+                <div class="tab-panel" id="panel-analytics">
+                    <!-- Period Selector -->
+                    <div class="anx-period-bar">
+                        <div class="anx-period-pills" id="anxPeriodPills">
+                            <button class="anx-period-pill active" data-period="today">Today</button>
+                            <button class="anx-period-pill" data-period="7d">7 Days</button>
+                            <button class="anx-period-pill" data-period="30d">30 Days</button>
+                            <button class="anx-period-pill" data-period="all">All Time</button>
+                        </div>
+                        <span class="anx-period-label" id="anxPeriodLabel">Last updated just now</span>
+                    </div>
+
+                    <!-- 8 KPI Hero Cards (4 cols x 2 rows) -->
+                    <div class="anx-kpi-grid" id="anxKpiGrid">
+                        <div class="anx-kpi">
+                            <div class="anx-kpi-icon anx-kpi-icon--blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+                            <div class="anx-kpi-body">
+                                <div class="anx-kpi-value" id="anxKpiConversations">&mdash;</div>
+                                <div class="anx-kpi-label">Total Conversations</div>
+                            </div>
+                        </div>
+                        <div class="anx-kpi">
+                            <div class="anx-kpi-icon anx-kpi-icon--purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></div>
+                            <div class="anx-kpi-body">
+                                <div class="anx-kpi-value" id="anxKpiMessages">&mdash;</div>
+                                <div class="anx-kpi-label">Messages Exchanged</div>
+                            </div>
+                        </div>
+                        <div class="anx-kpi">
+                            <div class="anx-kpi-icon anx-kpi-icon--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+                            <div class="anx-kpi-body">
+                                <div class="anx-kpi-value" id="anxKpiSentiment">&mdash;</div>
+                                <div class="anx-kpi-label">Avg Sentiment</div>
+                            </div>
+                        </div>
+                        <div class="anx-kpi">
+                            <div class="anx-kpi-icon anx-kpi-icon--orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+                            <div class="anx-kpi-body">
+                                <div class="anx-kpi-value" id="anxKpiEscalation">&mdash;</div>
+                                <div class="anx-kpi-label">Escalation Rate</div>
+                            </div>
+                        </div>
+                        <div class="anx-kpi">
+                            <div class="anx-kpi-icon anx-kpi-icon--cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></div>
+                            <div class="anx-kpi-body">
+                                <div class="anx-kpi-value" id="anxKpiOrders">&mdash;</div>
+                                <div class="anx-kpi-label">Total Orders</div>
+                            </div>
+                        </div>
+                        <div class="anx-kpi">
+                            <div class="anx-kpi-icon anx-kpi-icon--red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+                            <div class="anx-kpi-body">
+                                <div class="anx-kpi-value" id="anxKpiRevenue">&mdash;</div>
+                                <div class="anx-kpi-label">Total Revenue</div>
+                            </div>
+                        </div>
+                        <div class="anx-kpi">
+                            <div class="anx-kpi-icon anx-kpi-icon--purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
+                            <div class="anx-kpi-body">
+                                <div class="anx-kpi-value" id="anxKpiProducts">&mdash;</div>
+                                <div class="anx-kpi-label">Products</div>
+                            </div>
+                        </div>
+                        <div class="anx-kpi">
+                            <div class="anx-kpi-icon anx-kpi-icon--blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+                            <div class="anx-kpi-body">
+                                <div class="anx-kpi-value" id="anxKpiKbDocs">&mdash;</div>
+                                <div class="anx-kpi-label">KB Documents</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 1: Sentiment Trend + Sentiment Distribution (Rich) -->
+                    <div class="anx-grid">
+                        <div class="wg-card">
+                            <div class="wg-card-header">
+                                <div class="wg-card-dots"><span></span><span></span><span></span></div>
+                                <span class="wg-card-title">Sentiment Trend</span>
+                            </div>
+                            <div class="wg-card-body">
+                                <div class="anx-chart-wrap" id="anxSentimentChart"></div>
+                                <div class="anx-chart-x-labels" id="anxChartXLabels"></div>
+                                <div class="anx-chart-legend">
+                                    <span class="anx-chart-legend-item"><span class="anx-chart-legend-dot" style="background:var(--positive)"></span>Positive</span>
+                                    <span class="anx-chart-legend-item"><span class="anx-chart-legend-dot" style="background:var(--neutral)"></span>Neutral</span>
+                                    <span class="anx-chart-legend-item"><span class="anx-chart-legend-dot" style="background:var(--negative)"></span>Negative</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wg-card">
+                            <div class="wg-card-header">
+                                <div class="wg-card-dots"><span></span><span></span><span></span></div>
+                                <span class="wg-card-title">Sentiment Distribution</span>
+                            </div>
+                            <div class="wg-card-body" id="anxRichSentiment"></div>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Orders Overview + Language Detection -->
+                    <div class="anx-grid">
+                        <div class="wg-card">
+                            <div class="wg-card-header">
+                                <div class="wg-card-dots"><span></span><span></span><span></span></div>
+                                <span class="wg-card-title">Orders Overview</span>
+                                <span class="wg-card-badge" id="anxOrderTotal"></span>
+                            </div>
+                            <div class="wg-card-body" id="anxOrdersOverview"></div>
+                            <!-- Recent Orders List -->
+                            <div class="wg-card-footer" id="anxRecentOrdersWrap">
+                                <div class="ss-section-label" style="padding:12px 16px 6px">Recent Orders</div>
+                                <div id="anxRecentOrders">
+                                    <div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wg-card">
+                            <div class="wg-card-header">
+                                <div class="wg-card-dots"><span></span><span></span><span></span></div>
+                                <span class="wg-card-title">Language Detection</span>
+                                <span class="wg-card-badge" id="anxLangCount"></span>
+                            </div>
+                            <div class="wg-card-body" id="anxLanguages"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══════════ TAB: SETTINGS ═══════════ -->
+                <div class="tab-panel" id="panel-settings">
+                    <div class="stg-grid-wrap" id="settingsContainer">
+                        <!-- Dynamically rendered by loadSettings() -->
+                        <div class="loading-state">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══════════ TAB: LOGISTICS CONTROL TOWER ═══════════ -->
+                <div class="tab-panel" id="panel-logistics">
+                    <!-- ── 6 Control Tower KPI Cards ── -->
+                    <div class="logistics-kpi-grid">
+                        <div class="logistics-kpi-card">
+                            <div class="logistics-kpi-val" id="kpiTotalShipments">&mdash;</div>
+                            <div class="logistics-kpi-label">Active Waybills</div>
+                        </div>
+                        <div class="logistics-kpi-card">
+                            <div class="logistics-kpi-val" id="kpiInTransit" style="color:#60a5fa">&mdash;</div>
+                            <div class="logistics-kpi-label">In Transit</div>
+                        </div>
+                        <div class="logistics-kpi-card kpi--exceptions">
+                            <div class="logistics-kpi-val" id="kpiExceptions" style="color:#f87171">&mdash;</div>
+                            <div class="logistics-kpi-label">Active Exceptions</div>
+                        </div>
+                        <div class="logistics-kpi-card kpi--delivered">
+                            <div class="logistics-kpi-val" id="kpiDelivered" style="color:#34d399">&mdash;</div>
+                            <div class="logistics-kpi-label">Delivered</div>
+                        </div>
+                        <div class="logistics-kpi-card">
+                            <div class="logistics-kpi-val" id="kpiZones" style="color:#c084fc">&mdash;</div>
+                            <div class="logistics-kpi-label">Delivery Zones</div>
+                        </div>
+                        <div class="logistics-kpi-card kpi--ontime">
+                            <div class="logistics-kpi-val" id="kpiModelStatus" style="font-size:1.05rem;padding-top:0.35rem;color:#38bdf8">&mdash;</div>
+                            <div class="logistics-kpi-label">ML ETA Engine</div>
+                        </div>
+                    </div>
+
+                    <!-- ── Search & Filter Toolbar ── -->
+                    <div class="logistics-toolbar">
+                        <div class="logistics-search-box">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            <input type="text" id="shipmentSearchInput" placeholder="Search waybill, city, or carrier ID..." oninput="LogisticsDashboard.loadShipments()">
+                        </div>
+                        <div class="logistics-filters-group">
+                            <select id="shipmentCarrierFilter" class="logistics-select" onchange="LogisticsDashboard.loadShipments()">
+                                <option value="">All Carriers</option>
+                                <option value="FedEx">FedEx</option>
+                                <option value="DHL">DHL Express</option>
+                                <option value="UPS">UPS Worldwide</option>
+                                <option value="TCS">TCS Express</option>
+                            </select>
+                            <select id="shipmentStatusFilter" class="logistics-select" onchange="LogisticsDashboard.loadShipments()">
+                                <option value="">All Statuses</option>
+                                <option value="in_transit">In Transit</option>
+                                <option value="out_for_delivery">Out for Delivery</option>
+                                <option value="exception">Exceptions Only</option>
+                                <option value="delivered">Delivered</option>
+                            </select>
+                            <button class="btn btn-sm btn-primary" onclick="LogisticsDashboard.loadTab()">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                                <span>Refresh Telemetry</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ── Main Two-Column Fleet Workspace ── -->
+                    <div class="logistics-workspace">
+                        <!-- Left Column: Fleet Table & Interactive ML Simulator -->
+                        <div>
+                            <div class="logistics-card">
+                                <div class="logistics-card-header">
+                                    <div class="logistics-card-title">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                                        Live Fleet Telemetry &amp; Waybill Tracking
+                                    </div>
+                                    <span style="font-size:0.75rem;color:#94a3b8;">Click row to inspect milestone log</span>
+                                </div>
+                                <div class="logistics-table-container">
+                                    <table class="logistics-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Waybill #</th>
+                                                <th>Carrier</th>
+                                                <th>Route</th>
+                                                <th>Current Node</th>
+                                                <th>Status</th>
+                                                <th>ML ETA vs SLA</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="shipmentsTableBody">
+                                            <!-- Dynamically populated -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Exception Radar & Milestone Inspector -->
+                        <div>
+                            <!-- Sentiment-Gated Exception Radar -->
+                            <div class="logistics-card">
+                                <div class="logistics-card-header">
+                                    <div class="logistics-card-title" style="color:#f87171;">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                        Exception Radar &amp; Sentiment
+                                    </div>
+                                    <span style="font-size:0.72rem;color:#fca5a5;">Emotion-Gated</span>
+                                </div>
+                                <div class="exception-feed" id="exceptionFeedContent">
+                                    <!-- Populated by loadExceptionFeed -->
+                                </div>
+                            </div>
+
+                            <!-- Selected Shipment Milestone Timeline -->
+                            <div class="logistics-card">
+                                <div class="logistics-card-header">
+                                    <div class="logistics-card-title" id="selectedWaybillTitle">
+                                        Milestone Timeline
+                                    </div>
+                                </div>
+                                <div style="padding:1rem;">
+                                    <div id="selectedShipmentHeader"></div>
+                                    <div id="shipmentTimelineContent"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══════════ TAB: DELIVERY ZONES ═══════════ -->
+                <div class="tab-panel" id="panel-zones">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+                        <div>
+                            <h2 style="font-size:1.25rem;font-weight:700;color:#fff;">Serviceable Delivery Zones</h2>
+                            <p style="font-size:0.85rem;color:#94a3b8;">Regional geofencing bounds, baseline dispatch SLAs, and historical courier delivery rates.</p>
+                        </div>
+                        <button class="btn btn-sm btn-primary" onclick="LogisticsDashboard.loadZonesTab()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                            <span>Refresh Zones</span>
+                        </button>
+                    </div>
+                    <div class="zones-grid" id="deliveryZonesGrid">
+                        <!-- Populated by loadDeliveryZonesTab -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Order Detail Modal -->
+    <div class="order-detail-overlay" id="orderDetailOverlay" onclick="if(event.target===this)closeOrderModal()">
+        <div class="order-detail-modal" id="orderDetailContent"></div>
+    </div>
+
+    <!-- Document View Modal (Custom Data) -->
+    <div class="modal-overlay" id="docViewModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center; padding:1rem;" onclick="if(event.target===this) document.getElementById('docViewModal').style.display='none'">
+        <div class="modal-content glass-card" style="max-width: 800px; width: 100%; max-height: 85vh; display: flex; flex-direction: column; padding: 1.5rem; background: var(--bg-primary);">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1rem; margin-bottom: 1rem;">
+                <h3 id="docViewTitle" style="margin: 0; font-size: 1.25rem; color: var(--text-primary);">Document Content</h3>
+                <button class="btn btn-icon" onclick="document.getElementById('docViewModal').style.display='none'" style="background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 0.5rem; border-radius: 50%;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body" style="overflow-y: auto; flex: 1; padding-right: 10px;">
+                <div id="docViewLoading" style="display: none; justify-content: center; padding: 2rem;">
+                    <div class="spinner" style="border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--primary-500); border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite;"></div>
+                </div>
+                <div id="docViewText" style="white-space: pre-wrap; font-family: monospace; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;"></div>
+            </div>
+            <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/auth.js?v=18"></script>
+    <script src="../js/api.js?v=18"></script>
+    <script src="../js/app.js?v=18"></script>
+    <script src="../js/client-dashboard.js?v=18"></script>
+    <script src="../js/logistics-dashboard.js?v=20"></script>
+</body>
+
+</html>

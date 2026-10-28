@@ -1,0 +1,2960 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Apex Logistics AI — Emotion-Gated Autonomous Logistics Platform. Real-time fleet telemetry, ML ETA prediction, and automated dispatch escalation.">
+    <title>Apex Logistics AI | Autonomous Freight & Dispatch Platform</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="css/landing.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+
+    <style>
+        /* ═══════════════════════════════════════════════════════
+           HOW IT WORKS — SCROLL-ANIMATED STICKY SECTION
+           ═══════════════════════════════════════════════════════ */
+        .hiw-section {
+            position: relative;
+            background: var(--bg-secondary);
+            padding-bottom: 100px;
+        }
+
+        .hiw-header {
+            text-align: center;
+            padding: 80px 2rem 60px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .hiw-track {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            gap: 0;
+            position: relative;
+        }
+
+        /* LEFT: scrolling text steps */
+        .hiw-steps {
+            flex: 1;
+            padding: 0 2rem 1rem 2rem;
+        }
+
+        .hiw-step {
+            min-height: 55vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 2rem 1rem 2rem 0;
+            opacity: 0.25;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .hiw-step:first-child {
+            padding-top: 3rem;
+        }
+
+        .hiw-step:last-child {
+            min-height: auto;
+            padding-bottom: 2rem;
+        }
+
+        .hiw-step.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hiw-step-number {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--primary-400);
+            margin-bottom: 0.75rem;
+        }
+
+        .hiw-step-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.6rem;
+            color: var(--text-primary);
+        }
+
+        .hiw-step-desc {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.65;
+            max-width: 400px;
+        }
+
+        .hiw-step-tags {
+            display: flex;
+            gap: 6px;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .hiw-step-tag {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+        }
+
+        /* RIGHT: sticky visual card */
+        .hiw-visual {
+            flex: 0 0 480px;
+            position: sticky;
+            top: calc(50vh - 200px);
+            height: fit-content;
+            padding: 0 2rem 0 0;
+            align-self: flex-start;
+            transition: opacity 0.4s ease;
+        }
+
+        .hiw-visual.faded {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .hiw-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--glass-shadow-lg);
+            overflow: hidden;
+        }
+
+        .hiw-card-header {
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hiw-card-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .hiw-card-dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--glass-border);
+        }
+
+        .hiw-card-dots span:first-child {
+            background: #ff5f56;
+        }
+
+        .hiw-card-dots span:nth-child(2) {
+            background: #ffbd2e;
+        }
+
+        .hiw-card-dots span:last-child {
+            background: #27ca40;
+        }
+
+        .hiw-card-label {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+
+        .hiw-card-body {
+            position: relative;
+            min-height: 340px;
+        }
+
+        /* Individual visual scenes */
+        .hiw-scene {
+            position: absolute;
+            inset: 0;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            opacity: 0;
+            transform: scale(0.97);
+            transition: opacity 0.45s ease, transform 0.45s ease;
+            pointer-events: none;
+        }
+
+        .hiw-scene.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        /* Scene building blocks */
+        .scene-msg {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .scene-msg--right {
+            flex-direction: row-reverse;
+        }
+
+        .scene-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .scene-avatar--user {
+            background: linear-gradient(135deg, var(--primary-500), var(--secondary-500));
+        }
+
+        .scene-avatar--ai {
+            background: linear-gradient(135deg, var(--secondary-500), var(--primary-500));
+        }
+
+        .scene-bubble {
+            background: var(--bg-elevated);
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            max-width: 80%;
+        }
+
+        .scene-bubble--ai {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(59, 130, 246, 0.15));
+            border: 1px solid rgba(139, 92, 246, 0.25);
+        }
+
+        .scene-bubble-text {
+            font-size: 0.82rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .scene-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: 0.68rem;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .scene-badge--neg {
+            background: var(--negative-bg);
+            color: var(--negative-light);
+            border: 1px solid var(--negative-border);
+        }
+
+        .scene-badge--pos {
+            background: var(--positive-bg);
+            color: var(--positive-light);
+            border: 1px solid var(--positive-border);
+        }
+
+        .scene-badge--warn {
+            background: var(--urgent-bg);
+            color: var(--urgent-light);
+            border: 1px solid var(--urgent-border);
+        }
+
+        .scene-badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: sceneDotPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes sceneDotPulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(0.7);
+            }
+        }
+
+        .scene-analysis {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .scene-analysis-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .scene-analysis-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            min-width: 85px;
+        }
+
+        .scene-analysis-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+
+        .scene-analysis-fill {
+            height: 100%;
+            border-radius: var(--radius-full);
+            transition: width 0.8s ease;
+        }
+
+        .scene-analysis-value {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 35px;
+            text-align: right;
+        }
+
+        .scene-escalation {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: var(--radius-md);
+            background: rgba(245, 87, 108, 0.08);
+            border: 1px solid rgba(245, 87, 108, 0.15);
+        }
+
+        .scene-escalation-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(245, 87, 108, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .scene-escalation-icon svg {
+            width: 16px;
+            height: 16px;
+            color: #f5576c;
+        }
+
+        .scene-escalation-text {
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.75);
+            line-height: 1.4;
+        }
+
+        .scene-escalation-text strong {
+            color: #f5576c;
+        }
+
+        .scene-response-card {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            border-left: 3px solid var(--primary-500);
+        }
+
+        .scene-response-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--primary-400);
+            margin-bottom: 5px;
+        }
+
+        .scene-response-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .scene-lang-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .scene-lang-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-tertiary);
+            transition: background 0.3s;
+        }
+
+        .scene-lang-item.highlight {
+            background: rgba(102, 126, 234, 0.12);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .scene-lang-flag {
+            font-size: 1.2rem;
+        }
+
+        .scene-lang-name {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .scene-lang-detect {
+            margin-left: auto;
+            font-size: 0.6rem;
+            font-weight: 700;
+            color: var(--positive-light);
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: var(--positive-bg);
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           LANGUAGES — PREMIUM REDESIGN
+           ═══════════════════════════════════════════════════════ */
+        .lang-section {
+            background: var(--bg-primary);
+            padding: 100px 0;
+        }
+
+        .lang-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .lang-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+        }
+
+        .lang-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 2rem 1.5rem 1.75rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 0;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+        }
+
+        /* Top accent glow line */
+        .lang-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20%;
+            right: 20%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-500), var(--secondary-500), transparent);
+            opacity: 0.5;
+            transition: opacity 0.35s, left 0.35s, right 0.35s;
+        }
+
+        .lang-card:hover::before {
+            left: 10%;
+            right: 10%;
+            opacity: 1;
+        }
+
+        /* Bottom glow reflection */
+        .lang-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 50%;
+            background: radial-gradient(ellipse at bottom, rgba(102, 126, 234, 0.06), transparent 70%);
+            pointer-events: none;
+            transition: opacity 0.35s;
+            opacity: 0;
+        }
+
+        .lang-card:hover::after {
+            opacity: 1;
+        }
+
+        .lang-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(102, 126, 234, 0.08);
+        }
+
+        /* Flag with subtle glow backdrop */
+        .lang-flag-wrap {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 0.9rem;
+            position: relative;
+            transition: all 0.35s;
+        }
+
+        .lang-card:hover .lang-flag-wrap {
+            background: rgba(102, 126, 234, 0.08);
+            border-color: rgba(102, 126, 234, 0.15);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.12);
+        }
+
+        .lang-flag {
+            font-size: 1.75rem;
+            line-height: 1;
+        }
+
+        .lang-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+            letter-spacing: -0.01em;
+        }
+
+        .lang-greeting {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+
+        /* ═══════════════════════════════════════════════════════
+           SETUP GUIDE — GET STARTED SECTION
+           ═══════════════════════════════════════════════════════ */
+        .setup-section {
+            background: var(--bg-secondary);
+            padding: 30px 0;
+        }
+
+        .setup-layout {
+            display: flex;
+            gap: 2.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        /* Tabs (left) */
+        .setup-tabs {
+            flex: 0 0 360px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .setup-tab {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            padding: 18px 20px;
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            color: rgba(255, 255, 255, 0.55);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .setup-tab::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.06), rgba(124, 58, 237, 0.03));
+            opacity: 0;
+            transition: opacity 0.35s;
+        }
+
+        .setup-tab:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(102, 126, 234, 0.2);
+            border-left-color: transparent;
+            color: rgba(255, 255, 255, 0.8);
+            transform: translateX(3px);
+        }
+
+        .setup-tab:hover::before {
+            opacity: 1;
+        }
+
+        .setup-tab.active {
+            background: rgba(102, 126, 234, 0.08);
+            border-color: rgba(102, 126, 234, 0.35);
+            border-left-color: transparent;
+            color: var(--text-primary);
+            transform: translateX(3px);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.08), inset 0 0 20px rgba(102, 126, 234, 0.03);
+        }
+
+        .setup-tab.active::before {
+            opacity: 1;
+        }
+
+        .setup-tab-num {
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            min-width: 28px;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .setup-tab .setup-tab-num {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .setup-tab:hover .setup-tab-num {
+            color: rgba(102, 126, 234, 0.7);
+        }
+
+        .setup-tab.active .setup-tab-num {
+            background: linear-gradient(135deg, var(--primary-400), #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .setup-tab-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .setup-tab-title {
+            font-size: 1.02rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            transition: color 0.3s;
+        }
+
+        .setup-tab:hover .setup-tab-title {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .setup-tab.active .setup-tab-title {
+            color: #fff;
+        }
+
+        .setup-tab-desc {
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.35);
+            transition: color 0.3s;
+        }
+
+        /* Card (right) — matches HiW card design */
+        .setup-visual {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .setup-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--glass-shadow-lg);
+            overflow: hidden;
+        }
+
+        .setup-card-header {
+            padding: 12px 16px;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .setup-card-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .setup-card-dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--glass-border);
+        }
+
+        .setup-card-dots span:first-child {
+            background: #ff5f56;
+        }
+
+        .setup-card-dots span:nth-child(2) {
+            background: #ffbd2e;
+        }
+
+        .setup-card-dots span:last-child {
+            background: #27ca40;
+        }
+
+        .setup-card-label {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            transition: color 0.3s;
+        }
+
+        .setup-card-body {
+            position: relative;
+            min-height: 360px;
+        }
+
+        /* Scenes — same pattern as HiW */
+        .setup-scene {
+            position: absolute;
+            inset: 0;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.45s ease, transform 0.45s ease;
+            pointer-events: none;
+        }
+
+        .setup-scene.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        /* — Shared form primitives — */
+        .ss-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .ss-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .ss-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .ss-input {
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .ss-input-typed {
+            display: flex;
+            align-items: center;
+            gap: 1px;
+        }
+
+        .ss-typed-text {
+            color: var(--text-primary);
+        }
+
+        .ss-cursor {
+            color: var(--primary-400);
+            animation: blink-cursor 1s step-end infinite;
+        }
+
+        @keyframes blink-cursor {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .ss-select {
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ss-tone-chips {
+            display: flex;
+            gap: 8px;
+        }
+
+        .ss-chip {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.76rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: transparent;
+            color: var(--text-muted);
+            transition: all 0.25s;
+        }
+
+        .ss-chip-active {
+            background: rgba(102, 126, 234, 0.15);
+            border-color: rgba(102, 126, 234, 0.3);
+            color: var(--primary-300);
+        }
+
+        .ss-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.76rem;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 4px;
+        }
+
+        .ss-status-ok {
+            color: #27ca40;
+            background: rgba(39, 202, 64, 0.08);
+            border: 1px solid rgba(39, 202, 64, 0.15);
+        }
+
+        /* — Scene 1: Platform Grid — */
+        .ss-platform-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .ss-plat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.02);
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            position: relative;
+            transition: all 0.25s;
+        }
+
+        .ss-plat-active {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: rgba(102, 126, 234, 0.25);
+            color: var(--primary-300);
+        }
+
+        .ss-plat-check {
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            font-size: 0.65rem;
+            color: #27ca40;
+        }
+
+        /* — Scene 2: Widget Config — */
+        .ss-widget-config {
+            display: flex;
+            gap: 18px;
+            height: 100%;
+        }
+
+        .ss-config-left {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .ss-config-right {
+            flex: 0 0 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ss-color-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .ss-swatch {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .ss-swatch-active {
+            border-color: white;
+            box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
+        }
+
+        .ss-widget-preview {
+            position: relative;
+        }
+
+        .ss-wp-window {
+            width: 120px;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .ss-wp-bar {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .ss-wp-body {
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .ss-wp-line {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 2px;
+        }
+
+        .ss-wp-bubble {
+            position: absolute;
+            bottom: -6px;
+            right: -6px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #7c3aed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(124, 58, 237, 0.4);
+            animation: bubble-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes bubble-pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* — Sync Stats Row (Scene 1) — */
+        .ss-sync-stats {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 8px;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .ss-sync-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .ss-sync-val {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-300);
+        }
+
+        .ss-sync-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .ss-sync-divider {
+            width: 1px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* — API Info (Scene 1) — */
+        .ss-api-info {
+            margin-top: 6px;
+            padding: 8px 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .ss-api-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .ss-api-key-label {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .ss-api-key-val {
+            font-size: 0.68rem;
+            color: var(--primary-300);
+            font-family: 'Courier New', monospace;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* — Larger Widget Preview (Scene 2) — */
+        .ss-widget-preview-lg {
+            position: relative;
+            width: 100%;
+        }
+
+        .ss-wpl-site {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            min-height: 200px;
+        }
+
+        .ss-wpl-bar {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 7px 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .ss-wpl-bar>span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .ss-wpl-bar>span:first-child {
+            background: #ff5f56;
+        }
+
+        .ss-wpl-bar>span:nth-child(2) {
+            background: #ffbd2e;
+        }
+
+        .ss-wpl-bar>span:nth-child(3) {
+            background: #27ca40;
+        }
+
+        .ss-wpl-url {
+            flex: 1;
+            text-align: center;
+            font-size: 0.58rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 4px;
+            padding: 2px 6px;
+            margin-left: 4px;
+        }
+
+        .ss-wpl-body {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .ss-wpl-line {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+        }
+
+        .ss-wpl-chat {
+            position: absolute;
+            bottom: 40px;
+            right: 8px;
+            width: 130px;
+            background: rgba(20, 20, 30, 0.95);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: chat-slide-up 0.5s ease-out;
+        }
+
+        @keyframes chat-slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ss-wpl-chat-head {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 8px;
+            background: rgba(124, 58, 237, 0.15);
+            border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+            font-size: 0.62rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .ss-wpl-chat-avatar {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-400), #a78bfa);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.48rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .ss-wpl-chat-msgs {
+            padding: 6px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .ss-wpl-msg {
+            font-size: 0.58rem;
+            padding: 4px 7px;
+            border-radius: 6px;
+            max-width: 90%;
+            line-height: 1.3;
+        }
+
+        .ss-wpl-msg-bot {
+            background: rgba(102, 126, 234, 0.15);
+            color: rgba(255, 255, 255, 0.8);
+            align-self: flex-start;
+        }
+
+        .ss-wpl-bubble {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #7c3aed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bubble-pulse 2s ease-in-out infinite;
+            box-shadow: 0 2px 12px rgba(124, 58, 237, 0.5);
+        }
+
+        /* — Scene 3: Knowledge Base — */
+        .ss-kb-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .ss-kb-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .ss-kb-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .ss-kb-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .ss-kb-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .ss-kb-name {
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .ss-kb-meta {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+        }
+
+        .ss-kb-badge {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .ss-kb-badge-ok {
+            color: #27ca40;
+            background: rgba(39, 202, 64, 0.1);
+        }
+
+        .ss-kb-badge-load {
+            color: #ffbd2e;
+            background: rgba(255, 189, 46, 0.1);
+            animation: pulse-badge 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-badge {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* — Scene 4: Embed & Go Live — */
+        .ss-embed {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ss-embed-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #27ca40;
+        }
+
+        .ss-embed-code {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .ss-code-bar {
+            padding: 8px 14px;
+            background: rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .ss-copy-badge {
+            color: #27ca40;
+            font-weight: 600;
+            font-size: 0.68rem;
+        }
+
+        .ss-code-block {
+            padding: 14px;
+            margin: 0;
+            background: rgba(0, 0, 0, 0.3);
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.76rem;
+            color: #a5b4fc;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .ss-embed-demo {
+            margin-top: 4px;
+            text-align: center;
+        }
+
+        .ss-ed-browser {
+            width: 200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ss-ed-bar {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .ss-ed-bar>span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .ss-ed-bar>span:first-child {
+            background: #ff5f56;
+        }
+
+        .ss-ed-bar>span:nth-child(2) {
+            background: #ffbd2e;
+        }
+
+        .ss-ed-bar>span:nth-child(3) {
+            background: #27ca40;
+        }
+
+        .ss-ed-url {
+            flex: 1;
+            text-align: center;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 4px;
+            padding: 2px 6px;
+            margin-left: 4px;
+        }
+
+        .ss-ed-body {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .ss-ed-line {
+            height: 3px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 2px;
+        }
+
+        .ss-ed-widget-dot {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #7c3aed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: bubble-pulse 2s ease-in-out infinite;
+            box-shadow: 0 2px 10px rgba(124, 58, 237, 0.5);
+        }
+
+        .ss-ed-label {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           RESPONSIVE — HOW IT WORKS
+           ═══════════════════════════════════════════════════════ */
+        @media (max-width: 900px) {
+            .hiw-track {
+                flex-direction: column;
+            }
+
+            /* Tighten HiW section spacing for mobile */
+            .hiw-section {
+                padding-bottom: 8px;
+            }
+
+            .hiw-header {
+                padding: 12px 1rem 8px;
+            }
+
+            .hiw-visual {
+                position: relative;
+                top: 0;
+                flex: none;
+                width: 100%;
+                padding: 0 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .hiw-steps {
+                padding: 0 1rem 0.5rem;
+            }
+
+            .hiw-step {
+                min-height: auto;
+                padding: 1.5rem 0;
+            }
+
+            /* Tighten language section */
+            .lang-section {
+                padding: 24px 0;
+            }
+
+            .section-header {
+                margin-bottom: 36px;
+            }
+
+            .lang-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .setup-layout {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1.25rem;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            /* Tabs → compact horizontal pill row */
+            .setup-tabs {
+                flex: none;
+                flex-direction: row;
+                overflow-x: auto;
+                gap: 6px;
+                padding-bottom: 8px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                justify-content: center;
+            }
+
+            .setup-tabs::-webkit-scrollbar {
+                display: none;
+            }
+
+            .setup-tab {
+                flex: 0 0 auto;
+                padding: 10px;
+                white-space: nowrap;
+                border-radius: 50%;
+                transform: none !important;
+                gap: 0;
+                width: 38px;
+                height: 38px;
+                justify-content: center;
+            }
+
+            .setup-tab.active {
+                border-bottom: none;
+                transform: none !important;
+                box-shadow: 0 0 14px rgba(102, 126, 234, 0.2);
+            }
+
+            .setup-tab::before {
+                border-radius: 50%;
+            }
+
+            /* Hide title + description — show numbers only */
+            .setup-tab-info {
+                display: none;
+            }
+
+            .setup-tab-num {
+                font-size: 0.78rem;
+                min-width: auto;
+                font-weight: 700;
+            }
+
+            /* Visual card → full width */
+            .setup-visual {
+                flex: none;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .setup-card {
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .setup-card-body {
+                min-height: 370px;
+            }
+
+            /* Platform grid */
+            .ss-platform-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+            }
+
+            /* Widget config → stack */
+            .ss-widget-config {
+                flex-direction: column;
+            }
+
+            .ss-config-right {
+                flex: none;
+            }
+
+            /* Large widget preview */
+            .ss-wpl-site {
+                min-height: 160px;
+            }
+
+            .ss-wpl-chat {
+                width: 120px;
+                bottom: 32px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .lang-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .setup-layout {
+                gap: 0.85rem;
+            }
+
+            /* Tabs — compact number circles on phones */
+            .setup-tab {
+                width: 34px;
+                height: 34px;
+                padding: 8px;
+            }
+
+            .setup-tab-num {
+                font-size: 0.72rem;
+            }
+
+            /* Card body */
+            .setup-card-body {
+                min-height: 350px;
+                padding: 0;
+            }
+
+            /* Scenes */
+            .setup-scene {
+                padding: 0.85rem;
+                gap: 10px;
+            }
+
+            /* Form elements inside scenes */
+            .ss-form {
+                gap: 10px;
+            }
+
+            .ss-label {
+                font-size: 0.62rem;
+            }
+
+            .ss-input {
+                padding: 8px 10px;
+                font-size: 0.78rem;
+                border-radius: 7px;
+            }
+
+            .ss-select {
+                padding: 8px 10px;
+                font-size: 0.78rem;
+                border-radius: 7px;
+            }
+
+            .ss-chip {
+                padding: 5px 10px;
+                font-size: 0.68rem;
+            }
+
+            .ss-status {
+                padding: 6px 10px;
+                font-size: 0.68rem;
+            }
+
+            /* Platform grid */
+            .ss-platform-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+            }
+
+            .ss-plat {
+                padding: 8px 4px;
+                font-size: 0.62rem;
+                gap: 4px;
+                border-radius: 8px;
+            }
+
+            .ss-plat svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .ss-plat-check {
+                font-size: 0.55rem;
+                top: 3px;
+                right: 4px;
+            }
+
+            /* Sync stats */
+            .ss-sync-stats {
+                gap: 8px;
+                padding: 6px 8px;
+            }
+
+            .ss-sync-val {
+                font-size: 0.88rem;
+            }
+
+            .ss-sync-label {
+                font-size: 0.58rem;
+            }
+
+            /* API info */
+            .ss-api-info {
+                padding: 6px 8px;
+            }
+
+            .ss-api-key-label,
+            .ss-api-key-val {
+                font-size: 0.6rem;
+            }
+
+            /* Widget config */
+            .ss-config-right {
+                flex: 0 0 auto;
+            }
+
+            .ss-color-row {
+                gap: 6px;
+            }
+
+            .ss-swatch {
+                width: 22px;
+                height: 22px;
+            }
+
+            /* Widget preview */
+            .ss-wp-window {
+                width: 100px;
+                height: 75px;
+            }
+
+            .ss-wp-bubble {
+                width: 26px;
+                height: 26px;
+            }
+
+            /* Large widget preview */
+            .ss-wpl-site {
+                min-height: 130px;
+            }
+
+            .ss-wpl-chat {
+                width: 100px;
+                bottom: 24px;
+                right: 6px;
+            }
+
+            .ss-wpl-chat-head {
+                padding: 4px 6px;
+                font-size: 0.52rem;
+            }
+
+            .ss-wpl-msg {
+                font-size: 0.48rem;
+            }
+
+            /* Embed code */
+            .ss-embed-code {
+                border-radius: 8px;
+            }
+
+            .ss-code-block {
+                font-size: 0.62rem;
+                padding: 8px;
+            }
+
+            .ss-ed-browser {
+                width: 160px;
+            }
+
+            /* Card header */
+            .setup-card-header {
+                padding: 8px 12px;
+                gap: 8px;
+            }
+
+            .setup-card-dots span {
+                width: 8px;
+                height: 8px;
+            }
+
+            .setup-card-label {
+                font-size: 0.68rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Animated Gradient Background -->
+    <div class="gradient-bg">
+        <div class="gradient-orb gradient-orb--1"></div>
+        <div class="gradient-orb gradient-orb--2"></div>
+        <div class="gradient-orb gradient-orb--3"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="landing-nav">
+        <div class="landing-nav-container">
+            <a href="#" class="landing-logo">
+                <div class="landing-logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                        <polyline points="2 17 12 22 22 17" />
+                        <polyline points="2 12 12 17 22 12" />
+                    </svg>
+                </div>
+                <span class="landing-logo-text">Apex Logistics AI</span>
+            </a>
+
+            <div class="landing-nav-links">
+                <a href="#features" class="landing-nav-link">Capabilities</a>
+                <a href="#setup" class="landing-nav-link">Fleet Setup</a>
+                <a href="#how-it-works" class="landing-nav-link">Architecture</a>
+                <a href="pages/client-dashboard.html#logistics" class="landing-nav-link" style="color:#818cf8;font-weight:600;">Control Tower ↗</a>
+            </div>
+
+            <div class="landing-nav-actions">
+                <button class="mobile-menu-btn"
+                    onclick="document.querySelector('.landing-nav-links').classList.toggle('open')" aria-label="Menu">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <a href="pages/admin.html" class="btn btn-secondary" style="margin-right: 8px;">Super Admin</a>
+                <a href="pages/login.html" class="btn btn-primary">
+                    Launch Dispatch Console
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                <span>Powered by Gradient Boosted ETA &amp; Telemetry Intelligence</span>
+            </div>
+
+            <h1 class="hero-title">
+                <span class="hero-title-line">Autonomous Logistics &amp;</span>
+                <span class="hero-title-line hero-title-gradient">Emotion-Gated Dispatch AI</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                Real-time fleet telemetry, ML transit ETA prediction, and emotion-gated exception management for modern logistics and freight operations across DHL, FedEx, UPS, and regional carriers.
+            </p>
+
+            <div class="hero-actions">
+                <a href="pages/client-dashboard.html#logistics" class="btn btn-primary btn-lg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="3" width="15" height="13" />
+                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                        <circle cx="5.5" cy="18.5" r="2.5" />
+                        <circle cx="18.5" cy="18.5" r="2.5" />
+                    </svg>
+                    Control Tower Console
+                </a>
+                <a href="pages/admin.html#fleet" class="btn btn-secondary btn-lg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    Global Fleet Radar
+                </a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-value">99.4%</span>
+                    <span class="hero-stat-label">ETA Accuracy</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value">50+</span>
+                    <span class="hero-stat-label">Active Telemetry Hubs</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-value">&lt;10ms</span>
+                    <span class="hero-stat-label">Fast-Path Latency</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hero Visual -->
+        <div class="hero-visual">
+            <div class="hero-visual-card glass-card">
+                <div class="hero-visual-header">
+                    <div class="hero-visual-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <span class="hero-visual-title">Live Dispatch Telemetry</span>
+                </div>
+                <div class="hero-visual-content">
+                    <div class="demo-message demo-message--customer">
+                        <div class="demo-message-avatar">M</div>
+                        <div class="demo-message-bubble">
+                            <span class="demo-message-text">Where is freight consignment SHP-20261022-A1B2? Customs delay status is unresolved!</span>
+                            <span class="demo-message-sentiment demo-message-sentiment--negative">
+                                <span class="sentiment-dot sentiment-dot--negative"></span>
+                                Urgent Delay — 94%
+                            </span>
+                        </div>
+                    </div>
+                    <div class="demo-message demo-message--ai">
+                        <div class="demo-message-bubble">
+                            <span class="demo-message-text">🚨 Delay Mitigation Protocol Triggered — Priority dispatch corridor assigned, carrier milestone updated.</span>
+                        </div>
+                        <div class="demo-message-avatar demo-message-avatar--ai">AI</div>
+                    </div>
+                    <div class="demo-analysis">
+                        <div class="demo-analysis-item">
+                            <span class="demo-analysis-label">Emotion</span>
+                            <span class="demo-analysis-value">Frustrated (Urgent)</span>
+                        </div>
+                        <div class="demo-analysis-item">
+                            <span class="demo-analysis-label">Escalation Risk</span>
+                            <div class="demo-analysis-bar">
+                                <div class="demo-analysis-bar-fill" style="width: 94%"></div>
+                            </div>
+                            <span class="demo-analysis-value">94%</span>
+                        </div>
+                        <div class="demo-analysis-item">
+                            <span class="demo-analysis-label">Carrier</span>
+                            <span class="demo-analysis-value" style="color:#fbbf24;font-weight:700;">DHL Express</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section (UNCHANGED) -->
+    <section id="features" class="features">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-badge">Features</span>
+                <h2 class="section-title">Intelligent Customer Support</h2>
+                <p class="section-subtitle">
+                    Our AI understands not just what customers say, but how they feel while saying it.
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card glass-card">
+                    <div class="feature-icon feature-icon--blue">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                            <line x1="9" y1="9" x2="9.01" y2="9" />
+                            <line x1="15" y1="9" x2="15.01" y2="9" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Sentiment Analysis</h3>
+                    <p class="feature-description">
+                        Detect customer emotions in real-time across 6 European languages with 94% accuracy.
+                        Identify anger, frustration, satisfaction, and urgency.
+                    </p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Real-time</span>
+                        <span class="feature-tag">Multilingual</span>
+                    </div>
+                </div>
+
+                <div class="feature-card glass-card">
+                    <div class="feature-icon feature-icon--purple">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Behavior Prediction</h3>
+                    <p class="feature-description">
+                        Anticipate customer needs before they express them. Predict escalation probability
+                        and take proactive action.
+                    </p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Predictive</span>
+                        <span class="feature-tag">Proactive</span>
+                    </div>
+                </div>
+
+                <div class="feature-card glass-card">
+                    <div class="feature-icon feature-icon--orange">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path
+                                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                            <line x1="12" y1="9" x2="12" y2="13" />
+                            <line x1="12" y1="17" x2="12.01" y2="17" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Carrier & TMS Integration</h3>
+                    <p class="feature-description">
+                        Seamlessly connect with DHL Express, FedEx Fleet, UPS Quantum View, TCS, or enterprise TMS —
+                        embed the autonomous tracking telemetry widget with a single code snippet.
+                    </p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Carrier APIs</span>
+                        <span class="feature-tag">Plug & Play</span>
+                    </div>
+                </div>
+
+                <!-- Logistics Feature Cards -->
+                <div class="feature-card glass-card">
+                    <div class="feature-icon feature-icon--blue">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="1" y="3" width="15" height="13" rx="2" />
+                            <path d="M16 8h4a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-4" />
+                            <polyline points="5 12 9 16 13 12" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Autonomous Waybill Telemetry</h3>
+                    <p class="feature-description">
+                        Consignees query waybills (e.g. SHP-20261022-A1B2) and get sub-second GPS telemetry, carrier
+                        logs, and gradient-boosted ML ETA calculations.
+                    </p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">ML ETA</span>
+                        <span class="feature-tag">Live Waybills</span>
+                    </div>
+                </div>
+
+                <div class="feature-card glass-card">
+                    <div class="feature-icon feature-icon--purple">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Carrier SLA & Tariff Matrix</h3>
+                    <p class="feature-description">
+                        Upload carrier SLAs, customs clearance requirements, and zone tariffs — auto-indexed into
+                        hybrid Vector RAG for exact policy and exception handling.
+                    </p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Vector RAG</span>
+                        <span class="feature-tag">Carrier SLAs</span>
+                    </div>
+                </div>
+
+                <div class="feature-card glass-card">
+                    <div class="feature-icon feature-icon--orange">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" />
+                            <line x1="8" y1="21" x2="16" y2="21" />
+                            <line x1="12" y1="17" x2="12" y2="21" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">4 Dispatch Widget Modes</h3>
+                    <p class="feature-description">
+                        Deploy Full Autonomous Dispatch, Live Telemetry Radar, Consignee POD Verification, or Carrier
+                        SLA FAQ modes matched to your operational touchpoints.
+                    </p>
+                    <div class="feature-tags">
+                        <span class="feature-tag">Configurable</span>
+                        <span class="feature-tag">4 Dispatch Modes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         GET STARTED — SETUP GUIDE SECTION
+         ═══════════════════════════════════════════════════════ -->
+    <section id="setup" class="setup-section">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-badge">Setup</span>
+                <h2 class="section-title">Deploy in Minutes</h2>
+                <p class="section-subtitle">
+                    Five streamlined steps from operator onboarding to active autonomous fleet dispatch — zero friction.
+                </p>
+            </div>
+
+            <div class="setup-layout">
+                <!-- LEFT: step tabs -->
+                <div class="setup-tabs">
+                    <button class="setup-tab active" data-setup="0">
+                        <span class="setup-tab-num">01</span>
+                        <div class="setup-tab-info">
+                            <span class="setup-tab-title">Fleet Profile</span>
+                            <span class="setup-tab-desc">Carrier identity, corridor & tone</span>
+                        </div>
+                    </button>
+                    <button class="setup-tab" data-setup="1">
+                        <span class="setup-tab-num">02</span>
+                        <div class="setup-tab-info">
+                            <span class="setup-tab-title">Connect Carrier / TMS</span>
+                            <span class="setup-tab-desc">Connect DHL, FedEx, UPS & TMS</span>
+                        </div>
+                    </button>
+                    <button class="setup-tab" data-setup="2">
+                        <span class="setup-tab-num">03</span>
+                        <div class="setup-tab-info">
+                            <span class="setup-tab-title">Configure Dispatch AI</span>
+                            <span class="setup-tab-desc">Telemetry mode & brand colors</span>
+                        </div>
+                    </button>
+                    <button class="setup-tab" data-setup="3">
+                        <span class="setup-tab-num">04</span>
+                        <div class="setup-tab-info">
+                            <span class="setup-tab-title">Manifests & SLAs</span>
+                            <span class="setup-tab-desc">Upload manifests & carrier tariffs</span>
+                        </div>
+                    </button>
+                    <button class="setup-tab" data-setup="4">
+                        <span class="setup-tab-num">05</span>
+                        <div class="setup-tab-info">
+                            <span class="setup-tab-title">Embed & Go Live</span>
+                            <span class="setup-tab-desc">Copy one line of telemetry script</span>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- RIGHT: interactive visual card -->
+                <div class="setup-visual">
+                    <div class="setup-card">
+                        <div class="setup-card-header">
+                            <div class="setup-card-dots"><span></span><span></span><span></span></div>
+                            <span class="setup-card-label" id="setupCardLabel">Fleet Profile</span>
+                        </div>
+                        <div class="setup-card-body">
+
+                            <!-- Scene 0: Fleet Profile -->
+                            <div class="setup-scene active" data-sscene="0">
+                                <div class="ss-form">
+                                    <div class="ss-field">
+                                        <span class="ss-label">Logistics Operator Name</span>
+                                        <div class="ss-input ss-input-typed">
+                                            <span class="ss-typed-text">Apex Global Trans & Freight</span>
+                                            <span class="ss-cursor">|</span>
+                                        </div>
+                                    </div>
+                                    <div class="ss-field">
+                                        <span class="ss-label">Logistics Vertical</span>
+                                        <div class="ss-select">
+                                            <span>Freight Forwarding & 3PL</span>
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <polyline points="6 9 12 15 18 9" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="ss-field">
+                                        <span class="ss-label">Agent Resolution Persona</span>
+                                        <div class="ss-tone-chips">
+                                            <span class="ss-chip ss-chip-active">Authoritative Dispatch</span>
+                                            <span class="ss-chip">Concierge Service</span>
+                                            <span class="ss-chip">Fast Telemetry</span>
+                                        </div>
+                                    </div>
+                                    <div class="ss-status ss-status-ok">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <polyline points="20 6 9 17 4 12" />
+                                        </svg>
+                                        Fleet profile configured
+                                    </div>
+                                    <div class="ss-status ss-status-ok">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <polyline points="20 6 9 17 4 12" />
+                                        </svg>
+                                        Carrier API webhooks mapped
+                                    </div>
+                                    <div class="ss-status ss-status-ok">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <polyline points="20 6 9 17 4 12" />
+                                        </svg>
+                                        Emotion-gated dispatch escalation active
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Scene 1: Connect Carrier / TMS -->
+                            <div class="setup-scene" data-sscene="1">
+                                <div class="ss-form">
+                                    <div class="ss-field">
+                                        <span class="ss-label">Carrier / TMS Network</span>
+                                        <div class="ss-platform-grid">
+                                            <div class="ss-plat ss-plat-active">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="1.5">
+                                                    <rect x="1" y="3" width="15" height="13" rx="1"/>
+                                                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                                                </svg>
+                                                <span>DHL Express</span>
+                                                <span class="ss-plat-check">✓</span>
+                                            </div>
+                                            <div class="ss-plat">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="1.5">
+                                                    <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                                                    <polyline points="2 17 12 22 22 17"/>
+                                                </svg>
+                                                <span>FedEx Fleet</span>
+                                            </div>
+                                            <div class="ss-plat">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="1.5">
+                                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                                </svg>
+                                                <span>UPS Quantum</span>
+                                            </div>
+                                            <div class="ss-plat">
+                                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="1.5">
+                                                    <circle cx="12" cy="12" r="10" />
+                                                    <line x1="2" y1="12" x2="22" y2="12" />
+                                                </svg>
+                                                <span>Custom TMS</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ss-field">
+                                        <span class="ss-label">TMS Dispatch Endpoint</span>
+                                        <div class="ss-input ss-input-typed">
+                                            <span class="ss-typed-text">https://tms.apexlogistics.com/api/v1</span>
+                                            <span class="ss-cursor">|</span>
+                                        </div>
+                                    </div>
+                                    <div class="ss-status ss-status-ok">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <polyline points="20 6 9 17 4 12" />
+                                        </svg>
+                                        Carrier API Connected
+                                    </div>
+                                    <!-- API info gathered -->
+                                    <div class="ss-api-info">
+                                        <div class="ss-api-row">
+                                            <span class="ss-api-key-label">Carrier Key</span>
+                                            <span class="ss-api-key-val">dhl-live-••••••••3f8a <svg width="11" height="11"
+                                                    viewBox="0 0 24 24" fill="none" stroke="#27ca40" stroke-width="3">
+                                                    <polyline points="20 6 9 17 4 12" />
+                                                </svg></span>
+                                                                             <div class="ss-api-row">
+                                            <span class="ss-api-key-label">Fleet ID</span>
+                                            <span class="ss-api-key-val">FLT-4829-DHL-PRO</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- Scene 2: Configure Widget -->
+                            <div class="setup-scene" data-sscene="2">
+                                <div class="ss-widget-config">
+                                    <div class="ss-config-left">
+                                        <div class="ss-field">
+                                            <span class="ss-label">Brand Color</span>
+                                            <div class="ss-color-row">
+                                                <span class="ss-swatch" style="background:#6366f1;"></span>
+                                                <span class="ss-swatch ss-swatch-active"
+                                                    style="background:#06b6d4;"></span>
+                                                <span class="ss-swatch" style="background:#10b981;"></span>
+                                                <span class="ss-swatch" style="background:#ef4444;"></span>
+                                                <span class="ss-swatch" style="background:#f59e0b;"></span>
+                                            </div>
+                                        </div>
+                                        <div class="ss-field">
+                                            <span class="ss-label">Position</span>
+                                            <div class="ss-tone-chips">
+                                                <span class="ss-chip">Left</span>
+                                                <span class="ss-chip ss-chip-active">Right</span>
+                                            </div>
+                                        </div>
+                                        <div class="ss-field">
+                                            <span class="ss-label">Dispatch Greeting</span>
+                                            <div class="ss-input ss-input-typed" style="font-size:0.72rem;">
+                                                <span class="ss-typed-text">Hi! Enter waybill # for live telemetry.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ss-config-right">
+                                        <div class="ss-widget-preview-lg">
+                                            <div class="ss-wpl-site">
+                                                <div class="ss-wpl-bar">
+                                                    <span></span><span></span><span></span>
+                                                    <div class="ss-wpl-url">tms.apexlogistics.com</div>
+                                                </div>
+                                                <div class="ss-wpl-body">
+                                                    <div class="ss-wpl-line" style="width:80%"></div>
+                                                    <div class="ss-wpl-line" style="width:55%"></div>
+                                                    <div class="ss-wpl-line" style="width:70%"></div>
+                                                    <div class="ss-wpl-line" style="width:45%"></div>
+                                                </div>
+                                                <!-- Chat widget overlay -->
+                                                <div class="ss-wpl-chat">
+                                                    <div class="ss-wpl-chat-head">
+                                                        <div class="ss-wpl-chat-avatar">🚛</div>
+                                                        <span>Dispatch AI</span>
+                                                    </div>
+                                                    <div class="ss-wpl-chat-msgs">
+                                                        <div class="ss-wpl-msg ss-wpl-msg-bot">Consignment Radar Active 🛰️</div>
+                                                        <div class="ss-wpl-msg ss-wpl-msg-bot">Enter tracking waybill #</div>
+                                                    </div>
+                                                </div>
+                                                <!-- Floating bubble -->
+                                                <div class="ss-wpl-bubble">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+                                                        <path
+                                                            d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Scene 3: Manifests & SLAs -->
+                            <div class="setup-scene" data-sscene="3">
+                                <div class="ss-form">
+                                    <div class="ss-kb-header">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="1.5">
+                                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                                            <polyline points="14 2 14 8 20 8" />
+                                        </svg>
+                                        <span>Logistics Knowledge Base</span>
+                                    </div>
+                                    <div class="ss-kb-list">
+                                        <div class="ss-kb-item">
+                                            <div class="ss-kb-icon">🚛</div>
+                                            <div class="ss-kb-info">
+                                                <span class="ss-kb-name">Active Waybill Manifest</span>
+                                                <span class="ss-kb-meta">50 consignments • synced</span>
+                                            </div>
+                                            <span class="ss-kb-badge ss-kb-badge-ok">Ready</span>
+                                        </div>
+                                        <div class="ss-kb-item">
+                                            <div class="ss-kb-icon">📋</div>
+                                            <div class="ss-kb-info">
+                                                <span class="ss-kb-name">Carrier SLA & Tariff Matrix</span>
+                                                <span class="ss-kb-meta">1,450 tokens • indexed</span>
+                                            </div>
+                                            <span class="ss-kb-badge ss-kb-badge-ok">Ready</span>
+                                        </div>
+                                        <div class="ss-kb-item">
+                                            <div class="ss-kb-icon">🌐</div>
+                                            <div class="ss-kb-info">
+                                                <span class="ss-kb-name">Customs & Zone Guidelines</span>
+                                                <span class="ss-kb-meta">980 tokens • indexed</span>
+                                            </div>
+                                            <span class="ss-kb-badge ss-kb-badge-ok">Ready</span>
+                                        </div>
+                                    </div>
+                                    <div class="ss-status ss-status-ok">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2.5">
+                                            <polyline points="20 6 9 17 4 12" />
+                                        </svg>
+                                        Fleet knowledge base vectorized
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Scene 4: Embed & Go Live -->
+                            <div class="setup-scene" data-sscene="4">
+                                <div class="ss-embed">
+                                    <div class="ss-embed-title">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#27ca40"
+                                            stroke-width="2">
+                                            <polyline points="20 6 9 17 4 12" />
+                                        </svg>
+                                        Dispatch Telemetry Ready!
+                                    </div>
+                                    <div class="ss-embed-code">
+                                        <div class="ss-code-bar">
+                                            <span>embed.html</span>
+                                            <span class="ss-copy-badge">Copied ✓</span>
+                                        </div>
+                                        <pre class="ss-code-block"><code>&lt;script
+  src="/widget/embed.js"
+  data-key="ak_live_7x9q..."
+  data-widget-type="full"
+&gt;&lt;/script&gt;</code></pre>
+                                    </div>
+                                    <div class="ss-embed-demo">
+                                        <div class="ss-ed-browser">
+                                            <div class="ss-ed-bar">
+                                                <span></span><span></span><span></span>
+                                                <div class="ss-ed-url">tms.yourlogistics.com</div>
+                                            </div>
+                                            <div class="ss-ed-body">
+                                                <div class="ss-ed-line" style="width:75%"></div>
+                                                <div class="ss-ed-line" style="width:55%"></div>
+                                                <div class="ss-ed-line" style="width:65%"></div>
+                                            </div>
+                                            <div class="ss-ed-widget-dot">
+                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+                                                    <path
+                                                        d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <span class="ss-ed-label">Dispatch widget active on fleet portal ✨</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         HOW IT WORKS — SCROLL-ANIMATED SECTION
+         ═══════════════════════════════════════════════════════ -->
+    <section id="how-it-works" class="hiw-section">
+        <div class="hiw-header">
+            <span class="section-badge">Process</span>
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">
+                Our five-layer architecture processes customer messages in milliseconds.
+            </p>
+        </div>
+
+        <div class="hiw-track">
+            <!-- LEFT: scrolling steps -->
+            <div class="hiw-steps">
+                <div class="hiw-step active" data-step="0">
+                    <div class="hiw-step-number">Step 01</div>
+                    <h3 class="hiw-step-title">Input Processing</h3>
+                    <p class="hiw-step-desc">
+                        A customer message arrives and the system instantly detects the language using XLM-RoBERTa
+                        with 99.2% accuracy — no configuration needed.
+                    </p>
+                    <div class="hiw-step-tags">
+                        <span class="hiw-step-tag">XLM-RoBERTa</span>
+                        <span class="hiw-step-tag">Auto-detection</span>
+                    </div>
+                </div>
+
+                <div class="hiw-step" data-step="1">
+                    <div class="hiw-step-number">Step 02</div>
+                    <h3 class="hiw-step-title">Sentiment Analysis</h3>
+                    <p class="hiw-step-desc">
+                        Multi-pipeline analysis detects the emotional state, intent, and cultural context
+                        behind every message. Frustration, joy, urgency — all scored in real-time.
+                    </p>
+                    <div class="hiw-step-tags">
+                        <span class="hiw-step-tag">Emotion Detection</span>
+                        <span class="hiw-step-tag">94% Accuracy</span>
+                    </div>
+                </div>
+
+                <div class="hiw-step" data-step="2">
+                    <div class="hiw-step-number">Step 03</div>
+                    <h3 class="hiw-step-title">Behavior Prediction</h3>
+                    <p class="hiw-step-desc">
+                        A dynamic state model tracks the customer's emotional trajectory across the
+                        conversation, predicting escalation probability in real-time.
+                    </p>
+                    <div class="hiw-step-tags">
+                        <span class="hiw-step-tag">State Tracking</span>
+                        <span class="hiw-step-tag">Predictive</span>
+                    </div>
+                </div>
+
+                <div class="hiw-step" data-step="3">
+                    <div class="hiw-step-number">Step 04</div>
+                    <h3 class="hiw-step-title">Response Generation</h3>
+                    <p class="hiw-step-desc">
+                        The AI generates contextually appropriate, empathetic responses in the customer's
+                        own language — matching tone and providing accurate product information.
+                    </p>
+                    <div class="hiw-step-tags">
+                        <span class="hiw-step-tag">Contextual</span>
+                        <span class="hiw-step-tag">Empathetic</span>
+                    </div>
+                </div>
+
+                <div class="hiw-step" data-step="4">
+                    <div class="hiw-step-number">Step 05</div>
+                    <h3 class="hiw-step-title">Escalation Decision</h3>
+                    <p class="hiw-step-desc">
+                        When frustration crosses the threshold, the system instantly routes the conversation
+                        to a human agent — with full emotional context and suggested responses.
+                    </p>
+                    <div class="hiw-step-tags">
+                        <span class="hiw-step-tag">Smart Routing</span>
+                        <span class="hiw-step-tag">Human Handoff</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: sticky interactive visual -->
+            <div class="hiw-visual">
+                <div class="hiw-card" id="hiwCard">
+                    <div class="hiw-card-header">
+                        <div class="hiw-card-dots"><span></span><span></span><span></span></div>
+                        <span class="hiw-card-label" id="hiwCardLabel">Input Processing</span>
+                    </div>
+                    <div class="hiw-card-body">
+
+                        <!-- Scene 0: Input Processing -->
+                        <div class="hiw-scene active" data-scene="0">
+                            <div class="scene-msg">
+                                <div class="scene-avatar scene-avatar--user">M</div>
+                                <div class="scene-bubble">
+                                    <div class="scene-bubble-text">This is the third time I'm asking about my
+                                        order! Very frustrated.</div>
+                                </div>
+                            </div>
+                            <div class="scene-analysis">
+                                <div class="scene-analysis-row">
+                                    <span class="scene-analysis-label">Language</span>
+                                    <span class="scene-analysis-value" style="color: var(--primary-400);">English</span>
+                                </div>
+                                <div class="scene-analysis-row">
+                                    <span class="scene-analysis-label">Confidence</span>
+                                    <div class="scene-analysis-bar">
+                                        <div class="scene-analysis-fill"
+                                            style="width:99%;background:linear-gradient(90deg,var(--primary-500),var(--secondary-500));">
+                                        </div>
+                                    </div>
+                                    <span class="scene-analysis-value">99.2%</span>
+                                </div>
+                                <div class="scene-analysis-row">
+                                    <span class="scene-analysis-label">Tokens</span>
+                                    <span class="scene-analysis-value">14</span>
+                                </div>
+                            </div>
+                            <div class="scene-lang-grid">
+                                <div class="scene-lang-item highlight">
+                                    <span class="scene-lang-flag">🇺🇸</span>
+                                    <span class="scene-lang-name">English</span>
+                                    <span class="scene-lang-detect">✓</span>
+                                </div>
+                                <div class="scene-lang-item">
+                                    <span class="scene-lang-flag">🇪🇸</span>
+                                    <span class="scene-lang-name">Spanish</span>
+                                </div>
+                                <div class="scene-lang-item">
+                                    <span class="scene-lang-flag">🇫🇷</span>
+                                    <span class="scene-lang-name">French</span>
+                                </div>
+                                <div class="scene-lang-item">
+                                    <span class="scene-lang-flag">🇩🇪</span>
+                                    <span class="scene-lang-name">German</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scene 1: Sentiment Analysis -->
+                        <div class="hiw-scene" data-scene="1">
+                            <div class="scene-msg">
+                                <div class="scene-avatar scene-avatar--user">M</div>
+                                <div class="scene-bubble">
+                                    <div class="scene-bubble-text">This is the third time I'm asking about my
+                                        order! Very frustrated.</div>
+                                    <div class="scene-badge scene-badge--neg">
+                                        <span class="scene-badge-dot"></span>
+                                        Frustrated — 92%
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="scene-analysis">
+                                <div class="scene-analysis-row">
+                                    <span class="scene-analysis-label">Frustration</span>
+                                    <div class="scene-analysis-bar">
+                                        <div class="scene-analysis-fill"
+                                            style="width:92%;background:linear-gradient(90deg,var(--negative),#f5576c);">
+                                        </div>
+                                    </div>
+                                    <span class="scene-analysis-value">92%</span>
+                                </div>
+                                <div class="scene-analysis-row">
+                                    <span class="scene-analysis-label">Anger</span>
+                                    <div class="scene-analysis-bar">
+                                        <div class="scene-analysis-fill"
+                                            style="width:78%;background:linear-gradient(90deg,var(--urgent), #ffa726);">
+                                        </div>
+                                    </div>
+                                    <span class="scene-analysis-value">78%</span>
+                                </div>
+                                <div class="scene-analysis-row">
+                                    <span class="scene-analysis-label">Urgency</span>
+                                    <div class="scene-analysis-bar">
+                                        <div class="scene-analysis-fill"
+                                            style="width:85%;background:linear-gradient(90deg,var(--urgent), #ffa726);">
+                                        </div>
+                                    </div>
+                                    <span class="scene-analysis-value">85%</span>
+                                </div>
+                                <div class="scene-analysis-row">
+                                    <span class="scene-analysis-label">Satisfaction</span>
+                                    <div class="scene-analysis-bar">
+                                        <div class="scene-analysis-fill"
+                                            style="width:8%;background:linear-gradient(90deg,var(--positive),#2ed573);">
+                                        </div>
+                                    </div>
+                                    <span class="scene-analysis-value">8%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scene 2: Behavior Prediction -->
+                        <div class="hiw-scene" data-scene="2">
+                            <div class="scene-analysis" style="gap:10px;">
+                                <div class="scene-analysis-row">
+                                    <span class="scene-analysis-label">Escalation Risk</span>
+                                    <div class="scene-analysis-bar" style="height:8px;">
+                                        <div class="scene-analysis-fill"
+                                            style="width:87%;background:linear-gradient(90deg,var(--urgent),var(--negative));">
+                                        </div>
+                                    </div>
+                                    <span class="scene-analysis-value" style="color:var(--negative-light);">87%</span>
+                                </div>
+                                <div class="scene-analysis-row">
+                                    <span class="scene-analysis-label">Churn Risk</span>
+                                    <div class="scene-analysis-bar" style="height:8px;">
+                                        <div class="scene-analysis-fill"
+                                            style="width:72%;background:linear-gradient(90deg,var(--urgent),#f5576c);">
+                                        </div>
+                                    </div>
+                                    <span class="scene-analysis-value" style="color:var(--urgent-light);">72%</span>
+                                </div>
+                                <div class="scene-analysis-row">
+                                    <span class="scene-analysis-label">Resolution</span>
+                                    <div class="scene-analysis-bar" style="height:8px;">
+                                        <div class="scene-analysis-fill"
+                                            style="width:35%;background:linear-gradient(90deg,var(--positive),#2ed573);">
+                                        </div>
+                                    </div>
+                                    <span class="scene-analysis-value">35%</span>
+                                </div>
+                            </div>
+                            <div class="scene-badge scene-badge--warn" style="align-self:flex-start;">
+                                <span class="scene-badge-dot"></span>
+                                ⚠ High escalation probability — emotional trajectory rising
+                            </div>
+                            <div class="scene-analysis">
+                                <div class="scene-analysis-row">
+                                    <span class="scene-analysis-label">Trajectory</span>
+                                    <span class="scene-analysis-value" style="color:var(--negative-light);">↑
+                                        Worsening</span>
+                                </div>
+                                <div class="scene-analysis-row">
+                                    <span class="scene-analysis-label">Repeat Issue</span>
+                                    <span class="scene-analysis-value" style="color:var(--urgent-light);">Yes (3rd
+                                        contact)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scene 3: Response Generation -->
+                        <div class="hiw-scene" data-scene="3">
+                            <div class="scene-msg">
+                                <div class="scene-avatar scene-avatar--user">M</div>
+                                <div class="scene-bubble">
+                                    <div class="scene-bubble-text">This is the third time I'm asking about my
+                                        order!</div>
+                                    <div class="scene-badge scene-badge--neg">
+                                        <span class="scene-badge-dot"></span>Frustrated — 92%
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="scene-response-card">
+                                <div class="scene-response-label">AI-Generated Response</div>
+                                <div class="scene-response-text">
+                                    I sincerely apologize for the repeated inconvenience, and I completely understand
+                                    your frustration. Let me locate your order right away. Can you share your order
+                                    number so I can give you an immediate update?
+                                </div>
+                            </div>
+                            <div class="scene-msg scene-msg--right">
+                                <div class="scene-avatar scene-avatar--ai">AI</div>
+                                <div class="scene-bubble scene-bubble--ai">
+                                    <div class="scene-bubble-text">I sincerely apologize. Let me locate your order
+                                        right away…</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scene 4: Escalation Decision -->
+                        <div class="hiw-scene" data-scene="4">
+                            <div class="scene-escalation">
+                                <div class="scene-escalation-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path
+                                            d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                                        <line x1="12" y1="9" x2="12" y2="13" />
+                                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                                    </svg>
+                                </div>
+                                <div class="scene-escalation-text">
+                                    <strong>Auto-Escalation Triggered</strong><br>
+                                    Frustration threshold exceeded — routing to human agent.
+                                </div>
+                            </div>
+                            <div class="scene-analysis">
+                                <div class="scene-analysis-row">
+                                    <span class="scene-analysis-label">Routed to</span>
+                                    <span class="scene-analysis-value" style="color:var(--positive-light);">Agent Sarah
+                                        M.</span>
+                                </div>
+                                <div class="scene-analysis-row">
+                                    <span class="scene-analysis-label">Context</span>
+                                    <span class="scene-analysis-value">Full history attached</span>
+                                </div>
+                                <div class="scene-analysis-row">
+                                    <span class="scene-analysis-label">Priority</span>
+                                    <span class="scene-analysis-value"
+                                        style="color:var(--negative-light);">Critical</span>
+                                </div>
+                            </div>
+                            <div class="scene-response-card" style="border-left-color:var(--positive);">
+                                <div class="scene-response-label" style="color:var(--positive-light);">Suggested
+                                    Response for Agent</div>
+                                <div class="scene-response-text">
+                                    "Hello! I can see this is your 3rd contact about this order. I'm personally going to
+                                    resolve this for you right now…"
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════
+         LANGUAGES — ENHANCED SECTION
+         ═══════════════════════════════════════════════════════ -->
+    <section id="languages" class="lang-section">
+        <div class="lang-container">
+            <div class="section-header">
+                <span class="section-badge">Global</span>
+                <h2 class="section-title">6 European Languages Supported</h2>
+                <p class="section-subtitle">
+                    Focused on quality over quantity — exceptional sentiment accuracy across 6 major European languages.
+                </p>
+            </div>
+
+            <div class="lang-grid">
+                <div class="lang-card">
+                    <div class="lang-flag-wrap"><span class="lang-flag">🇺🇸</span></div>
+                    <div class="lang-name">English</div>
+                    <div class="lang-greeting">"Hello, how can I help?"</div>
+                </div>
+                <div class="lang-card">
+                    <div class="lang-flag-wrap"><span class="lang-flag">🇪🇸</span></div>
+                    <div class="lang-name">Spanish</div>
+                    <div class="lang-greeting">"Hola, ¿en qué puedo ayudarle?"</div>
+                </div>
+                <div class="lang-card">
+                    <div class="lang-flag-wrap"><span class="lang-flag">🇫🇷</span></div>
+                    <div class="lang-name">French</div>
+                    <div class="lang-greeting">"Bonjour, comment puis-je vous aider?"</div>
+                </div>
+                <div class="lang-card">
+                    <div class="lang-flag-wrap"><span class="lang-flag">🇩🇪</span></div>
+                    <div class="lang-name">German</div>
+                    <div class="lang-greeting">"Hallo, wie kann ich Ihnen helfen?"</div>
+                </div>
+                <div class="lang-card">
+                    <div class="lang-flag-wrap"><span class="lang-flag">🇮🇹</span></div>
+                    <div class="lang-name">Italian</div>
+                    <div class="lang-greeting">"Ciao, come posso aiutarti?"</div>
+                </div>
+                <div class="lang-card">
+                    <div class="lang-flag-wrap"><span class="lang-flag">🇳🇱</span></div>
+                    <div class="lang-name">Dutch</div>
+                    <div class="lang-greeting">"Hallo, waarmee kan ik u helpen?"</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section (UNCHANGED) -->
+    <section class="cta">
+        <div class="section-container">
+            <div class="cta-card glass-card">
+                <div class="cta-content">
+                    <h2 class="cta-title">Ready to Transform Your Customer Support?</h2>
+                    <p class="cta-text">
+                        Experience the power of emotionally intelligent AI. Start your journey today.
+                    </p>
+                    <a href="pages/client-dashboard.html" class="btn btn-primary btn-lg">
+                        Get Started Now
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (UNCHANGED) -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="landing-logo">
+                    <div class="landing-logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                            <path d="M2 17l10 5 10-5" />
+                            <path d="M2 12l10 5 10-5" />
+                        </svg>
+                    </div>
+                    <span class="landing-logo-text">Behavioral AI</span>
+                </div>
+                <p class="footer-brand-text">
+                    Sentiment-Aware Escalation System for Global Customer Support
+                </p>
+            </div>
+
+            <div class="footer-info">
+                <p class="footer-project">Final Year Project | KFUEIT</p>
+                <p class="footer-author">Usman Shams | SWEN221101044</p>
+                <p class="footer-year">© 2025 All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/landing.js"></script>
+
+    <!-- How It Works scroll logic + Language bar animation -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // ═══════════════════════════════════════════════════════
+            // HOW IT WORKS — Scroll-driven step switcher
+            // ═══════════════════════════════════════════════════════
+            const steps = document.querySelectorAll('.hiw-step');
+            const scenes = document.querySelectorAll('.hiw-scene');
+            const cardLabel = document.getElementById('hiwCardLabel');
+            const labels = [
+                'Input Processing',
+                'Sentiment Analysis',
+                'Behavior Prediction',
+                'Response Generation',
+                'Escalation Decision'
+            ];
+
+            let currentStep = 0;
+
+            function setActiveStep(index) {
+                if (index === currentStep) return;
+                currentStep = index;
+
+                steps.forEach((s, i) => s.classList.toggle('active', i === index));
+                scenes.forEach((s, i) => s.classList.toggle('active', i === index));
+                if (cardLabel) cardLabel.textContent = labels[index] || '';
+            }
+
+            // Scroll-based step detection — robust, always syncs last step
+            function updateActiveStep() {
+                const viewportCenter = window.innerHeight / 2;
+                let closest = 0;
+                let closestDist = Infinity;
+
+                steps.forEach((s, i) => {
+                    const rect = s.getBoundingClientRect();
+                    const stepCenter = rect.top + rect.height / 2;
+                    const dist = Math.abs(stepCenter - viewportCenter);
+                    if (dist < closestDist) {
+                        closestDist = dist;
+                        closest = i;
+                    }
+                });
+
+                setActiveStep(closest);
+            }
+
+            // Throttled scroll listener
+            let scrollTick = false;
+            window.addEventListener('scroll', () => {
+                if (!scrollTick) {
+                    scrollTick = true;
+                    requestAnimationFrame(() => {
+                        updateActiveStep();
+                        scrollTick = false;
+                    });
+                }
+            });
+
+            updateActiveStep(); // initial sync
+
+            // Fade out the sticky visual when HiW section leaves viewport
+            const hiwSection = document.querySelector('.hiw-section');
+            const hiwVisual = document.querySelector('.hiw-visual');
+            if (hiwSection && hiwVisual) {
+                const sectionObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        hiwVisual.classList.toggle('faded', !entry.isIntersecting);
+                    });
+                }, { threshold: 0.05 });
+                sectionObserver.observe(hiwSection);
+            }
+            // ═══════════════════════════════════════════════════════
+            // SETUP GUIDE — Tab switching
+            // ═══════════════════════════════════════════════════════
+            const setupTabs = document.querySelectorAll('.setup-tab');
+            const setupScenes = document.querySelectorAll('.setup-scene');
+            const setupLabel = document.getElementById('setupCardLabel');
+            const setupLabels = [
+                'Business Profile',
+                'Connect Your Store',
+                'Configure Widget',
+                'Product Knowledge',
+                'Embed & Go Live'
+            ];
+
+            setupTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const idx = parseInt(tab.dataset.setup);
+                    setupTabs.forEach(t => t.classList.remove('active'));
+                    setupScenes.forEach(s => s.classList.remove('active'));
+                    tab.classList.add('active');
+                    const target = document.querySelector(`.setup-scene[data-sscene="${idx}"]`);
+                    if (target) target.classList.add('active');
+                    if (setupLabel) setupLabel.textContent = setupLabels[idx] || '';
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

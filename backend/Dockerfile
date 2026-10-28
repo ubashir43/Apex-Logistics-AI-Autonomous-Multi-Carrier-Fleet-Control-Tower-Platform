@@ -1,0 +1,77 @@
+# ═══════════════════════════════════════════════════════════════════
+# Apex Logistics AI — Backend Production Dockerfile
+# Autonomous Multi-Carrier Logistics Intelligence & Control Tower
+# Version: 6.0.0
+# ═══════════════════════════════════════════════════════════════════
+
+FROM python:3.13-slim AS base
+
+LABEL maintainer="Apex Logistics AI Team"
+LABEL version="6.0.0"
+LABEL description="Apex Logistics AI — Autonomous Multi-Carrier Logistics Intelligence, Topography-Adaptive GBDT ETA Prediction, Exception Routing"
+
+# ── Environment ──────────────────────────────────────────────────
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app
+ENV PYTHONIOENCODING=utf-8
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1
+ENV HF_HUB_DISABLE_SYMLINKS_WARNING=1
+
+WORKDIR /app
+
+# ── System Dependencies ─────────────────────────────────────────
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    g++ \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── Python Dependencies (cached layer) ──────────────────────────
+# Install torch CPU-only first (smaller image, no CUDA)
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu
+
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# ── Application Code ────────────────────────────────────────────
+# Build context is project root (set in docker-compose.yml)
+COPY backend/ /app/
+
+# ── Frontend (served as static files by FastAPI) ─────────────────
+COPY frontend/ /app/frontend/
+
+# ── Pre-download SentenceTransformer model (baked into image) ────
+# This avoids runtime download failures on Coolify redeploys.
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')" \
+    || echo "WARNING: Model pre-download failed, will retry at runtime"
+
+# ── Data Directories ────────────────────────────────────────────
+RUN mkdir -p /app/data /app/data/vector_store /app/data/kb_uploads /app/logs
+
+# ── Permissions ──────────────────────────────────────────────────
+RUN chmod -R 755 /app
+
+# ── Port ─────────────────────────────────────────────────────────
+EXPOSE 8000
+
+# ── Health Check ─────────────────────────────────────────────────
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8000/ || exit 1
+
+# ── Default Environment Variables ────────────────────────────────
+# NOTE: LLM_API_KEY, LLM_BASE_URL, LLM_MODEL, LLM_FALLBACK_MODEL
+# are NOT set here — they MUST come from Coolify runtime env vars.
+# Setting ENV VAR="" in Dockerfile overrides Coolify's injected values!
+ENV ENVIRONMENT="production"
+ENV DATABASE_URL="sqlite:///./data/app.db"
+ENV JWT_SECRET_KEY="change-this-in-production-minimum-32-characters"
+ENV VECTOR_STORE_DIR="/app/data/vector_store"
+ENV EMBEDDING_MODEL="paraphrase-multilingual-MiniLM-L12-v2"
+ENV LOG_LEVEL="INFO"
+ENV CORS_ORIGINS="*"
+ENV BACKEND_URL="https://sentimenta.snick.at"
+
+# ── Run ──────────────────────────────────────────────────────────
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]

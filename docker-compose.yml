@@ -1,0 +1,77 @@
+# ═══════════════════════════════════════════════════════════════════
+# Apex Logistics AI — Production Docker Compose Orchestration
+# Run: docker compose up -d --build
+# ═══════════════════════════════════════════════════════════════════
+
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: apex-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # ── Database ────────────────
+      - DATABASE_URL=sqlite:///./data/app.db
+      # ── LLM Engine (OpenRouter / OpenAI / Anthropic) ─────────
+      - LLM_API_KEY=${LLM_API_KEY:-}
+      - LLM_BASE_URL=${LLM_BASE_URL:-https://openrouter.ai/api/v1}
+      - LLM_MODEL=${LLM_MODEL:-anthropic/claude-sonnet-4}
+      - LLM_FALLBACK_MODEL=${LLM_FALLBACK_MODEL:-anthropic/claude-3-haiku}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      # ── Vector Store & Embeddings ────────────
+      - VECTOR_STORE_DIR=/app/data/vector_store
+      - EMBEDDING_MODEL=paraphrase-multilingual-MiniLM-L12-v2
+      # ── Security & Authentication ────────────
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-apex-production-secret-change-me-to-random-64-characters}
+      # ── Application Runtime ──────────────────
+      - ENVIRONMENT=production
+      - LOG_LEVEL=INFO
+      - DEBUG=false
+      - CORS_ORIGINS=*
+      - BACKEND_URL=${BACKEND_URL:-http://localhost:8000}
+    volumes:
+      - apex-data:/app/data
+      - apex-logs:/app/logs
+    networks:
+      - apex-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 45s
+      retries: 3
+
+  web:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: apex-web
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - apex-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/pages/login.html"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+volumes:
+  apex-data:
+    driver: local
+  apex-logs:
+    driver: local
+
+networks:
+  apex-network:
+    driver: bridge

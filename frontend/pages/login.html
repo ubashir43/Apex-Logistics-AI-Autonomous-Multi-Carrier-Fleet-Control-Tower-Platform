@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Apex Logistics AI — Dispatch Console Login">
+    <title>Login | Apex Logistics AI</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/css/design-system.css">
+    <link rel="stylesheet" href="/css/components.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #07070d;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* ── Particle Canvas ─────────────────────────────────── */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ── Ambient Glow Orbs (behind card) ─────────────────── */
+        .ambient-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .ambient-glow .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.18;
+        }
+
+        .ambient-glow .orb--1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #667eea, #764ba2);
+            top: -15%;
+            left: -10%;
+            animation: orbFloat1 25s ease-in-out infinite;
+        }
+
+        .ambient-glow .orb--2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #f093fb, #f5576c);
+            bottom: -10%;
+            right: -8%;
+            animation: orbFloat2 30s ease-in-out infinite;
+        }
+
+        .ambient-glow .orb--3 {
+            width: 280px;
+            height: 280px;
+            background: radial-gradient(circle, #4facfe, #00f2fe);
+            top: 50%;
+            left: 55%;
+            transform: translate(-50%, -50%);
+            animation: orbFloat3 22s ease-in-out infinite;
+        }
+
+        @keyframes orbFloat1 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(40px, 60px) scale(1.08);
+            }
+
+            66% {
+                transform: translate(-30px, 30px) scale(0.95);
+            }
+        }
+
+        @keyframes orbFloat2 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            33% {
+                transform: translate(-50px, -40px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(30px, -20px) scale(0.92);
+            }
+        }
+
+        @keyframes orbFloat3 {
+
+            0%,
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50% {
+                transform: translate(-45%, -55%) scale(1.15);
+            }
+        }
+
+        /* ── Login Container ─────────────────────────────────── */
+        .login-container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 440px;
+            padding: 2rem;
+            animation: cardEntry 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes cardEntry {
+            from {
+                opacity: 0;
+                transform: translateY(24px) scale(0.98);
+                filter: blur(4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+
+        /* ── Glass Card ──────────────────────────────────────── */
+        .login-card {
+            background: rgba(255, 255, 255, 0.025);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 3rem;
+            box-shadow:
+                0 32px 64px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+                0 1px 0 rgba(255, 255, 255, 0.06) inset;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle shimmer line at the top of the card */
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg,
+                    transparent 0%,
+                    rgba(102, 126, 234, 0.4) 30%,
+                    rgba(167, 139, 250, 0.6) 50%,
+                    rgba(102, 126, 234, 0.4) 70%,
+                    transparent 100%);
+            animation: shimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+
+            0%,
+            100% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* ── Logo ────────────────────────────────────────────── */
+        .login-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow:
+                0 8px 24px rgba(102, 126, 234, 0.35),
+                0 0 0 1px rgba(102, 126, 234, 0.15);
+            animation: logoPulse 3s ease-in-out infinite;
+            position: relative;
+        }
+
+        @keyframes logoPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 8px 24px rgba(102, 126, 234, 0.35), 0 0 0 1px rgba(102, 126, 234, 0.15);
+            }
+
+            50% {
+                box-shadow: 0 8px 32px rgba(102, 126, 234, 0.5), 0 0 0 1px rgba(102, 126, 234, 0.25);
+            }
+        }
+
+        .login-logo-icon svg {
+            width: 28px;
+            height: 28px;
+            color: white;
+        }
+
+        .login-logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ── Header ──────────────────────────────────────────── */
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .login-header p {
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 0.95rem;
+        }
+
+        /* ── Form ────────────────────────────────────────────── */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.55);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.95rem 1.15rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.22);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: rgba(102, 126, 234, 0.6);
+            background: rgba(102, 126, 234, 0.06);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.12);
+            transform: scale(1.008);
+        }
+
+        .form-group input.error {
+            border-color: #f5576c;
+            background: rgba(245, 87, 108, 0.06);
+        }
+
+        /* Animated underline on focus */
+        .form-group .focus-line {
+            position: absolute;
+            bottom: 0;
+            left: 12px;
+            right: 12px;
+            height: 2px;
+            border-radius: 1px;
+            background: linear-gradient(90deg, #667eea, #a78bfa, #667eea);
+            background-size: 200% 100%;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            transform-origin: left;
+        }
+
+        .form-group input:focus~.focus-line {
+            transform: scaleX(1);
+            animation: lineSlide 2s linear infinite;
+        }
+
+        @keyframes lineSlide {
+            0% {
+                background-position: 0% 0%;
+            }
+
+            100% {
+                background-position: 200% 0%;
+            }
+        }
+
+        /* ── Remember & Forgot ───────────────────────────────── */
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #667eea;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            font-size: 0.85rem;
+            color: rgba(102, 126, 234, 0.9);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-link:hover {
+            color: #a5b4fc;
+        }
+
+        /* ── Submit Button ───────────────────────────────────── */
+        .btn-submit {
+            width: 100%;
+            padding: 0.95rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.01em;
+        }
+
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #764ba2 0%, #c471f5 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-submit span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-submit:hover::before {
+            opacity: 1;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(102, 126, 234, 0.35);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-submit .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .btn-submit.loading .spinner {
+            display: inline-block;
+        }
+
+        .btn-submit.loading .btn-text {
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── Footer ──────────────────────────────────────────── */
+        .login-footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        .login-footer a {
+            color: rgba(102, 126, 234, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .login-footer a:hover {
+            color: #a5b4fc;
+        }
+
+        /* ── Messages ────────────────────────────────────────── */
+        .error-message {
+            background: rgba(245, 87, 108, 0.08);
+            border: 1px solid rgba(245, 87, 108, 0.25);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            color: #f5576c;
+            font-size: 0.85rem;
+            display: none;
+            animation: msgSlide 0.3s ease;
+        }
+
+        .success-message {
+            background: rgba(46, 213, 115, 0.08);
+            border: 1px solid rgba(46, 213, 115, 0.25);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            color: #2ed573;
+            font-size: 0.85rem;
+            display: none;
+            animation: msgSlide 0.3s ease;
+        }
+
+        .error-message.show,
+        .success-message.show {
+            display: block;
+        }
+
+        @keyframes msgSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Responsive ──────────────────────────────────────── */
+        @media (max-width: 768px) {
+            .ambient-glow .orb--1 {
+                width: 320px;
+                height: 320px;
+            }
+
+            .ambient-glow .orb--2 {
+                width: 260px;
+                height: 260px;
+            }
+
+            .ambient-glow .orb--3 {
+                width: 180px;
+                height: 180px;
+            }
+
+            .login-container {
+                max-width: 100%;
+                padding: 1.5rem;
+            }
+
+            .login-card {
+                padding: 2.5rem 2rem;
+                border-radius: 20px;
+            }
+
+            .login-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+            }
+
+            .login-container {
+                padding: 1rem;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .login-card {
+                padding: 2rem 1.25rem;
+                border-radius: 16px;
+            }
+
+            .login-logo-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 12px;
+            }
+
+            .login-logo-icon svg {
+                width: 22px;
+                height: 22px;
+            }
+
+            .login-logo-text {
+                font-size: 1.25rem;
+            }
+
+            .login-header h1 {
+                font-size: 1.35rem;
+            }
+
+            .login-header p {
+                font-size: 0.85rem;
+            }
+
+            .form-group input {
+                padding: 0.85rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .btn-submit {
+                padding: 0.85rem;
+                font-size: 0.95rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0.75rem;
+                align-items: flex-start;
+            }
+
+            .login-footer {
+                font-size: 0.82rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Ambient Glow Orbs -->
+    <div class="ambient-glow">
+        <div class="orb orb--1"></div>
+        <div class="orb orb--2"></div>
+        <div class="orb orb--3"></div>
+    </div>
+
+    <!-- Particle Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Login Container -->
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Logo -->
+            <div class="login-logo">
+                <a href="/" style="display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;">
+                    <div class="login-logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                            <polyline points="2 17 12 22 22 17" />
+                            <polyline points="2 12 12 17 22 12" />
+                        </svg>
+                    </div>
+                    <span class="login-logo-text">Apex Logistics AI</span>
+                </a>
+            </div>
+
+            <!-- Header -->
+            <div class="login-header">
+                <h1>Logistics Dispatch Console</h1>
+                <p>Sign in to your autonomous operations account</p>
+            </div>
+
+            <!-- Quick Demo Credentials Chips -->
+            <div style="display:flex;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap;">
+                <button type="button" onclick="fillCredentials('admin@behavioral-ai.com', 'admin@1122')" 
+                    style="flex:1;min-width:140px;background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3);color:#818cf8;border-radius:8px;padding:6px 10px;font-size:0.75rem;cursor:pointer;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;">
+                    <span>🛡️ Super Admin</span>
+                </button>
+                <button type="button" onclick="fillCredentials('client1@test.com', 'password123')" 
+                    style="flex:1;min-width:140px;background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.3);color:#22d3ee;border-radius:8px;padding:6px 10px;font-size:0.75rem;cursor:pointer;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;">
+                    <span>🚚 Fleet Dispatcher</span>
+                </button>
+            </div>
+
+            <!-- Messages -->
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+
+            <!-- Login Form -->
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    <div class="focus-line"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <div class="focus-line"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Remember me</label>
+                    </div>
+                    <a href="/pages/signup.html" class="forgot-link">Create an account</a>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <span class="btn-text">Sign In &rarr;</span>
+                    <span class="spinner"></span>
+                </button>
+            </form>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                Don't have an account? <a href="/pages/signup.html">Create one</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/auth.js"></script>
+    <script src="/js/api.js"></script>
+    <script>
+        // ═══════════════════════════════════════════════════════
+        // PARTICLE SYSTEM — Color-changing grains
+        // ═══════════════════════════════════════════════════════
+        (function () {
+            const canvas = document.getElementById('particleCanvas');
+            const ctx = canvas.getContext('2d');
+            let W, H;
+            let mouseX = -9999, mouseY = -9999;
+            const PARTICLE_COUNT = 80;
+            const particles = [];
+
+            // Color palette for cycling (HSL hues)
+            // indigo(235) → violet(270) → pink(320) → cyan(185) → back
+            const HUES = [235, 255, 270, 295, 320, 340, 200, 185];
+
+            function resize() {
+                W = canvas.width = window.innerWidth;
+                H = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            // Track mouse for proximity glow
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            document.addEventListener('mouseleave', () => {
+                mouseX = -9999;
+                mouseY = -9999;
+            });
+
+            class Particle {
+                constructor() {
+                    this.reset();
+                }
+
+                reset() {
+                    this.x = Math.random() * W;
+                    this.y = Math.random() * H;
+                    this.baseRadius = 0.8 + Math.random() * 1.8;
+                    this.radius = this.baseRadius;
+                    this.vx = (Math.random() - 0.5) * 0.3;
+                    this.vy = (Math.random() - 0.5) * 0.3;
+                    this.hueIndex = Math.random() * HUES.length;
+                    this.hueSpeed = 0.003 + Math.random() * 0.008;
+                    this.baseSat = 60 + Math.random() * 30;
+                    this.baseLight = 55 + Math.random() * 20;
+                    this.baseAlpha = 0.15 + Math.random() * 0.35;
+                    this.alpha = this.baseAlpha;
+                    // Twinkle phase
+                    this.twinklePhase = Math.random() * Math.PI * 2;
+                    this.twinkleSpeed = 0.008 + Math.random() * 0.015;
+                }
+
+                update() {
+                    // Drift
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    // Wrap edges
+                    if (this.x < -10) this.x = W + 10;
+                    if (this.x > W + 10) this.x = -10;
+                    if (this.y < -10) this.y = H + 10;
+                    if (this.y > H + 10) this.y = -10;
+
+                    // Cycle hue
+                    this.hueIndex = (this.hueIndex + this.hueSpeed) % HUES.length;
+
+                    // Twinkle
+                    this.twinklePhase += this.twinkleSpeed;
+                    const twinkle = 0.7 + 0.3 * Math.sin(this.twinklePhase);
+
+                    // Mouse proximity — glow brighter and grow
+                    const dx = this.x - mouseX;
+                    const dy = this.y - mouseY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const influence = Math.max(0, 1 - dist / 180);
+
+                    this.alpha = (this.baseAlpha * twinkle) + influence * 0.45;
+                    this.radius = this.baseRadius + influence * 2.5;
+                }
+
+                draw() {
+                    const i = Math.floor(this.hueIndex);
+                    const frac = this.hueIndex - i;
+                    const h1 = HUES[i % HUES.length];
+                    const h2 = HUES[(i + 1) % HUES.length];
+                    const hue = h1 + (h2 - h1) * frac;
+
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `hsla(${hue}, ${this.baseSat}%, ${this.baseLight}%, ${this.alpha})`;
+                    ctx.fill();
+
+                    // Glow halo for brighter particles
+                    if (this.alpha > 0.35) {
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.radius * 2.5, 0, Math.PI * 2);
+                        ctx.fillStyle = `hsla(${hue}, ${this.baseSat}%, ${this.baseLight}%, ${(this.alpha - 0.35) * 0.3})`;
+                        ctx.fill();
+                    }
+                }
+            }
+
+            // Init particles
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                particles.push(new Particle());
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, W, H);
+                for (const p of particles) {
+                    p.update();
+                    p.draw();
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
+
+
+        // ═══════════════════════════════════════════════════════
+        // LOGIN LOGIC
+        // ═══════════════════════════════════════════════════════
+        const loginForm = document.getElementById('loginForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+
+        const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? 'http://localhost:8000' : window.location.origin;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (!urlParams.get('keep_session')) {
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+                localStorage.removeItem('user');
+            }
+
+            const savedEmail = localStorage.getItem('remembered_email');
+            if (savedEmail) {
+                document.getElementById('email').value = savedEmail;
+                document.getElementById('remember').checked = true;
+            }
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember').checked;
+
+            if (!email || !password) {
+                showError('Please fill in all fields');
+                return;
+            }
+
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            hideMessages();
+
+            try {
+                const response = await fetch(`${API_BASE}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, remember_me: remember })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('access_token', data.access_token);
+                    localStorage.setItem('refresh_token', data.refresh_token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+
+                    if (remember) {
+                        localStorage.setItem('remembered_email', email);
+                    } else {
+                        localStorage.removeItem('remembered_email');
+                    }
+
+                    showSuccess('Login successful! Redirecting...');
+
+                    setTimeout(() => {
+                        const role = data.user.role;
+                        if (role === 'super_admin') {
+                            window.location.href = '/pages/admin.html';
+                        } else if (data.user.onboarding_completed) {
+                            window.location.href = '/pages/client-dashboard.html';
+                        } else {
+                            window.location.href = '/pages/onboarding.html';
+                        }
+                    }, 1000);
+                } else {
+                    showError(data.detail || 'Login failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('Unable to connect to server. Please try again later.');
+            } finally {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }
+        });
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            successMessage.classList.remove('show');
+        }
+
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.classList.add('show');
+            errorMessage.classList.remove('show');
+        }
+
+        function hideMessages() {
+            errorMessage.classList.remove('show');
+            successMessage.classList.remove('show');
+        }
+
+        window.fillCredentials = function(email, password) {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = password;
+            hideMessages();
+            showSuccess(`Filled demo credentials for ${email}`);
+            setTimeout(hideMessages, 2500);
+        };
+    </script>
+</body>
+
+</html>
