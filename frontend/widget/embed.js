@@ -28,8 +28,10 @@
         return;
     }
 
-    // Session persistence — FR-6.2.14
-    const STORAGE_KEY = `bai_session_${API_KEY.slice(0, 8)}`;
+    // Session persistence — FR-6.2.14 (v6 Apex Logistics Copilot namespace)
+    const STORAGE_KEY = `apex_copilot_session_v6_${API_KEY.slice(0, 8)}`;
+    // Clear legacy cache to prevent stale mock sessions
+    try { localStorage.removeItem(`bai_session_${API_KEY.slice(0, 8)}`); } catch {}
     const getSession = () => {
         try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch { return null; }
     };
@@ -109,7 +111,7 @@
     // STYLES (injected into Shadow DOM) — FR-6.1.3
     // ═══════════════════════════════════════════════════════════════
     function getStyles(config) {
-        const color = config?.theme_color || '#6366f1';
+        const color = config?.theme_color || '#4d148c';
         return `
       :host { all: initial; font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif; }
       * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -314,8 +316,8 @@
 
     function renderPanel(refs) {
         const { panel, config } = refs;
-        const botName = config?.bot_name || 'AI Assistant';
-        const welcomeMsg = config?.welcome_message || 'Hello! How can I help you today?';
+        const botName = config?.bot_name || 'Apex Logistics Copilot';
+        const welcomeMsg = config?.welcome_message || 'Hello! I am your Apex Logistics Copilot, your personal AI for the Fleet Management System. Enter a waybill tracking # or ask about live telemetry, route disruptions, or carrier SLAs.';
 
         panel.innerHTML = `
       <div class="bai-header">
@@ -341,7 +343,7 @@
           <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
         </button>
       </div>
-      ${config?.show_branding !== false ? '<div class="bai-branding">Powered by <a href="/">Apex Logistics AI</a></div>' : ''}
+      ${config?.show_branding !== false ? '<div class="bai-branding">Powered by <a href="/" target="_blank">Apex Logistics Copilot</a></div>' : ''}
     `;
 
         // Close button
@@ -468,7 +470,7 @@
                     addMessage({
                         content: response.response,
                         sender_type: response.is_human_agent ? 'agent' : 'ai',
-                        sender_name: response.is_human_agent ? 'Support Agent' : (refs.config?.bot_name || 'AI Assistant'),
+                        sender_name: response.is_human_agent ? 'Support Agent' : (refs.config?.bot_name || 'Apex Logistics Copilot'),
                         created_at: new Date().toISOString()
                     }, refs);
                 }
