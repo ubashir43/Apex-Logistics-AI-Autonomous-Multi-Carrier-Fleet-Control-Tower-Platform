@@ -10,3 +10,4 @@ for root, dirs, files in os.walk(root_dir):
                     if any(term in line.lower() for term in ["favicon", "logo-icon", "sidebar-logo"]):
                         rel = os.path.relpath(fp, root_dir)
                         print(f"{rel}:{idx+1} -> {line.strip()[:90]}")
+
