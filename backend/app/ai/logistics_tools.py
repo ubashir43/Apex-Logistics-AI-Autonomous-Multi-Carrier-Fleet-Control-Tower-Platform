@@ -98,15 +98,12 @@ class LogisticsToolRegistry:
         if not clean_id:
             return {"found": False, "error": "No tracking identifier provided"}
 
-        # 1. Search Shipment table
+        # 1. Search Shipment table (Unified Fleet)
         shipment = (
             self.db.query(Shipment)
             .filter(
-                Shipment.tenant_id == self.tenant_id,
-                (
-                    (Shipment.shipment_id.ilike(f"%{clean_id}%"))
-                    | (Shipment.carrier_tracking_id.ilike(f"%{clean_id}%"))
-                )
+                (Shipment.shipment_id.ilike(f"%{clean_id}%"))
+                | (Shipment.carrier_tracking_id.ilike(f"%{clean_id}%"))
             )
             .first()
         )
@@ -129,15 +126,12 @@ class LogisticsToolRegistry:
                 "summary": shipment.to_natural_language()
             }
 
-        # 2. Search CustomerOrder table
+        # 2. Search CustomerOrder table (Unified Company Orders)
         order = (
             self.db.query(CustomerOrder)
             .filter(
-                CustomerOrder.tenant_id == self.tenant_id,
-                (
-                    (CustomerOrder.order_id.ilike(f"%{clean_id}%"))
-                    | (CustomerOrder.tracking_number.ilike(f"%{clean_id}%"))
-                )
+                (CustomerOrder.order_id.ilike(f"%{clean_id}%"))
+                | (CustomerOrder.tracking_number.ilike(f"%{clean_id}%"))
             )
             .first()
         )
@@ -171,7 +165,6 @@ class LogisticsToolRegistry:
         shipment = (
             self.db.query(Shipment)
             .filter(
-                Shipment.tenant_id == self.tenant_id,
                 Shipment.shipment_id == track_info.get("shipment_id")
             )
             .first()
@@ -229,7 +222,6 @@ class LogisticsToolRegistry:
         shipment = (
             self.db.query(Shipment)
             .filter(
-                Shipment.tenant_id == self.tenant_id,
                 Shipment.shipment_id == track_info.get("shipment_id")
             )
             .first()

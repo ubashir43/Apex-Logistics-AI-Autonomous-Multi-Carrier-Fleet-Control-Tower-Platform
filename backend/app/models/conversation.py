@@ -83,5 +83,32 @@ class Conversation(Base):
         """Generate a unique session ID for widget chat sessions"""
         return f"sess_{secrets.token_urlsafe(24)}"
 
+    def to_dict(self) -> dict:
+        """Serialize conversation details to dictionary"""
+        return {
+            "id": self.id,
+            "session_id": self.session_id,
+            "tenant_id": self.tenant_id,
+            "customer_id": self.customer_id,
+            "customer_name": self.customer_name or "Anonymous Shipper",
+            "customer_email": self.customer_email,
+            "status": self.status,
+            "priority": self.priority,
+            "current_sentiment": self.current_sentiment,
+            "sentiment_score": self.sentiment_score,
+            "frustration_level": self.frustration_level,
+            "is_escalated": self.is_escalated,
+            "escalation_reason": self.escalation_reason,
+            "escalated_at": self.escalated_at.isoformat() if self.escalated_at else None,
+            "assigned_agent_id": self.assigned_agent_id,
+            "detected_language": self.detected_language,
+            "language_name": self.language_name,
+            "language_flag": self.language_flag,
+            "last_message_preview": self.last_message_preview,
+            "message_count": self.message_count,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
     def __repr__(self):
         return f"<Conversation {self.id} - {self.status}>"

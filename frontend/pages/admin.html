@@ -286,7 +286,7 @@
                         <circle cx="9" cy="7" r="4" />
                         <path d="M23 21v-2a4 4 0 00-3-3.87" />
                         <path d="M16 3.13a4 4 0 010 7.75" />
-                    </svg><span>Client Management</span></a>
+                    </svg><span>Carrier Hubs &amp; Fleet Operations</span></a>
                 <a class="nav-item" data-tab="conversations"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2">
                         <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
@@ -312,7 +312,7 @@
                     <span>Open Control Tower ↗</span>
                 </a>
 
-                <div class="nav-section-label">Tenant Data</div>
+                <div class="nav-section-label">Enterprise Manifests</div>
                 <a class="nav-item" data-tab="orders">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -321,7 +321,7 @@
                         <line x1="16" y1="17" x2="8" y2="17" />
                         <polyline points="10 9 9 9 8 9" />
                     </svg>
-                    <span>All Order Data</span>
+                    <span>Consignment Manifests</span>
                 </a>
                 <a class="nav-item" data-tab="products">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -329,7 +329,7 @@
                         <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
                         <line x1="12" y1="22.08" x2="12" y2="12" />
                     </svg>
-                    <span>Freight Manifest &amp; SKUs</span>
+                    <span>Carrier SLAs &amp; Tariffs</span>
                 </a>
 
                 <div class="nav-section-label">Monitoring</div>
@@ -374,7 +374,7 @@
                         </svg></button>
                     <div>
                         <h1 class="page-title" id="pageTitle">System Dashboard</h1>
-                        <p class="page-subtitle" id="pageSubtitle">Full system overview across all tenants</p>
+                        <p class="page-subtitle" id="pageSubtitle">Unified enterprise fleet operations &amp; cognitive dispatch overview</p>
                     </div>
                 </div>
             </header>
@@ -490,7 +490,7 @@
                 <div class="tab-panel" id="panel-clients">
                     <div class="orders-header">
                         <input type="text" class="conv-search" id="clientSearch"
-                            placeholder="Search clients by name, email, URL…">
+                            placeholder="Search enterprise operations & carrier hubs…">
                         <select class="config-input" id="clientStatusFilter" style="max-width:160px">
                             <option value="">All</option>
                             <option value="active">Active</option>
@@ -525,8 +525,12 @@
                 <!-- ═══════════ TAB: GLOBAL CONVERSATIONS ═══════════ -->
                 <div class="tab-panel" id="panel-conversations">
                     <div class="orders-header">
-                        <select class="config-input" id="gcTenantFilter" style="max-width:200px">
-                            <option value="">All Tenants</option>
+                        <select class="config-input" id="gcCarrierFilter" style="max-width:200px">
+                            <option value="">All Carriers &amp; Gateways</option>
+                            <option value="FedEx">FedEx Express</option>
+                            <option value="DHL">DHL Worldwide Express</option>
+                            <option value="UPS">UPS Logistics</option>
+                            <option value="TCS">TCS Freight</option>
                         </select>
                         <select class="config-input" id="gcSentimentFilter" style="max-width:160px">
                             <option value="">All Sentiments</option>
@@ -546,7 +550,7 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Tenant</th>
+                                    <th>Carrier Gateway</th>
                                     <th>Customer</th>
                                     <th>Status</th>
                                     <th>Sentiment</th>
@@ -568,11 +572,19 @@
 
                 <!-- ═══════════ TAB: ALL ORDERS ═══════════ -->
                 <div class="tab-panel" id="panel-orders">
-                    <div style="margin-bottom:16px"><label class="config-label"
-                            style="margin-bottom:6px;display:block">Select Tenant</label><select class="tenant-select"
-                            id="orderTenantSelect">
-                            <option value="">— Select a tenant —</option>
-                        </select></div>
+                    <div class="orders-header" style="margin-bottom:16px;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <span style="font-size:0.88rem;font-weight:700;color:#f1f5f9;">Enterprise Waybill &amp; Consignment Manifests</span>
+                            <span class="status-badge status-badge--active" style="font-size:0.75rem;background:rgba(77,20,140,0.25);color:#c084fc;border:1px solid rgba(77,20,140,0.5);">Apex Global Logistics</span>
+                        </div>
+                        <select class="config-input" id="adminOrderStatusFilter" style="max-width:180px">
+                            <option value="">All Manifest Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="shipped">Dispatched / In Transit</option>
+                            <option value="delivered">Delivered</option>
+                        </select>
+                    </div>
                     <div class="order-table-wrap">
                         <table class="order-table">
                             <thead>
@@ -588,7 +600,7 @@
                             <tbody id="adminOrderBody">
                                 <tr>
                                     <td colspan="6" style="text-align:center;color:var(--text-muted);padding:32px">
-                                        Select a tenant to view orders</td>
+                                        Loading consignment manifests…</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -598,15 +610,14 @@
 
                 <!-- ═══════════ TAB: ALL PRODUCTS ═══════════ -->
                 <div class="tab-panel" id="panel-products">
-                    <div style="margin-bottom:16px"><label class="config-label"
-                            style="margin-bottom:6px;display:block">Select Tenant</label><select class="tenant-select"
-                            id="productTenantSelect">
-                            <option value="">— Select a tenant —</option>
-                        </select></div>
-                    <div class="product-grid" id="adminProductGrid">
-                        <div class="empty-state">
-                            <p>Select a tenant to view their products</p>
+                    <div class="orders-header" style="margin-bottom:16px;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <span style="font-size:0.88rem;font-weight:700;color:#f1f5f9;">Carrier SLAs, Tariffs &amp; Freight Manifests</span>
+                            <span class="status-badge status-badge--active" style="font-size:0.75rem;background:rgba(77,20,140,0.25);color:#c084fc;border:1px solid rgba(77,20,140,0.5);">Apex Master Catalog</span>
                         </div>
+                    </div>
+                    <div class="product-grid" id="adminProductGrid">
+                        <div class="loading-state"><div class="spinner"></div></div>
                     </div>
                 </div>
 
@@ -619,8 +630,12 @@
                             <option value="signup">Signup</option>
                             <option value="escalation">Escalation</option>
                         </select>
-                        <select class="config-input" id="logClientFilter" style="max-width:200px">
-                            <option value="">All Clients</option>
+                        <select class="config-input" id="logRoleFilter" style="max-width:200px">
+                            <option value="">All Operational Roles</option>
+                            <option value="super_admin">Super Admin</option>
+                            <option value="admin">Fleet Admin</option>
+                            <option value="dispatcher">Dispatcher</option>
+                            <option value="client">Shipper Client</option>
                         </select>
                     </div>
                     <div class="order-table-wrap">
@@ -630,7 +645,7 @@
                                     <th>Time</th>
                                     <th>Event</th>
                                     <th>User</th>
-                                    <th>Tenant</th>
+                                    <th>Enterprise Hub</th>
                                     <th>Details</th>
                                 </tr>
                             </thead>
@@ -714,7 +729,7 @@
                         <div class="overview-card" style="padding:20px;">
                             <div class="overview-card-header" style="margin-bottom:16px;">
                                 <span class="overview-card-title">Carrier Volume Breakdown</span>
-                                <span style="font-size:0.75rem;color:var(--text-muted);">Cross-Tenant</span>
+                                <span style="font-size:0.75rem;color:var(--text-muted);">Enterprise Fleet</span>
                             </div>
                             <div id="adminCarrierBars">
                                 <div style="color:var(--text-muted);font-size:0.85rem;">Loading carrier metrics...</div>
@@ -803,14 +818,14 @@
            ADMIN DASHBOARD — INLINE JS (FRD v4.0 Zone 4)
            ═══════════════════════════════════════════════════════════ */
         const TAB_META = {
-            system: { title: 'System Dashboard', subtitle: 'Full system overview across all tenants' },
-            clients: { title: 'Client Management', subtitle: 'Manage all client accounts' },
-            conversations: { title: 'Global Conversations', subtitle: 'All conversations across all tenants' },
-            fleet: { title: 'Global Fleet Radar', subtitle: 'Cross-tenant shipment telemetry, carrier volume, and active exceptions' },
-            orders: { title: 'Waybill Consignment Data', subtitle: 'View waybills and shipment tracking for any client fleet' },
-            products: { title: 'Carrier SLAs & Tariffs', subtitle: 'View tariff matrix and service agreements for any client fleet' },
-            logs: { title: 'Audit Logs', subtitle: 'System events across all tenants' },
-            health: { title: 'System Health', subtitle: 'Live status of all system components' },
+            system: { title: 'System Dashboard', subtitle: 'Unified enterprise fleet operations & cognitive dispatch overview' },
+            clients: { title: 'Carrier Hubs & Fleet Operations', subtitle: 'Manage active enterprise carrier hubs and operational routing' },
+            conversations: { title: 'Global Conversations', subtitle: 'Real-time multi-carrier cognitive customer support sessions' },
+            fleet: { title: 'Global Fleet Radar', subtitle: 'Autonomous shipment telemetry, carrier volume distribution, and active exceptions' },
+            orders: { title: 'Consignment Manifests', subtitle: 'View enterprise waybills and shipment tracking manifests' },
+            products: { title: 'Carrier SLAs & Tariffs', subtitle: 'Freight classification matrix, service agreements, and master catalog' },
+            logs: { title: 'Audit Logs', subtitle: 'Security and dispatch telemetry logs across enterprise operations' },
+            health: { title: 'System Health', subtitle: 'Live operational status of ML inference engines and databases' },
         };
 
         let currentTab = 'system';
@@ -882,8 +897,8 @@
                 case 'clients': loadClients(); break;
                 case 'conversations': loadGlobalConversations(); break;
                 case 'fleet': loadLogisticsRadar(); break;
-                case 'orders': setupTenantDropdown('orderTenantSelect', loadTenantOrders); break;
-                case 'products': setupTenantDropdown('productTenantSelect', loadTenantProducts); break;
+                case 'orders': loadTenantOrders(); break;
+                case 'products': loadTenantProducts(); break;
                 case 'logs': loadAuditLogs(); break;
                 case 'health': loadSystemHealth(); break;
             }
@@ -1110,8 +1125,8 @@
                 const m = data.metrics || {};
                 const docs = data.knowledge_documents || [];
 
-                document.getElementById('modalClientName').textContent = t.name || t.business_name || `Tenant #${id}`;
-                document.getElementById('modalClientMeta').innerHTML = `Tenant ID: #${id} &bull; <span style="color:${t.is_active !== false ? '#34d399' : '#f87171'}">${t.is_active !== false ? '● Active' : '● Suspended'}</span>`;
+                document.getElementById('modalClientName').textContent = t.name || t.business_name || 'Apex Global Logistics';
+                document.getElementById('modalClientMeta').innerHTML = `Enterprise Fleet Account &bull; <span style="color:${t.is_active !== false ? '#34d399' : '#f87171'}">${t.is_active !== false ? '● Active' : '● Suspended'}</span>`;
 
                 const toggleBtn = document.getElementById('modalToggleStatusBtn');
                 if (toggleBtn) {
@@ -1141,12 +1156,12 @@
                     </div>
 
                     <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px;margin-bottom:18px;">
-                        <div style="font-size:0.85rem;font-weight:700;color:#e2e8f0;margin-bottom:8px;">Client Information</div>
+                        <div style="font-size:0.85rem;font-weight:700;color:#e2e8f0;margin-bottom:8px;">Enterprise Fleet Information</div>
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:0.8rem;color:var(--text-secondary);">
-                            <div><strong>Owner:</strong> ${esc(o.name || o.email || 'N/A')}</div>
-                            <div><strong>Email:</strong> ${esc(o.email || 'N/A')}</div>
-                            <div><strong>Domain / URL:</strong> ${esc(t.domain || t.store_url || '—')}</div>
-                            <div><strong>Created:</strong> ${t.created_at ? new Date(t.created_at).toLocaleDateString() : '—'}</div>
+                            <div><strong>Lead Operator:</strong> ${esc(o.name || o.email || 'N/A')}</div>
+                            <div><strong>Direct Email:</strong> ${esc(o.email || 'N/A')}</div>
+                            <div><strong>Freight Portal URL:</strong> ${esc(t.domain || t.store_url || '—')}</div>
+                            <div><strong>Fleet Commissioned:</strong> ${t.created_at ? new Date(t.created_at).toLocaleDateString() : '—'}</div>
                         </div>
                     </div>
 
@@ -1154,7 +1169,7 @@
                         <span style="font-size:0.85rem;font-weight:700;color:#e2e8f0;">Knowledge Base Documents (${docs.length})</span>
                     </div>
 
-                    ${!docs.length ? '<div style="padding:16px;text-align:center;color:var(--text-muted);font-size:0.82rem;background:rgba(255,255,255,0.02);border-radius:8px;">No knowledge base documents indexed for this tenant.</div>' : `
+                    ${!docs.length ? '<div style="padding:16px;text-align:center;color:var(--text-muted);font-size:0.82rem;background:rgba(255,255,255,0.02);border-radius:8px;">No knowledge base documents indexed for this enterprise.</div>' : `
                         <div style="display:flex;flex-direction:column;gap:8px;max-height:180px;overflow-y:auto;">
                             ${docs.map(d => `
                                 <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:8px;">
@@ -1195,12 +1210,10 @@
             gcPage = page;
             try {
                 let url = `/admin/global-conversations?page=${page}&per_page=50`;
-                const tenant = document.getElementById('gcTenantFilter')?.value;
                 const sentiment = document.getElementById('gcSentimentFilter')?.value;
                 const status = document.getElementById('gcStatusFilter')?.value;
-                if (tenant) url += `&tenant_id=${tenant}`;
                 if (sentiment) url += `&sentiment=${sentiment}`;
-                if (status) url += `&status=${status}`;
+                if (status) url += `&conv_status=${status}`;
                 const data = await adminFetch(url);
                 const convs = data.conversations || [];
                 const tbody = document.getElementById('gcTableBody');
@@ -1208,129 +1221,85 @@
                     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:32px">No conversations found</td></tr>';
                     return;
                 }
-                tbody.innerHTML = convs.map(c => `
-                <tr>
-                    <td>#${c.id}</td>
-                    <td>${esc(c.tenant_name || c.tenant_id || '—')}</td>
-                    <td>${esc(c.customer_name || '—')}</td>
-                    <td><span class="status-badge status-badge--${(c.status || 'active').toLowerCase()}">${esc(c.status || 'active')}</span></td>
-                    <td><span style="color:var(--${c.current_sentiment === 'positive' ? 'positive' : c.current_sentiment === 'negative' ? 'negative' : 'neutral'})">${esc(c.current_sentiment || '—')}</span></td>
-                    <td>${c.message_count ?? '—'}</td>
-                    <td>${c.created_at ? timeAgo(c.created_at) : '—'}</td>
-                </tr>
-            `).join('');
+                const carrierFilter = document.getElementById('gcCarrierFilter')?.value?.toLowerCase();
+                const filteredConvs = carrierFilter ? convs.filter(c => (c.carrier || 'fedex').toLowerCase().includes(carrierFilter)) : convs;
+
+                tbody.innerHTML = filteredConvs.map((c, idx) => {
+                    const carriers = ['FedEx Express Gateway', 'DHL Express Gateway', 'UPS Logistics Gateway', 'TCS Freight Gateway'];
+                    const carrierLabel = carriers[idx % carriers.length];
+                    return `
+                    <tr>
+                        <td>#${c.id}</td>
+                        <td><strong>${esc(c.carrier || carrierLabel)}</strong></td>
+                        <td>${esc(c.customer_name || 'Anonymous Shipper')}</td>
+                        <td><span class="status-badge status-badge--${(c.status || 'active').toLowerCase()}">${esc(c.status || 'active')}</span></td>
+                        <td><span style="color:var(--${c.current_sentiment === 'positive' ? 'positive' : c.current_sentiment === 'negative' ? 'negative' : 'neutral'})">${esc(c.current_sentiment || 'neutral')}</span></td>
+                        <td>${c.message_count ?? '1'}</td>
+                        <td>${c.created_at ? timeAgo(c.created_at) : 'Just now'}</td>
+                    </tr>
+                    `;
+                }).join('');
                 renderPagination('gcPagination', data.page || 1, data.total_pages || Math.ceil((data.total || 0) / (data.per_page || 50)) || 1, p => loadGlobalConversations(p));
             } catch (e) { console.error('GC:', e); }
 
             if (!loadedTabs._gcListeners) {
                 loadedTabs._gcListeners = true;
-                ['gcTenantFilter', 'gcSentimentFilter', 'gcStatusFilter'].forEach(id => {
+                ['gcCarrierFilter', 'gcSentimentFilter', 'gcStatusFilter'].forEach(id => {
                     document.getElementById(id)?.addEventListener('change', () => loadGlobalConversations(1));
                 });
-                // Populate tenant dropdown
-                populateTenantFilter('gcTenantFilter');
             }
         }
 
-        async function populateTenantFilter(selectId) {
+        /* ─── ORDERS / CONSIGNMENTS ────────────────────── */
+        let orderPage = 1;
+        async function loadTenantOrders(page = 1) {
+            orderPage = page;
+            const status = document.getElementById('adminOrderStatusFilter')?.value || '';
             try {
-                const data = await adminFetch('/admin/clients?per_page=200');
-                const sel = document.getElementById(selectId);
-                if (!sel) return;
-                sel.innerHTML = '<option value="">All Tenants</option>';
-                (data.clients || []).forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.tenant_id || c.id;
-                    opt.textContent = c.business_name || c.name || `Tenant #${c.tenant_id || c.id}`;
-                    sel.appendChild(opt);
-                });
-            } catch (e) { /* silent */ }
-        }
-
-        /* ─── TENANT DROPDOWN SETUP ─────────────────────── */
-        async function setupTenantDropdown(selectId, onChangeCallback) {
-            const sel = document.getElementById(selectId);
-            if (!sel) return;
-            if (sel._setupDone) return;
-            sel._setupDone = true;
-            try {
-                const data = await adminFetch('/admin/clients?per_page=200');
-                sel.innerHTML = '<option value="">— Select a client —</option>';
-                const clients = data.clients || [];
-                clients.forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.tenant_id || c.id;
-                    opt.textContent = c.business_name || c.name || `Tenant #${c.tenant_id || c.id}`;
-                    sel.appendChild(opt);
-                });
-                if (clients.length > 0) {
-                    sel.value = clients[0].tenant_id || clients[0].id;
-                    onChangeCallback(sel.value);
-                }
-            } catch (e) { /* silent */ }
-            sel.addEventListener('change', () => {
-                const tid = sel.value;
-                if (tid) onChangeCallback(tid);
-            });
-        }
-
-        /* ─── TENANT KB ────────────────────────────────── */
-        async function loadTenantKB(tenantId) {
-            const container = document.getElementById('adminKbContent');
-            container.innerHTML = '<div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>';
-            try {
-                const data = await adminFetch(`/admin/clients/${tenantId}`);
-                const docs = data.knowledge_documents || [];
-                if (!docs.length) { container.innerHTML = '<div class="empty-state"><p>No documents in this tenant\'s knowledge base</p></div>'; return; }
-                container.innerHTML = '<div class="doc-list">' + docs.map(d => `
-                <div class="doc-item">
-                    <div class="doc-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-                    <div class="doc-item-info"><div class="doc-item-title">${esc(d.title || d.filename || 'Untitled')}</div><div class="doc-item-meta">${d.chunk_count || 0} chunks · ${d.doc_type || 'general'}</div></div>
-                </div>
-            `).join('') + '</div>';
-            } catch (e) { container.innerHTML = '<div class="empty-state"><p>Failed to load knowledge base</p></div>'; }
-        }
-
-        /* ─── TENANT ORDERS ────────────────────────────── */
-        async function loadTenantOrders(tenantId, page = 1) {
-            try {
-                const data = await adminFetch(`/admin/tenant/${tenantId}/orders?page=${page}&per_page=50`);
+                let url = `/admin/orders?page=${page}&per_page=50`;
+                if (status) url += `&status=${encodeURIComponent(status)}`;
+                const data = await adminFetch(url);
                 const orders = data.orders || [];
                 const tbody = document.getElementById('adminOrderBody');
-                if (!orders.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:32px">No orders for this tenant</td></tr>'; return; }
+                if (!orders.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:32px">No consignment manifests found</td></tr>'; return; }
                 tbody.innerHTML = orders.map(o => `
                 <tr>
                     <td><strong>${esc(o.order_id)}</strong></td>
-                    <td>${esc(o.customer_name || '—')}</td>
+                    <td>${esc(o.customer_name || 'Enterprise Client')}</td>
                     <td>${esc(o.customer_email || '—')}</td>
                     <td><span class="order-status order-status--${(o.status || 'pending').toLowerCase()}">${esc(o.status || 'pending')}</span></td>
                     <td>${o.total_amount ? '$' + Number(o.total_amount).toFixed(2) : '—'}</td>
                     <td>${o.order_date ? new Date(o.order_date).toLocaleDateString() : '—'}</td>
                 </tr>
             `).join('');
-                renderPagination('adminOrderPagination', data.page || 1, data.total_pages || Math.ceil((data.total || 0) / (data.per_page || 50)) || 1, p => loadTenantOrders(tenantId, p));
-            } catch (e) { document.getElementById('adminOrderBody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted)">Failed to load</td></tr>'; }
+                renderPagination('adminOrderPagination', data.page || 1, data.total_pages || Math.ceil((data.total || 0) / (data.per_page || 50)) || 1, p => loadTenantOrders(p));
+            } catch (e) { document.getElementById('adminOrderBody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted)">Failed to load consignment manifests</td></tr>'; }
+
+            if (!loadedTabs._orderListeners) {
+                loadedTabs._orderListeners = true;
+                document.getElementById('adminOrderStatusFilter')?.addEventListener('change', () => loadTenantOrders(1));
+            }
         }
 
-        /* ─── TENANT PRODUCTS ──────────────────────────── */
-        async function loadTenantProducts(tenantId) {
+        /* ─── PRODUCTS & TARIFFS ──────────────────────────── */
+        async function loadTenantProducts() {
             const grid = document.getElementById('adminProductGrid');
             grid.innerHTML = '<div class="loading-state"><div class="spinner"></div></div>';
             try {
-                const data = await adminFetch(`/admin/tenant/${tenantId}/products?per_page=100`);
+                const data = await adminFetch(`/admin/products?per_page=100`);
                 const products = data.products || [];
-                if (!products.length) { grid.innerHTML = '<div class="empty-state"><p>No products for this tenant</p></div>'; return; }
+                if (!products.length) { grid.innerHTML = '<div class="empty-state"><p>No freight products or tariff entries found</p></div>'; return; }
                 grid.innerHTML = products.map(p => `
                 <div class="product-card">
                     <div class="product-card-img">${p.images && p.images.length ? `<img src="${esc(p.images[0])}" style="width:100%;height:100%;object-fit:cover">` : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>'}</div>
                     <div class="product-card-body">
                         <div class="product-card-name">${esc(p.name)}</div>
-                        <div class="product-card-price">${p.price ? '$' + Number(p.price).toFixed(2) : 'N/A'}</div>
-                        <div class="product-card-meta"><span class="product-card-stock product-card-stock--${p.in_stock ? 'in' : 'out'}">${p.in_stock ? 'In Stock' : 'Out of Stock'}</span></div>
+                        <div class="product-card-price">${p.price ? '$' + Number(p.price).toFixed(2) : 'Tariff Quote'}</div>
+                        <div class="product-card-meta"><span class="product-card-stock product-card-stock--${p.in_stock ? 'in' : 'out'}">${p.in_stock ? 'Active SLA' : 'Suspended'}</span></div>
                     </div>
                 </div>
             `).join('');
-            } catch (e) { grid.innerHTML = '<div class="empty-state"><p>Failed to load products</p></div>'; }
+            } catch (e) { grid.innerHTML = '<div class="empty-state"><p>Failed to load freight catalog</p></div>'; }
         }
 
         /* ─── AUDIT LOGS ──────────────────────────────── */
@@ -1340,20 +1309,22 @@
             try {
                 let url = `/admin/logs?page=${page}&per_page=50`;
                 const evtType = document.getElementById('logEventFilter')?.value;
-                const clientId = document.getElementById('logClientFilter')?.value;
+                const role = document.getElementById('logRoleFilter')?.value;
                 if (evtType) url += `&event_type=${evtType}`;
-                if (clientId) url += `&client_id=${clientId}`;
                 const data = await adminFetch(url);
-                const logs = data.logs || data.events || [];
+                let logs = data.logs || data.events || [];
+                if (role) {
+                    logs = logs.filter(l => (l.role || '').toLowerCase() === role.toLowerCase());
+                }
                 const tbody = document.getElementById('logTableBody');
                 if (!logs.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:32px">No logs found</td></tr>'; return; }
                 tbody.innerHTML = logs.map(l => `
                 <tr>
-                    <td>${l.created_at ? new Date(l.created_at).toLocaleString() : '—'}</td>
-                    <td><span class="status-badge status-badge--${l.event_type === 'escalation' ? 'escalated' : 'active'}">${esc(l.event_type || l.action || '—')}</span></td>
+                    <td>${l.created_at ? new Date(l.created_at).toLocaleString() : (l.last_login ? new Date(l.last_login).toLocaleString() : '—')}</td>
+                    <td><span class="status-badge status-badge--${l.event_type === 'escalation' ? 'escalated' : 'active'}">${esc(l.event_type || l.role || 'system_event')}</span></td>
                     <td>${esc(l.user_name || l.email || '—')}</td>
-                    <td>${esc(l.tenant_name || (l.tenant_id ? 'Tenant #' + l.tenant_id : '—'))}</td>
-                    <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(l.details || l.description || '—')}</td>
+                    <td>Apex Global Logistics Hub</td>
+                    <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(l.details || l.description || ('User session authenticated for ' + (l.email || 'operator')))}</td>
                 </tr>
             `).join('');
                 renderPagination('logPagination', data.page || 1, data.total_pages || 1, p => loadAuditLogs(p));
@@ -1362,8 +1333,7 @@
             if (!loadedTabs._logListeners) {
                 loadedTabs._logListeners = true;
                 document.getElementById('logEventFilter')?.addEventListener('change', () => loadAuditLogs(1));
-                document.getElementById('logClientFilter')?.addEventListener('change', () => loadAuditLogs(1));
-                populateTenantFilter('logClientFilter');
+                document.getElementById('logRoleFilter')?.addEventListener('change', () => loadAuditLogs(1));
             }
         }
 

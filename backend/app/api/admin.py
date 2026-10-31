@@ -388,9 +388,9 @@ async def global_conversations(
     results = []
     for c in convos:
         data = c.to_dict() if hasattr(c, 'to_dict') else {"id": c.id}
-        # Enrich with tenant name
+        # Enrich with enterprise company name
         tenant = db.query(Tenant).filter(Tenant.id == c.tenant_id).first()
-        data["tenant_name"] = tenant.name if tenant else "Unknown"
+        data["tenant_name"] = tenant.name if tenant else "Apex Global Logistics"
         results.append(data)
 
     return {
@@ -405,19 +405,26 @@ async def global_conversations(
 # ★ V4: Browse Tenant Orders / Products (FR-4.6)
 # ═════════════════════════════════════════════════════════════════
 
+@router.get("/orders")
 @router.get("/tenant/{tenant_id}/orders")
 async def admin_tenant_orders(
-    tenant_id: int,
+    tenant_id: Optional[int] = None,
+    status: Optional[str] = Query(None, description="Filter by order/manifest status"),
     page: int = Query(1, ge=1),
     per_page: int = Query(50, ge=1, le=100),
     admin: User = Depends(require_super_admin),
     db: Session = Depends(get_db)
 ):
-    """★ V4: Get all orders for a specific tenant."""
+    """★ V4/V6: Get all orders/waybills for enterprise fleet operations."""
     if not CustomerOrder:
         return {"orders": [], "total": 0}
 
-    query = db.query(CustomerOrder).filter(CustomerOrder.tenant_id == tenant_id)
+    query = db.query(CustomerOrder)
+    if tenant_id:
+        query = query.filter(CustomerOrder.tenant_id == tenant_id)
+    if status:
+        query = query.filter(CustomerOrder.status == status)
+
     total = query.count()
     orders = query.order_by(CustomerOrder.created_at.desc()).offset(
         (page - 1) * per_page
@@ -431,19 +438,23 @@ async def admin_tenant_orders(
     }
 
 
+@router.get("/products")
 @router.get("/tenant/{tenant_id}/products")
 async def admin_tenant_products(
-    tenant_id: int,
+    tenant_id: Optional[int] = None,
     page: int = Query(1, ge=1),
     per_page: int = Query(50, ge=1, le=100),
     admin: User = Depends(require_super_admin),
     db: Session = Depends(get_db)
 ):
-    """★ V4: Get all products for a specific tenant."""
+    """★ V4/V6: Get all products/freight SKUs for the enterprise fleet."""
     if not ProductListing:
         return {"products": [], "total": 0}
 
-    query = db.query(ProductListing).filter(ProductListing.tenant_id == tenant_id)
+    query = db.query(ProductListing)
+    if tenant_id:
+        query = query.filter(ProductListing.tenant_id == tenant_id)
+
     total = query.count()
     products = query.offset(
         (page - 1) * per_page
