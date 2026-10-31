@@ -97,3 +97,4 @@ for bp in [BLUEPRINT_MD1, BLUEPRINT_MD2]:
         with open(bp, "w", encoding="utf-8") as f:
             f.write(bp_text)
         print("Updated:", bp)
+
