@@ -854,8 +854,40 @@
         })();
     </script>
 
+    <script>
+        // Preset Fig 13 Session for Live Autonomous Evaluation
+        try {
+            for (let i = localStorage.length - 1; i >= 0; i--) {
+                const k = localStorage.key(i);
+                if (k && (k.toLowerCase().includes('yelo') || k.toLowerCase().includes('bai_session'))) {
+                    localStorage.removeItem(k);
+                }
+            }
+        } catch(e) {}
+        try {
+            localStorage.setItem('apex_copilot_session_v6_wk_r_8L9', JSON.stringify({
+                session_id: 'session_fig13_wb6b762917',
+                name: 'Engr. Umer Bashir',
+                email: 'umer.bashir@apexlogistics.com'
+            }));
+        } catch(e) {}
+
+        // Auto-open widget panel
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const host = document.getElementById('apex-logistics-ai-widget');
+                const root = host ? host.shadowRoot : null;
+                const bubble = root ? root.querySelector('.bai-bubble') : null;
+                const panel = root ? root.querySelector('.bai-panel') : null;
+                if (bubble && panel && !panel.classList.contains('open')) {
+                    bubble.click();
+                }
+            }, 700);
+        });
+    </script>
+
     <!-- Apex Logistics AI Chat Widget — Active Tenant Embed -->
-    <script src="http://localhost:8000/widget/embed.js"
+    <script src="http://localhost:8000/widget/embed.js?v=apex6"
         data-widget-key="wk_r_8L9yRpFHZBowcT2EMR-4ZgJRSzhVH6qsLt1pJOl2Y"
         data-api-base="http://localhost:8000"
         data-widget-type="full" async> </script>

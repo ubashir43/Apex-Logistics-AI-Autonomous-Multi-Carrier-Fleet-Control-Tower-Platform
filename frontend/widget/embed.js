@@ -166,7 +166,7 @@
       .bai-messages::-webkit-scrollbar { width: 4px; }
       .bai-messages::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
-      .bai-msg { max-width: 85%; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.5; word-wrap: break-word; }
+      .bai-msg { max-width: 85%; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.5; word-wrap: break-word; white-space: pre-wrap; }
       .bai-msg.customer { align-self: flex-end; background: ${color}; color: #fff; border-bottom-right-radius: 4px; }
       .bai-msg.ai, .bai-msg.agent { align-self: flex-start; background: #fff; color: #1e293b; border: 1px solid #e2e8f0; border-bottom-left-radius: 4px; }
       .bai-msg.system { align-self: center; background: #fef3c7; color: #92400e; font-size: 12px; padding: 6px 12px; border-radius: 20px; }
@@ -276,7 +276,7 @@
         // FR-6.1.3: Shadow DOM isolation
         const host = document.createElement('div');
         host.id = 'apex-logistics-ai-widget';
-        const shadow = host.attachShadow({ mode: 'closed' });
+        const shadow = host.attachShadow({ mode: 'open' });
 
         // Styles
         const style = document.createElement('style');
