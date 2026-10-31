@@ -146,7 +146,7 @@
         background: ${color}; color: #fff; padding: 16px 20px;
         display: flex; align-items: center; gap: 12px; flex-shrink: 0;
       }
-      .bai-header-avatar {
+      .bai-header-avatar { padding: 4px; box-sizing: border-box;
         width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.2);
         display: flex; align-items: center; justify-content: center; font-size: 18px;
       }
@@ -321,7 +321,32 @@
 
         panel.innerHTML = `
       <div class="bai-header">
-        <div class="bai-header-avatar">🤖</div>
+        <div class="bai-header-avatar">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="apex-logo-svg">
+  <!-- Top Face (Aerial Freight & Apex Diamond) -->
+  <path d="M12 2.2L20.5 7L12 11.8L3.5 7L12 2.2Z" fill="#ffffff" fill-opacity="0.95"/>
+  <!-- Top Face Velocity Chevron (Apex Delta) -->
+  <path d="M12 4.5L16.5 7.1L12 9.7L7.5 7.1L12 4.5Z" fill="#4d148c"/>
+  <path d="M12 5.8L14.2 7.1L12 8.4L9.8 7.1L12 5.8Z" fill="#38bdf8"/>
+
+  <!-- Left Face (Enterprise Logistics Freight Base) -->
+  <path d="M3.5 8.4L11.2 12.6V21.5L3.5 17.3V8.4Z" fill="#ffffff" fill-opacity="0.75"/>
+  <line x1="6" y1="12" x2="8.5" y2="18" stroke="#4d148c" stroke-width="1.1" stroke-dasharray="1.5 1.5"/>
+
+  <!-- Right Face (Autonomous AI Dispatch Intelligence) -->
+  <path d="M12.8 12.6L20.5 8.4V17.3L12.8 21.5V12.6Z" fill="#ffffff" fill-opacity="0.52"/>
+  <line x1="18" y1="12" x2="15.5" y2="18" stroke="#38bdf8" stroke-width="1.1" stroke-dasharray="1.5 1.5"/>
+
+  <!-- Center Telemetry Beacon (Quantum AI Route Node) -->
+  <circle cx="12" cy="12.2" r="2.2" fill="#38bdf8"/>
+  <circle cx="12" cy="12.2" r="1.1" fill="#ffffff"/>
+
+  <!-- Route Waypoint Milestone Blips -->
+  <circle cx="3.5" cy="17.3" r="1.2" fill="#10b981"/>
+  <circle cx="20.5" cy="17.3" r="1.2" fill="#38bdf8"/>
+  <circle cx="12" cy="2.2" r="1.2" fill="#f59e0b"/>
+</svg>
+        </div>
         <div class="bai-header-info">
           <div class="bai-header-name">${botName}</div>
           <div class="bai-header-status"><span class="bai-header-dot"></span> Online</div>
