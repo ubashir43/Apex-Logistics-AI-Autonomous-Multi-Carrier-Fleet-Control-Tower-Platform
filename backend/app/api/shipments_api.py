@@ -107,6 +107,7 @@ def list_shipments(
     }
 
 
+@router.get("/alerts/exceptions")
 @router.get("/exceptions")
 def list_active_exceptions(
     current_user: User = Depends(get_current_user),

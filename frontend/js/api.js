@@ -564,7 +564,7 @@ const API = {
     },
 
     async getShipmentExceptions() {
-        return this.request('/shipments/alerts/exceptions');
+        return this.request('/shipments/exceptions');
     },
 
     async getDeliveryZones() {
