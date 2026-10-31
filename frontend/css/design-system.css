@@ -53,17 +53,18 @@ body {
   --glass-blur: blur(20px);
   --glass-blur-lg: blur(40px);
   
-  /* Primary Accent - Blue */
-  --primary-50: #eff6ff;
-  --primary-100: #dbeafe;
-  --primary-200: #bfdbfe;
-  --primary-300: #93c5fd;
-  --primary-400: #60a5fa;
-  --primary-500: #3b82f6;
-  --primary-600: #2563eb;
-  --primary-700: #1d4ed8;
-  --primary-800: #1e40af;
-  --primary-900: #1e3a8a;
+  /* Primary Accent - FedEx Purple (#4D148C) */
+  --primary-50: #f6f0fd;
+  --primary-100: #eddcfb;
+  --primary-200: #dbb9f7;
+  --primary-300: #c084fc;
+  --primary-400: #a85cf0;
+  --primary-500: #4d148c;
+  --primary-600: #3f0f74;
+  --primary-700: #310a5c;
+  --primary-800: #230744;
+  --primary-900: #17042d;
+  --primary-rgb: 77, 20, 140;
   
   /* Secondary Accent - Purple */
   --secondary-400: #a78bfa;
@@ -245,12 +246,12 @@ a:hover {
 .btn-primary {
   background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
   color: white;
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 16px rgba(77, 20, 140, 0.4);
 }
 
 .btn-primary:hover:not(:disabled) {
   background: linear-gradient(135deg, var(--primary-400), var(--primary-500));
-  box-shadow: 0 6px 24px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 6px 24px rgba(77, 20, 140, 0.55);
   transform: translateY(-1px);
 }
 
@@ -352,7 +353,7 @@ a:hover {
 .input:focus {
   background: var(--glass-bg-hover);
   border-color: var(--primary-500);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 0 0 3px rgba(77, 20, 140, 0.25);
 }
 
 .input:disabled {

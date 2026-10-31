@@ -17,10 +17,9 @@
         || document.querySelector('script[data-key]')
         || document.querySelector('script[src*="embed.js"]');
 
-    // Accept both data-widget-key (canonical) and data-key (shorthand)
     const API_KEY = SCRIPT?.getAttribute('data-widget-key')
         || SCRIPT?.getAttribute('data-key');
-    const API_BASE = SCRIPT?.src ? new URL(SCRIPT.src).origin : window.location.origin;
+    const API_BASE = SCRIPT?.getAttribute('data-api-base') || (SCRIPT?.src && !SCRIPT.src.includes(':5500') ? new URL(SCRIPT.src).origin : 'http://localhost:8000');
     const SCRIPT_WIDGET_TYPE = SCRIPT?.getAttribute('data-widget-type') || 'full';
 
     if (!API_KEY) {

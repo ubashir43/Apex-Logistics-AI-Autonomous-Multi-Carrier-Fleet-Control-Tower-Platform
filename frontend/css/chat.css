@@ -145,8 +145,8 @@
 }
 
 .conv-item.active {
-    background: rgba(59, 130, 246, 0.15);
-    border: 1px solid rgba(59, 130, 246, 0.3);
+    background: rgba(77, 20, 140, 0.2);
+    border: 1px solid rgba(77, 20, 140, 0.35);
 }
 
 .conv-item.urgent {

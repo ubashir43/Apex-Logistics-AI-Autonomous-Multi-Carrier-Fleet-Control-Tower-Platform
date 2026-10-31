@@ -92,7 +92,7 @@
 .drop-zone:hover,
 .drop-zone.drag-over {
     border-color: var(--primary-500);
-    background: rgba(59, 130, 246, 0.05);
+    background: rgba(77, 20, 140, 0.08);
 }
 
 .drop-zone.drag-over {

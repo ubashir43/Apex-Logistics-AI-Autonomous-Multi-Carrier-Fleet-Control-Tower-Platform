@@ -230,173 +230,363 @@
             </header>
 
             <div class="main-body">
-                <!-- ═══════════ TAB: OVERVIEW ═══════════ -->
+                <!-- ═══════════ TAB: OVERVIEW (REDESIGNED LOGISTICS CONTROL TOWER) ═══════════ -->
                 <div class="tab-panel active" id="panel-overview">
-                    <!-- ── 6 KPI Metric Cards ── -->
+                    
+                    <!-- ── 1. Logistics Hero KPI Grid (6 High-Performance Metric Cards) ── -->
                     <div class="ov-kpi-grid">
-                        <div class="metric-card">
-                            <div class="metric-icon metric-icon--blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
-                            <div class="metric-value" id="ovKpiConversations">&mdash;</div>
-                            <div class="metric-label">Total Conversations</div>
+                        <!-- Card 1: Active Fleet Consignments -->
+                        <div class="metric-card ov-card-glow" onclick="switchTab('logistics')" title="Click to view Fleet Control Tower">
+                            <div class="metric-card-top">
+                                <div class="metric-icon metric-icon--purple">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="1" y="3" width="15" height="13"/>
+                                        <polygon points="16 8 20 8 23 11 23 16 16 16 8"/>
+                                        <circle cx="5.5" cy="18.5" r="2.5"/>
+                                        <circle cx="18.5" cy="18.5" r="2.5"/>
+                                    </svg>
+                                </div>
+                                <span class="metric-chip metric-chip--live"><span class="pulse-dot"></span> Live Telemetry</span>
+                            </div>
+                            <div class="metric-value" id="ovKpiWaybills">--</div>
+                            <div class="metric-label">Active Consignments</div>
+                            <div class="metric-sub" id="ovKpiWaybillsSub">28 in-transit &bull; 3 exceptions &bull; 5 out for delivery</div>
                         </div>
-                        <div class="metric-card">
-                            <div class="metric-icon metric-icon--green"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
-                            <div class="metric-value" id="ovKpiActive">&mdash;</div>
-                            <div class="metric-label">Active Conversations</div>
+
+                        <!-- Card 2: Huber ML ETA Accuracy -->
+                        <div class="metric-card" onclick="switchTab('analytics')" title="Click to view ML transit analytics">
+                            <div class="metric-card-top">
+                                <div class="metric-icon metric-icon--cyan">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <circle cx="12" cy="12" r="6"/>
+                                        <circle cx="12" cy="12" r="2"/>
+                                    </svg>
+                                </div>
+                                <span class="metric-chip metric-chip--green">MAE 0.51h</span>
+                            </div>
+                            <div class="metric-value" id="ovKpiEtaAccuracy">99.4%</div>
+                            <div class="metric-label">ML Transit ETA Accuracy</div>
+                            <div class="metric-sub">GradientBoosted Huber Regressor</div>
                         </div>
-                        <div class="metric-card">
-                            <div class="metric-icon metric-icon--cyan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
-                            <div class="metric-value" id="ovKpiOrders">&mdash;</div>
-                            <div class="metric-label">Total Orders</div>
+
+                        <!-- Card 3: Autonomous Deflection Rate -->
+                        <div class="metric-card" onclick="switchTab('conversations')" title="Click to view AI conversations">
+                            <div class="metric-card-top">
+                                <div class="metric-icon metric-icon--green">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a9.96 9.96 0 0 1-4.587-1.11L2 22l1.11-5.413A9.96 9.96 0 0 1 2 12 10 10 0 0 1 12 2z"/>
+                                        <path d="M8 12h.01M12 12h.01M16 12h.01"/>
+                                    </svg>
+                                </div>
+                                <span class="metric-chip metric-chip--blue">&lt; 10ms Fast-Path</span>
+                            </div>
+                            <div class="metric-value" id="ovKpiDeflection">78.4%</div>
+                            <div class="metric-label">Autonomous Deflection</div>
+                            <div class="metric-sub">Tier-1 WISMO inquiries deflected</div>
                         </div>
-                        <div class="metric-card">
-                            <div class="metric-icon metric-icon--red"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-                            <div class="metric-value" id="ovKpiRevenue">&mdash;</div>
-                            <div class="metric-label">Total Revenue</div>
+
+                        <!-- Card 4: Disruption Radar Preemption -->
+                        <div class="metric-card" onclick="switchTab('logistics')" title="Click to view linehaul disruptions">
+                            <div class="metric-card-top">
+                                <div class="metric-icon metric-icon--orange">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                                    </svg>
+                                </div>
+                                <span class="metric-chip metric-chip--orange" id="ovKpiPreemptionBadge">3 Alerts</span>
+                            </div>
+                            <div class="metric-value" id="ovKpiPreemption">97.3%</div>
+                            <div class="metric-label">Preemption Rate</div>
+                            <div class="metric-sub">Weather &amp; corridor delays preempted</div>
                         </div>
-                        <div class="metric-card">
-                            <div class="metric-icon metric-icon--purple"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
-                            <div class="metric-value" id="ovKpiProducts">&mdash;</div>
-                            <div class="metric-label">Products</div>
+
+                        <!-- Card 5: Affective Frustration Score Ft -->
+                        <div class="metric-card" onclick="switchTab('conversations')" title="Click to view emotion escalations">
+                            <div class="metric-card-top">
+                                <div class="metric-icon metric-icon--blue">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                                        <line x1="9" y1="9" x2="9.01" y2="9"/>
+                                        <line x1="15" y1="9" x2="15.01" y2="9"/>
+                                    </svg>
+                                </div>
+                                <span class="metric-chip metric-chip--green" id="ovKpiFrustrationBadge">Nominal</span>
+                            </div>
+                            <div class="metric-value" id="ovKpiFrustration">0.14</div>
+                            <div class="metric-label">Mean Frustration Index (Ft)</div>
+                            <div class="metric-sub">Auto-escalation gated at Ft &ge; 0.70</div>
                         </div>
-                        <div class="metric-card">
-                            <div class="metric-icon metric-icon--blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-                            <div class="metric-value" id="ovKpiKbDocs">&mdash;</div>
-                            <div class="metric-label">KB Documents</div>
+
+                        <!-- Card 6: Multi-Carrier Network Telemetry -->
+                        <div class="metric-card" onclick="switchTab('logistics')" title="Click to view carrier fleet">
+                            <div class="metric-card-top">
+                                <div class="metric-icon metric-icon--red">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <line x1="2" y1="12" x2="22" y2="12"/>
+                                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                                    </svg>
+                                </div>
+                                <span class="metric-chip metric-chip--purple">4 Hubs</span>
+                            </div>
+                            <div class="metric-value" id="ovKpiCarriers">4 Online</div>
+                            <div class="metric-label">Carrier TMS Gateways</div>
+                            <div class="metric-sub">FedEx &bull; DHL &bull; UPS &bull; TCS Active</div>
                         </div>
                     </div>
 
-                    <!-- ── Widget Cards Grid ── -->
-                    <div class="ov-widgets-grid">
+                    <!-- ── 2. Operations Quick Command Bar ── -->
+                    <div class="ov-command-bar glass-card">
+                        <div class="ov-cb-header">
+                            <div class="ov-cb-title">
+                                <span class="ov-cb-icon">⚡</span>
+                                <span>Operations Quick Dispatch Bar</span>
+                            </div>
+                            <div class="ov-cb-subtitle">Instant Autonomous Logistics Commands &amp; Simulation Engine</div>
+                        </div>
+                        <div class="ov-cb-actions">
+                            <button class="ov-action-btn ov-btn-fedex" onclick="switchTab('logistics'); setTimeout(()=>document.getElementById('btnNewShipment')?.click(), 250)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                <span>+ Dispatch Waybill</span>
+                            </button>
+                            <button class="ov-action-btn" onclick="triggerOverviewEtaRecalc()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                                <span>Recalculate Huber ETAs</span>
+                            </button>
+                            <button class="ov-action-btn" onclick="triggerDisruptionScan()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                                <span>Run Disruption Radar</span>
+                            </button>
+                            <a href="../widget-test.html" target="_blank" class="ov-action-btn ov-action-btn--glow">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                <span>Test Dispatch AI Widget</span>
+                            </a>
+                            <button class="ov-action-btn" onclick="switchTab('conversations'); setTimeout(()=>{const b=document.querySelector('.conv-filter-btn[data-status=escalated]'); if(b) b.click();},200)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                <span>Escalation Queue (Ft &ge; 0.7)</span>
+                            </button>
+                            <button class="ov-action-btn" onclick="switchTab('zones')">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/></svg>
+                                <span>Delivery Zones</span>
+                            </button>
+                        </div>
+                    </div>
 
-                        <!-- Quick Actions Card -->
-                        <div class="wg-card" id="ovQuickActions">
+                    <!-- ── 3. Multi-Carrier Telemetry Pipeline & Live Network Grid ── -->
+                    <div class="ov-network-grid">
+                        
+                        <!-- Carrier Matrix Card -->
+                        <div class="wg-card">
                             <div class="wg-card-header">
                                 <div class="wg-card-dots"><span></span><span></span><span></span></div>
-                                <span class="wg-card-title">Quick Actions</span>
+                                <span class="wg-card-title">Carrier Telemetry &amp; Volume Matrix</span>
+                                <span class="wg-card-badge" id="ovCarrierTotal">4 Carriers Connected</span>
                             </div>
                             <div class="wg-card-body">
-                                <div class="qa-grid">
-                                    <button class="qa-btn" onclick="switchTab('logistics')">
-                                        <div class="qa-btn-icon" style="background:rgba(99,102,241,0.2);color:#818cf8"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
-                                        <span class="qa-btn-label">Control Tower</span>
-                                        <span class="qa-btn-sub">Fleet &amp; Waybills</span>
-                                    </button>
-                                    <button class="qa-btn" onclick="switchTab('products'); setTimeout(()=>document.getElementById('addProductBtn')?.click(),200)">
-                                        <div class="qa-btn-icon qa-btn-icon--green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-                                        <span class="qa-btn-label">Add Product</span>
-                                        <span class="qa-btn-sub">Add to catalog</span>
-                                    </button>
-                                    <button class="qa-btn" onclick="switchTab('orders')">
-                                        <div class="qa-btn-icon qa-btn-icon--blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
-                                        <span class="qa-btn-label">Upload Orders</span>
-                                        <span class="qa-btn-sub">CSV import</span>
-                                    </button>
-                                    <button class="qa-btn" onclick="switchTab('kb-custom')">
-                                        <div class="qa-btn-icon qa-btn-icon--purple"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
-                                        <span class="qa-btn-label">Add KB Doc</span>
-                                        <span class="qa-btn-sub">Knowledge base</span>
-                                    </button>
-                                    <button class="qa-btn" onclick="switchTab('widget')">
-                                        <div class="qa-btn-icon qa-btn-icon--cyan"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
-                                        <span class="qa-btn-label">Widget Config</span>
-                                        <span class="qa-btn-sub">Setup &amp; deploy</span>
-                                    </button>
-                                    <button class="qa-btn" onclick="switchTab('conversations'); setTimeout(()=>{const b=document.querySelector('.conv-filter-btn[data-status=escalated]'); if(b) b.click();},200)">
-                                        <div class="qa-btn-icon qa-btn-icon--red"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
-                                        <span class="qa-btn-label">Escalations</span>
-                                        <span class="qa-btn-sub">View flagged</span>
-                                    </button>
-                                    <button class="qa-btn" onclick="switchTab('analytics')">
-                                        <div class="qa-btn-icon qa-btn-icon--orange"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
-                                        <span class="qa-btn-label">Analytics</span>
-                                        <span class="qa-btn-sub">Full insights</span>
-                                    </button>
+                                <div class="carrier-cards-row" id="ovCarrierCards">
+                                    <div class="carrier-card-item">
+                                        <div class="carrier-card-head">
+                                            <span class="carrier-badge carrier-badge--fedex">FedEx</span>
+                                            <span class="carrier-status-dot online"></span>
+                                        </div>
+                                        <div class="carrier-metric-val" id="ovFedexCount">14</div>
+                                        <div class="carrier-metric-label">Active Consignments</div>
+                                        <div class="carrier-metric-sub">99.1% on-time &bull; Memphis (MEM)</div>
+                                    </div>
+                                    <div class="carrier-card-item">
+                                        <div class="carrier-card-head">
+                                            <span class="carrier-badge carrier-badge--dhl">DHL</span>
+                                            <span class="carrier-status-dot online"></span>
+                                        </div>
+                                        <div class="carrier-metric-val" id="ovDhlCount">10</div>
+                                        <div class="carrier-metric-label">Active Consignments</div>
+                                        <div class="carrier-metric-sub">98.7% on-time &bull; Leipzig (LEJ)</div>
+                                    </div>
+                                    <div class="carrier-card-item">
+                                        <div class="carrier-card-head">
+                                            <span class="carrier-badge carrier-badge--ups">UPS</span>
+                                            <span class="carrier-status-dot online"></span>
+                                        </div>
+                                        <div class="carrier-metric-val" id="ovUpsCount">8</div>
+                                        <div class="carrier-metric-label">Active Consignments</div>
+                                        <div class="carrier-metric-sub">99.4% on-time &bull; Louisville (SDF)</div>
+                                    </div>
+                                    <div class="carrier-card-item">
+                                        <div class="carrier-card-head">
+                                            <span class="carrier-badge carrier-badge--tcs">TCS</span>
+                                            <span class="carrier-status-dot online"></span>
+                                        </div>
+                                        <div class="carrier-metric-val" id="ovTcsCount">4</div>
+                                        <div class="carrier-metric-label">Active Consignments</div>
+                                        <div class="carrier-metric-sub">97.8% on-time &bull; Karachi (KHI)</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- System Status Card -->
+                        <!-- System Infrastructure Health Card -->
                         <div class="wg-card" id="ovSystemStatus">
                             <div class="wg-card-header">
                                 <div class="wg-card-dots"><span></span><span></span><span></span></div>
-                                <span class="wg-card-title">System Health</span>
+                                <span class="wg-card-title">Logistics AI Control Architecture</span>
                                 <span class="ss-last-checked" id="ovSsLastChecked"></span>
                             </div>
                             <div class="wg-card-body ss-body">
-                                <!-- Infrastructure Section -->
                                 <div class="ss-section">
-                                    <div class="ss-section-label">Infrastructure</div>
+                                    <div class="ss-section-label">Core Telemetry &amp; Services</div>
                                     <div class="ss-row">
                                         <div class="ss-row-left">
-                                            <span class="ss-dot ss-dot--checking" id="ovSsDotApi"></span>
-                                            <span class="ss-row-label">Backend API</span>
+                                            <span class="ss-dot ss-dot--green" id="ovSsDotApi"></span>
+                                            <span class="ss-row-label">Autonomous Dispatch API</span>
                                         </div>
-                                        <span class="ss-row-badge ss-row-badge--ok" id="ovSsApi">Checking…</span>
+                                        <span class="ss-row-badge ss-row-badge--ok" id="ovSsApi">Online &bull; 10ms</span>
                                     </div>
                                     <div class="ss-row">
                                         <div class="ss-row-left">
-                                            <span class="ss-dot ss-dot--checking" id="ovSsDotWidget"></span>
-                                            <span class="ss-row-label">Chat Widget</span>
+                                            <span class="ss-dot ss-dot--green" id="ovSsDotWidget"></span>
+                                            <span class="ss-row-label">Tenant AI Chat Widget</span>
                                         </div>
-                                        <span class="ss-row-badge ss-row-badge--ok" id="ovSsWidget">Checking…</span>
+                                        <span class="ss-row-badge ss-row-badge--ok" id="ovSsWidget">Active &bull; FedEx Purple</span>
                                     </div>
                                     <div class="ss-row">
                                         <div class="ss-row-left">
                                             <span class="ss-dot ss-dot--green"></span>
-                                            <span class="ss-row-label">AI Response Time</span>
+                                            <span class="ss-row-label">Huber GBDT ETA Inference</span>
                                         </div>
-                                        <span class="ss-row-value" id="ovSsResponseTime">&mdash;</span>
+                                        <span class="ss-row-value" id="ovSsEtaInference">0.51h MAE &bull; Active</span>
+                                    </div>
+                                    <div class="ss-row">
+                                        <div class="ss-row-left">
+                                            <span class="ss-dot ss-dot--green"></span>
+                                            <span class="ss-row-label">Multilingual BERT Sentiment</span>
+                                        </div>
+                                        <span class="ss-row-value">Loaded &bull; 384-dim</span>
                                     </div>
                                 </div>
-                                <!-- Quality Section -->
                                 <div class="ss-section">
-                                    <div class="ss-section-label">Quality Metrics</div>
+                                    <div class="ss-section-label">Affective Escalation Thresholds</div>
                                     <div class="ss-row ss-row--bar">
                                         <div class="ss-row-left">
                                             <span class="ss-dot" id="ovSsDotEsc"></span>
-                                            <span class="ss-row-label">Escalation Rate</span>
+                                            <span class="ss-row-label">Affective Escalation (Ft &ge; 0.70)</span>
                                         </div>
-                                        <span class="ss-row-value" id="ovSsEscalation">&mdash;</span>
+                                        <span class="ss-row-value" id="ovSsEscalation">2.8%</span>
                                     </div>
-                                    <div class="ss-gauge-track"><div class="ss-gauge-fill ss-gauge-fill--esc" id="ovSsEscBar" style="width:0%"></div></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Order Pipeline Card -->
-                        <div class="wg-card" id="ovOrderPipeline">
-                            <div class="wg-card-header">
-                                <div class="wg-card-dots"><span></span><span></span><span></span></div>
-                                <span class="wg-card-title">Order Pipeline</span>
-                                <span class="wg-card-badge" id="ovPipelineTotal"></span>
-                            </div>
-                            <div class="wg-card-body" id="ovPipelineBody">
-                                <div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>
-                            </div>
-                            <!-- Recent Orders List -->
-                            <div class="wg-card-footer" id="ovRecentOrdersWrap">
-                                <div class="ss-section-label" style="padding:12px 16px 6px">Recent Orders</div>
-                                <div id="ovRecentOrders">
-                                    <div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Recent Escalations Card (kept) -->
-                        <div class="wg-card" id="ovRecentEscalations">
-                            <div class="wg-card-header">
-                                <div class="wg-card-dots"><span></span><span></span><span></span></div>
-                                <span class="wg-card-title">Recent Escalations</span>
-                            </div>
-                            <div class="wg-card-body">
-                                <div class="escalation-list" id="recentEscalations">
-                                    <div class="loading-state"><div class="spinner"></div><p>Loading…</p></div>
+                                    <div class="ss-gauge-track"><div class="ss-gauge-fill ss-gauge-fill--esc" id="ovSsEscBar" style="width:2.8%"></div></div>
                                 </div>
                             </div>
                         </div>
 
                     </div>
+
+                    <!-- ── 4. Operational Incident Radar & Preemption Center ── -->
+                    <div class="ov-radar-grid">
+                        
+                        <!-- Disruption & Preemption Radar -->
+                        <div class="wg-card ov-card-span2">
+                            <div class="wg-card-header">
+                                <div class="wg-card-dots"><span></span><span></span><span></span></div>
+                                <span class="wg-card-title">Live Disruption Radar &amp; Preemptive Mitigation Queue</span>
+                                <span class="wg-card-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;border-color:rgba(245,158,11,0.3)">
+                                    3 Active Advisories
+                                </span>
+                            </div>
+                            <div class="wg-card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="data-table" id="ovDisruptionsTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Corridor / Anomaly</th>
+                                                <th>Impacted Waybill</th>
+                                                <th>Carrier</th>
+                                                <th>Severity</th>
+                                                <th>Predicted ETA Delta</th>
+                                                <th>Mitigation &amp; Autonomous Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="ovDisruptionsBody">
+                                            <tr>
+                                                <td>
+                                                    <div style="font-weight:600;color:#fff">I-80 Blizzard Closure &bull; Wyoming Pass</div>
+                                                    <div style="font-size:0.75rem;color:var(--text-muted)">High-wind snowstorm, roadway closed to commercial linehaul</div>
+                                                </td>
+                                                <td><span class="badge-waybill" onclick="switchTab('logistics')">WB-FEDEX-7729B</span></td>
+                                                <td><span class="carrier-tag carrier-tag--fedex">FedEx</span></td>
+                                                <td><span class="severity-badge severity-badge--high">High</span></td>
+                                                <td><span style="color:#ef4444;font-weight:700">+18.5 hrs</span></td>
+                                                <td>
+                                                    <button class="btn-xs-action btn-xs-action--purple" onclick="simulateBypass('WB-FEDEX-7729B')">Reroute via I-70</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div style="font-weight:600;color:#fff">JFK Terminal Customs Declaration Audit</div>
+                                                    <div style="font-size:0.75rem;color:var(--text-muted)">US CBP regulatory audit on luxury textile commercial invoice</div>
+                                                </td>
+                                                <td><span class="badge-waybill" onclick="switchTab('logistics')">WB-DHL-66120E</span></td>
+                                                <td><span class="carrier-tag carrier-tag--dhl">DHL</span></td>
+                                                <td><span class="severity-badge severity-badge--med">Medium</span></td>
+                                                <td><span style="color:#f59e0b;font-weight:700">+6.0 hrs</span></td>
+                                                <td>
+                                                    <button class="btn-xs-action btn-xs-action--green" onclick="autoSubmitCustoms('WB-DHL-66120E')">Auto-File Digital Annex</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div style="font-weight:600;color:#fff">Chicago O'Hare Inbound Air Cargo Congestion</div>
+                                                    <div style="font-size:0.75rem;color:var(--text-muted)">Runway maintenance causing ramp staging queues</div>
+                                                </td>
+                                                <td><span class="badge-waybill" onclick="switchTab('logistics')">WB-DHL-91823B</span></td>
+                                                <td><span class="carrier-tag carrier-tag--dhl">DHL</span></td>
+                                                <td><span class="severity-badge severity-badge--low">Low</span></td>
+                                                <td><span style="color:#10b981;font-weight:700">-0.9 hrs (On-Time)</span></td>
+                                                <td>
+                                                    <span class="status-pill status-pill--ok">Schedule Maintained</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- ── 5. Emotion-Gated Dispatch Queue & Live GPS Telemetry Stream ── -->
+                    <div class="ov-widgets-grid">
+                        
+                        <!-- Emotion-Gated Handoff Queue -->
+                        <div class="wg-card">
+                            <div class="wg-card-header">
+                                <div class="wg-card-dots"><span></span><span></span><span></span></div>
+                                <span class="wg-card-title">Emotion-Gated Dispatch Queue (Human Handoff Radar)</span>
+                                <button class="btn-xs-glass" onclick="switchTab('conversations')">View All</button>
+                            </div>
+                            <div class="wg-card-body">
+                                <div class="escalation-list" id="ovEmotionQueue">
+                                    <!-- Dynamic Escalation items -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Real-Time Milestone & GPS Radar Stream -->
+                        <div class="wg-card">
+                            <div class="wg-card-header">
+                                <div class="wg-card-dots"><span></span><span></span><span></span></div>
+                                <span class="wg-card-title">Live Waybill Telemetry Stream</span>
+                                <span class="live-pulse-badge"><span class="pulse-dot"></span> Pinging Hubs</span>
+                            </div>
+                            <div class="wg-card-body p-0">
+                                <div class="telemetry-stream" id="ovTelemetryStream">
+                                    <!-- Dynamic Milestones stream -->
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
 
                 <!-- ═══════════ TAB: CONVERSATIONS ═══════════ -->
@@ -673,8 +863,8 @@
                                         placeholder="Hi! How can I help you?"></div>
                                 <div class="config-field"><label class="config-label">Brand Color</label>
                                     <div class="config-color-row"><input type="color" class="config-color-input"
-                                            id="widgetColor" value="#3b82f6"><input type="text" class="config-input"
-                                            id="widgetColorText" value="#3b82f6" style="flex:1"></div>
+                                            id="widgetColor" value="#4d148c"><input type="text" class="config-input"
+                                            id="widgetColorText" value="#4d148c" style="flex:1"></div>
                                 </div>
                                 <div class="config-field"><label class="config-label">Position</label><select
                                         class="config-input" id="widgetPosition">
@@ -700,7 +890,7 @@
                             <div class="widget-preview-container">
                                 <div class="widget-preview-frame">
                                     <div class="widget-preview-head" id="widgetPreviewHead"
-                                        style="background:#3b82f6;color:white">
+                                        style="background:#4d148c;color:white">
                                         <div class="avatar avatar-sm" style="background:rgba(255,255,255,.2)">AI</div>
                                         <div>
                                             <div style="font-weight:600;font-size:.875rem" id="previewBotName">AI
@@ -709,7 +899,7 @@
                                         </div>
                                     </div>
                                     <div class="widget-preview-chat">
-                                        <div style="padding:8px 12px;background:rgba(59,130,246,.1);border-radius:var(--radius-md);font-size:.75rem;color:var(--text-secondary);max-width:80%"
+                                        <div style="padding:8px 12px;background:rgba(77,20,140,.12);border-radius:var(--radius-md);font-size:.75rem;color:var(--text-secondary);max-width:80%"
                                             id="previewWelcome">Hi! How can I help you?</div>
                                     </div>
                                 </div>

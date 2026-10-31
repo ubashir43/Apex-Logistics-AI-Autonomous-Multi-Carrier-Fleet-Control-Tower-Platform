@@ -96,7 +96,7 @@
 
 .hero-container {
     flex: 1;
-    max-width: 600px;
+    max-width: 680px;
 }
 
 .hero-badge {
@@ -136,15 +136,16 @@
 }
 
 .hero-title {
-    font-size: 3.5rem;
+    font-size: clamp(2.35rem, 3.5vw, 3.25rem);
     font-weight: 800;
-    line-height: 1.1;
+    line-height: 1.16;
     margin-bottom: var(--space-lg);
     letter-spacing: -0.03em;
 }
 
 .hero-title-line {
     display: block;
+    white-space: nowrap;
 }
 
 .hero-title-gradient {
@@ -292,7 +293,7 @@
 }
 
 .demo-message--ai .demo-message-bubble {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2));
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(77, 20, 140, 0.25));
     border: 1px solid rgba(139, 92, 246, 0.3);
 }
 
@@ -434,7 +435,7 @@
 }
 
 .feature-icon--blue {
-    background: rgba(59, 130, 246, 0.15);
+    background: rgba(77, 20, 140, 0.2);
     color: var(--primary-400);
 }
 
@@ -565,8 +566,8 @@
 .cta-card {
     padding: var(--space-3xl);
     text-align: center;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
-    border: 1px solid rgba(59, 130, 246, 0.2);
+    background: linear-gradient(135deg, rgba(77, 20, 140, 0.2), rgba(139, 92, 246, 0.1));
+    border: 1px solid rgba(77, 20, 140, 0.25);
 }
 
 .cta-title {
@@ -752,6 +753,11 @@
 
     .hero-title {
         font-size: 2.25rem;
+    }
+
+    .hero-title-line {
+        white-space: normal;
+        text-wrap: balance;
     }
 
     .hero-subtitle {

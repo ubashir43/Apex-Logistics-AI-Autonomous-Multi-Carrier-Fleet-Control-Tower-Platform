@@ -48,7 +48,7 @@
 }
 
 .logistics-kpi-card.kpi--ontime::before {
-    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    background: linear-gradient(90deg, var(--primary-500), var(--secondary-500));
 }
 
 .logistics-kpi-val {
