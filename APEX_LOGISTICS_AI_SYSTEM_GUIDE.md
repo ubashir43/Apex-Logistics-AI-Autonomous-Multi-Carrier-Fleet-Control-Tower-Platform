@@ -334,3 +334,4 @@ cd backend; .\venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 -
 # Terminal 2 - Frontend:
 cd frontend; python -m http.server 5500
 ```
+
