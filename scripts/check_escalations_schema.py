@@ -4,3 +4,4 @@ c = conn.cursor()
 c.execute("PRAGMA table_info(escalations)")
 for col in c.fetchall():
     print(col[1], col[2])
+

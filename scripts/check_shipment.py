@@ -11,3 +11,4 @@ print("WB shipments:", c.fetchall())
 
 c.execute("SELECT id, name, slug FROM tenants")
 print("Tenants:", c.fetchall())
+

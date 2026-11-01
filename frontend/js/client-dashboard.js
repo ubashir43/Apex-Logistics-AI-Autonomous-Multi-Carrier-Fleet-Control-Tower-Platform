@@ -596,8 +596,8 @@ function renderMessages(messages) {
             const sentiment = m.sentiment_label || (score > 0.58 ? 'positive' : score < 0.42 ? 'negative' : 'neutral');
             const emotionLabel = _getEmotionLabel(sentiment, score);
             const cssClass = _labelToClass(emotionLabel);
-            sentimentBadge = `<span class="msg-sentiment-pill msg-sentiment-pill--${cssClass}">` +
-                `<span class="msg-sentiment-dot"></span>${emotionLabel} | ${pct}%</span>`;
+            sentimentBadge = `<span class="msg-sentiment-pill msg-sentiment-pill--${cssClass}" data-sentiment-score="${score}" data-sentiment-pct="${pct}" title="System Internal Score: ${pct}%">` +
+                `<span class="msg-sentiment-dot"></span>${emotionLabel}</span>`;
         }
 
         const time = m.created_at ? tzTime(m.created_at) : '';
