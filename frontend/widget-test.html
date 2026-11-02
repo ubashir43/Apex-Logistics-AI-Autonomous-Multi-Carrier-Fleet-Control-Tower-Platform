@@ -4,16 +4,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Apex Logistics AI - Waybill & Dispatch Intelligence Widget Test">
-    <title>Dispatch Intelligence Widget | Apex Logistics AI</title>
+    <meta name="description" content="Apex Logistics AI — Autonomous Multi-Carrier Freight Tracking & Dispatch Intelligence Testbed">
+    <title>Autonomous Dispatch Testbed | Apex Logistics AI</title>
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg?v=2">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
 
     <style>
+        :root {
+            --bg-base: #080512;
+            --bg-surface: rgba(18, 14, 38, 0.75);
+            --bg-card: rgba(26, 20, 52, 0.65);
+            --bg-card-hover: rgba(36, 28, 70, 0.8);
+            --border-glass: rgba(147, 51, 234, 0.18);
+            --border-glass-bright: rgba(168, 85, 247, 0.35);
+            --primary-purple: #4d148c;
+            --primary-purple-light: #7c3aed;
+            --primary-purple-glow: rgba(124, 58, 237, 0.35);
+            --teal-bright: #38bdf8;
+            --teal-glow: rgba(56, 189, 248, 0.25);
+            --emerald-green: #10b981;
+            --amber-warn: #f59e0b;
+            --coral-alert: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -21,840 +42,1481 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(160deg, #0c0c1a 0%, #12122a 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-base);
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(77, 20, 140, 0.28) 0%, transparent 45%),
+                radial-gradient(circle at 85% 20%, rgba(56, 189, 248, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 50% 85%, rgba(124, 58, 237, 0.18) 0%, transparent 50%),
+                linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+            color: var(--text-main);
             min-height: 100vh;
             overflow-x: hidden;
-            color: #fff;
+            line-height: 1.5;
         }
 
-        /* ═══════════════════════════════════════════════════════
-           BACKGROUND LAYER
-           ═══════════════════════════════════════════════════════ */
-        #particleCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .orb {
+        /* Ambient Radar Glow Orbs */
+        .ambient-glow {
             position: fixed;
             border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.2;
+            filter: blur(120px);
             pointer-events: none;
             z-index: 0;
+            opacity: 0.35;
+        }
+        .glow-1 {
+            width: 500px;
+            height: 500px;
+            background: #4d148c;
+            top: -150px;
+            left: -100px;
+        }
+        .glow-2 {
+            width: 450px;
+            height: 450px;
+            background: #0284c7;
+            bottom: -100px;
+            right: -100px;
         }
 
-        .orb--1 {
-            width: 420px;
-            height: 420px;
-            background: radial-gradient(circle, #667eea, #764ba2);
-            top: -10%;
-            left: -10%;
-            animation: orbA 25s ease-in-out infinite;
-        }
-
-        .orb--2 {
-            width: 340px;
-            height: 340px;
-            background: radial-gradient(circle, #f093fb, #c471f5);
-            bottom: -8%;
-            right: -10%;
-            animation: orbB 30s ease-in-out infinite;
-        }
-
-        .orb--3 {
-            width: 280px;
-            height: 280px;
-            background: radial-gradient(circle, #2ed573, #17c0eb);
-            top: 55%;
-            left: 50%;
-            animation: orbA 28s ease-in-out infinite 6s;
-        }
-
-        @keyframes orbA {
-
-            0%,
-            100% {
-                transform: translate(0, 0) scale(1);
-            }
-
-            50% {
-                transform: translate(30px, 40px) scale(1.1);
-            }
-        }
-
-        @keyframes orbB {
-
-            0%,
-            100% {
-                transform: translate(0, 0) scale(1);
-            }
-
-            50% {
-                transform: translate(-25px, -30px) scale(1.08);
-            }
-        }
-
-        /* ═══════════════════════════════════════════════════════
-           MAIN LAYOUT
-           ═══════════════════════════════════════════════════════ */
-        .page-wrap {
+        /* Container */
+        .portal-container {
             position: relative;
             z-index: 1;
-            max-width: 720px;
+            max-width: 1440px;
             margin: 0 auto;
-            padding: 3rem 2rem 6rem;
-            animation: pageEntry 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+            padding: 0 2rem 5rem;
         }
 
-        @keyframes pageEntry {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ═══════════════════════════════════════════════════════
-           BRAND LOGO
-           ═══════════════════════════════════════════════════════ */
-        .brand-logo {
+        /* ══════════════════════════════════════════════
+           TOP NAVIGATION BAR
+           ══════════════════════════════════════════════ */
+        .top-navbar {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 3rem;
+            justify-content: space-between;
+            padding: 1.25rem 0;
+            border-bottom: 1px solid var(--border-glass);
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+        }
+
+        .brand-block {
+            display: flex;
+            align-items: center;
+            gap: 14px;
             text-decoration: none;
         }
 
         .brand-logo-icon {
-            width: 42px;
-            height: 42px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #4d148c, #1e0b4b);
+            border: 1px solid var(--border-glass-bright);
             border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
-            animation: logoPulse 3s ease-in-out infinite;
+            box-shadow: 0 4px 20px var(--primary-purple-glow);
+            transition: transform 0.25s ease;
         }
-
-        @keyframes logoPulse {
-
-            0%,
-            100% {
-                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
-            }
-
-            50% {
-                box-shadow: 0 6px 28px rgba(102, 126, 234, 0.5);
-            }
+        .brand-block:hover .brand-logo-icon {
+            transform: scale(1.06);
         }
 
         .brand-logo-icon svg {
-            width: 22px;
-            height: 22px;
-            color: #fff;
+            width: 24px;
+            height: 24px;
         }
 
-        .brand-logo-text {
-            font-size: 1.2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #fff, #a5b4fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* ═══════════════════════════════════════════════════════
-           HERO HEADING
-           ═══════════════════════════════════════════════════════ */
-        .hero-headline {
-            font-size: 2.6rem;
-            font-weight: 800;
-            color: #fff;
-            line-height: 1.12;
-            letter-spacing: -0.03em;
-            margin-bottom: 0.75rem;
-        }
-
-        .hero-headline span {
-            background: linear-gradient(135deg, #667eea, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 2rem;
-            max-width: 480px;
-        }
-
-        /* ═══════════════════════════════════════════════════════
-           STATUS BADGES
-           ═══════════════════════════════════════════════════════ */
-        .status-badges {
+        .brand-titles {
             display: flex;
-            gap: 0.65rem;
-            flex-wrap: wrap;
-            margin-bottom: 2.5rem;
+            flex-direction: column;
         }
 
-        .status-badge {
-            display: inline-flex;
+        .brand-title-main {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #ffffff 40%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-badge {
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 2px 7px;
+            background: rgba(56, 189, 248, 0.14);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            border-radius: 6px;
+            color: #38bdf8;
+            -webkit-text-fill-color: #38bdf8;
+        }
+
+        .brand-subtitle {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            letter-spacing: 0.01em;
+        }
+
+        /* Top Nav Telemetry Stream */
+        .nav-telemetry-feed {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: rgba(20, 14, 44, 0.6);
+            border: 1px solid var(--border-glass);
+            padding: 0.45rem 1.15rem;
+            border-radius: 100px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .telem-pill {
+            display: flex;
             align-items: center;
             gap: 6px;
-            padding: 6px 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.55);
         }
 
-        .status-dot {
+        .telem-dot {
             width: 7px;
             height: 7px;
             border-radius: 50%;
-            animation: dotPulse 2s ease-in-out infinite;
+            background: var(--emerald-green);
+            box-shadow: 0 0 8px var(--emerald-green);
+            animation: pulseDot 2s infinite ease-in-out;
+        }
+        .telem-dot--amber { background: var(--amber-warn); box-shadow: 0 0 8px var(--amber-warn); }
+        .telem-dot--blue { background: var(--teal-bright); box-shadow: 0 0 8px var(--teal-bright); }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.85); }
         }
 
-        .status-dot--green {
-            background: #2ed573;
-        }
-
-        .status-dot--blue {
-            background: #667eea;
-        }
-
-        .status-dot--amber {
-            background: #ffa726;
-        }
-
-        @keyframes dotPulse {
-
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: 0.5;
-                transform: scale(0.7);
-            }
-        }
-
-        /* ═══════════════════════════════════════════════════════
-           INTERACTIVE DEMO CARD — Widget Preview
-           ═══════════════════════════════════════════════════════ */
-        .demo-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-            animation: demoFloat 6s ease-in-out infinite;
-            margin-bottom: 2.5rem;
-        }
-
-        @keyframes demoFloat {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-6px);
-            }
-        }
-
-        .demo-card-header {
+        .nav-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            background: rgba(0, 0, 0, 0.2);
+            gap: 0.85rem;
         }
 
-        .demo-dots {
-            display: flex;
-            gap: 5px;
-        }
-
-        .demo-dots span {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
-
-        .demo-dots span:nth-child(1) {
-            background: #f5576c;
-        }
-
-        .demo-dots span:nth-child(2) {
-            background: #ffa726;
-        }
-
-        .demo-dots span:nth-child(3) {
-            background: #2ed573;
-        }
-
-        .demo-card-title {
-            font-size: 0.72rem;
-            color: rgba(255, 255, 255, 0.45);
-            font-weight: 500;
-            margin-left: 6px;
-        }
-
-        .demo-card-body {
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        /* Chat messages */
-        .demo-msg {
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            opacity: 0;
-            animation: msgFadeIn 0.5s ease forwards;
-        }
-
-        .demo-msg:nth-child(1) {
-            animation-delay: 0.5s;
-        }
-
-        .demo-msg:nth-child(2) {
-            animation-delay: 2.2s;
-        }
-
-        .demo-msg--ai {
-            flex-direction: row-reverse;
-        }
-
-        @keyframes msgFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .demo-avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.65rem;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .demo-avatar--user {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: #fff;
-        }
-
-        .demo-avatar--ai {
-            background: linear-gradient(135deg, #2ed573, #1e90ff);
-            color: #fff;
-        }
-
-        .demo-bubble {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 10px;
-            padding: 8px 12px;
-            max-width: 85%;
-        }
-
-        .demo-bubble-text {
-            font-size: 0.78rem;
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.4;
-        }
-
-        .demo-sentiment {
+        .btn-nav-action {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            margin-top: 5px;
-            font-size: 0.65rem;
+            gap: 7px;
+            padding: 0.55rem 1.15rem;
+            border-radius: 9px;
+            font-size: 0.82rem;
             font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
         }
 
-        .demo-sentiment--pos {
-            color: #2ed573;
+        .btn-nav-primary {
+            background: linear-gradient(135deg, var(--primary-purple) 0%, #350d63 100%);
+            border: 1px solid var(--border-glass-bright);
+            color: #ffffff;
+            box-shadow: 0 4px 16px var(--primary-purple-glow);
+        }
+        .btn-nav-primary:hover {
+            background: linear-gradient(135deg, #5c18a8 0%, #43117d 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px var(--primary-purple-glow);
         }
 
-        .demo-sentiment-dot {
+        .btn-nav-ghost {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+        }
+        .btn-nav-ghost:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ══════════════════════════════════════════════
+           HERO SECTION
+           ══════════════════════════════════════════════ */
+        .hero-banner {
+            display: grid;
+            grid-template-columns: 1.25fr 0.95fr;
+            gap: 2.5rem;
+            align-items: center;
+            padding: 2.25rem 2.5rem;
+            background: linear-gradient(135deg, rgba(32, 22, 68, 0.7) 0%, rgba(15, 11, 33, 0.85) 100%);
+            border: 1px solid var(--border-glass-bright);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            margin-bottom: 2.5rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 100%;
+            background: radial-gradient(circle at 80% 30%, rgba(56, 189, 248, 0.08), transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px;
+            background: rgba(77, 20, 140, 0.4);
+            border: 1px solid rgba(168, 85, 247, 0.45);
+            border-radius: 100px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #e9d5ff;
+            margin-bottom: 1.15rem;
+        }
+
+        .hero-tag-dot {
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: #2ed573;
-            animation: dotPulse 1.5s ease-in-out infinite;
+            background: #38bdf8;
+            box-shadow: 0 0 8px #38bdf8;
         }
 
-        .demo-resolve-badge {
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .hero-title span {
+            background: linear-gradient(135deg, #38bdf8 0%, #c084fc 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+            max-width: 620px;
+            margin-bottom: 1.75rem;
+        }
+
+        .hero-status-pills {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-status-pill {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            border-radius: 6px;
-            background: rgba(46, 213, 115, 0.1);
-            border: 1px solid rgba(46, 213, 115, 0.2);
-            font-size: 0.68rem;
-            font-weight: 600;
-            color: #2ed573;
-            margin-top: 2px;
-            align-self: flex-start;
-            opacity: 0;
-            animation: badgePop 0.4s ease 3s forwards;
+            gap: 7px;
+            padding: 6px 13px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: #cbd5e1;
         }
 
-        @keyframes badgePop {
-            from {
-                opacity: 0;
-                transform: scale(0.85);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        /* ═══════════════════════════════════════════════════════
-           INFO CARDS
-           ═══════════════════════════════════════════════════════ */
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.85rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .info-card {
-            background: rgba(255, 255, 255, 0.025);
-            backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+        /* Hero Right: Live Telemetry Dispatch Terminal */
+        .hero-terminal {
+            background: #090616;
+            border: 1px solid rgba(147, 51, 234, 0.3);
             border-radius: 14px;
-            padding: 1.25rem 1.15rem;
-            transition: border-color 0.3s, transform 0.3s;
+            overflow: hidden;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
         }
 
-        .info-card:hover {
-            border-color: rgba(102, 126, 234, 0.2);
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.72rem;
+            font-family: var(--font-mono);
+            color: var(--text-dim);
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 6px;
+        }
+        .terminal-dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .terminal-dots span:nth-child(1) { background: #ef4444; }
+        .terminal-dots span:nth-child(2) { background: #f59e0b; }
+        .terminal-dots span:nth-child(3) { background: #10b981; }
+
+        .terminal-body {
+            padding: 1.15rem;
+            font-family: var(--font-mono);
+            font-size: 0.76rem;
+            color: #cbd5e1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .terminal-line {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            line-height: 1.4;
+        }
+
+        .t-dim { color: var(--text-dim); }
+        .t-green { color: #34d399; font-weight: 600; }
+        .t-blue { color: #38bdf8; }
+        .t-amber { color: #fbbf24; }
+        .t-purple { color: #c084fc; font-weight: 600; }
+
+        .terminal-route-box {
+            background: rgba(77, 20, 140, 0.15);
+            border: 1px dashed rgba(168, 85, 247, 0.35);
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-top: 4px;
+        }
+
+        /* ══════════════════════════════════════════════
+           OPERATIONAL KPI MATRIX
+           ══════════════════════════════════════════════ */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+            margin-bottom: 2.75rem;
+        }
+
+        .kpi-block {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-glass);
+            border-radius: 14px;
+            padding: 1.25rem 1.35rem;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.25s ease;
+        }
+        .kpi-block:hover {
             transform: translateY(-2px);
+            border-color: var(--border-glass-bright);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
         }
 
-        .info-card-icon {
+        .kpi-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4d148c, #38bdf8);
+        }
+        .kpi-block.kpi--emerald::before { background: linear-gradient(90deg, #10b981, #34d399); }
+        .kpi-block.kpi--cyan::before { background: linear-gradient(90deg, #0284c7, #38bdf8); }
+        .kpi-block.kpi--amber::before { background: linear-gradient(90deg, #d97706, #fbbf24); }
+
+        .kpi-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.74rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-dim);
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-val {
+            font-size: 2.1rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+            line-height: 1.1;
+            margin-bottom: 0.35rem;
+        }
+
+        .kpi-sub {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .kpi-badge-pct {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 4px;
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+        }
+
+        /* ══════════════════════════════════════════════
+           TEST SCENARIOS BENCH (CORE SECTION)
+           ══════════════════════════════════════════════ */
+        .section-header-block {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 1.35rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.45rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-desc {
+            font-size: 0.84rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.35rem;
+            margin-bottom: 2.75rem;
+        }
+
+        .scenario-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+        .scenario-card:hover {
+            border-color: var(--border-glass-bright);
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+        }
+
+        .sc-badge-strip {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .sc-carrier-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .sc-carrier--tcs { background: rgba(239, 68, 68, 0.16); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35); }
+        .sc-carrier--dhl { background: rgba(245, 158, 11, 0.16); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
+        .sc-carrier--fedex { background: rgba(124, 58, 237, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.35); }
+        .sc-carrier--cold { background: rgba(56, 189, 248, 0.16); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.35); }
+
+        .sc-status-pill {
+            font-size: 0.7rem;
+            font-family: var(--font-mono);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: 600;
+        }
+        .sc-status--delayed { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+        .sc-status--transit { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+        .sc-status--ontime { background: rgba(56, 189, 248, 0.2); color: #93c5fd; }
+
+        .sc-waybill-id {
+            font-family: var(--font-mono);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.35rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sc-route {
+            font-size: 0.82rem;
+            color: #cbd5e1;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sc-route-arrow {
+            color: var(--teal-bright);
+            font-weight: 700;
+        }
+
+        .sc-telemetry-meta {
+            background: rgba(10, 7, 25, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 0.76rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sc-meta-row {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-muted);
+        }
+        .sc-meta-val {
+            font-weight: 600;
+            color: #f1f5f9;
+            font-family: var(--font-mono);
+        }
+
+        .sc-prompt-box {
+            background: rgba(77, 20, 140, 0.12);
+            border-left: 3px solid var(--primary-purple-light);
+            padding: 8px 12px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.78rem;
+            color: #e2e8f0;
+            font-style: italic;
+            margin-bottom: 1.15rem;
+        }
+
+        .sc-actions-row {
+            display: flex;
+            gap: 0.65rem;
+        }
+
+        .btn-test-action {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 0.65rem 1rem;
+            border-radius: 9px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            border: none;
+        }
+
+        .btn-test-primary {
+            background: linear-gradient(135deg, #4d148c 0%, #6d28d9 100%);
+            color: #ffffff;
+            border: 1px solid var(--border-glass-bright);
+            box-shadow: 0 4px 14px var(--primary-purple-glow);
+        }
+        .btn-test-primary:hover {
+            background: linear-gradient(135deg, #5c18a8 0%, #7c3aed 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px var(--primary-purple-glow);
+        }
+
+        .btn-test-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #cbd5e1;
+        }
+        .btn-test-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        /* ══════════════════════════════════════════════
+           LIVE ROUTE & SENSOR TELEMETRY VISUALIZER
+           ══════════════════════════════════════════════ */
+        .route-telemetry-panel {
+            background: linear-gradient(160deg, rgba(22, 17, 48, 0.7) 0%, rgba(13, 9, 30, 0.85) 100%);
+            border: 1px solid var(--border-glass-bright);
+            border-radius: 20px;
+            padding: 1.75rem 2rem;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+            margin-bottom: 2.75rem;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .corridor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .corridor-title-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .corridor-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .corridor-badge {
+            font-size: 0.72rem;
+            font-family: var(--font-mono);
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(239, 68, 68, 0.18);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            color: #fca5a5;
+            font-weight: 600;
+        }
+
+        /* Corridor Visual Milestone Track */
+        .corridor-track-container {
+            margin: 1.25rem 0 2rem;
+            padding: 1rem 0;
+            position: relative;
+        }
+
+        .corridor-line-bg {
+            position: absolute;
+            top: 26px;
+            left: 5%;
+            right: 5%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 2px;
+            z-index: 1;
+        }
+
+        .corridor-line-fill {
+            position: absolute;
+            top: 26px;
+            left: 5%;
+            width: 48%;
+            height: 4px;
+            background: linear-gradient(90deg, #10b981 0%, #f59e0b 100%);
+            border-radius: 2px;
+            z-index: 2;
+        }
+
+        .corridor-stops {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            position: relative;
+            z-index: 3;
+            text-align: center;
+        }
+
+        .stop-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stop-node {
             width: 32px;
             height: 32px;
-            border-radius: 8px;
+            border-radius: 50%;
+            background: #0d0822;
+            border: 2px solid rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 0.75rem;
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: #ffffff;
+            transition: all 0.25s ease;
         }
 
-        .info-card-icon svg {
-            width: 16px;
-            height: 16px;
+        .stop--completed .stop-node {
+            background: #10b981;
+            border-color: #34d399;
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
         }
 
-        .info-card-icon--purple {
-            background: rgba(102, 126, 234, 0.12);
-            color: #a5b4fc;
+        .stop--active .stop-node {
+            background: #f59e0b;
+            border-color: #fbbf24;
+            box-shadow: 0 0 16px rgba(245, 158, 11, 0.6);
+            animation: pulseActiveStop 2s infinite ease-in-out;
         }
 
-        .info-card-icon--green {
-            background: rgba(46, 213, 115, 0.12);
-            color: #2ed573;
+        @keyframes pulseActiveStop {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
         }
 
-        .info-card-icon--amber {
-            background: rgba(255, 167, 38, 0.12);
-            color: #ffa726;
-        }
-
-        .info-card-icon--pink {
-            background: rgba(245, 87, 108, 0.12);
-            color: #f5576c;
-        }
-
-        .info-card h3 {
-            font-size: 0.82rem;
+        .stop-name {
+            font-size: 0.78rem;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 0.25rem;
+            color: #f1f5f9;
         }
 
-        .info-card p {
-            font-size: 0.72rem;
-            color: rgba(255, 255, 255, 0.3);
-            line-height: 1.45;
+        .stop-detail {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
         }
 
-        /* ═══════════════════════════════════════════════════════
-           WIDGET EMBED SECTION
-           ═══════════════════════════════════════════════════════ */
-        .widget-notice {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 1rem 1.25rem;
-            background: rgba(102, 126, 234, 0.05);
-            border: 1px solid rgba(102, 126, 234, 0.12);
+        /* Corridor Telemetry Grid */
+        .corridor-sensor-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            background: rgba(10, 7, 26, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 12px;
-            margin-bottom: 2rem;
+            padding: 1.15rem 1.25rem;
         }
 
-        .widget-notice svg {
-            width: 18px;
-            height: 18px;
-            color: #a5b4fc;
-            flex-shrink: 0;
-            margin-top: 1px;
+        .sensor-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
         }
 
-        .widget-notice-text {
-            font-size: 0.82rem;
-            color: rgba(255, 255, 255, 0.55);
-            line-height: 1.55;
+        .sensor-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-dim);
         }
 
-        .widget-notice-text strong {
-            color: rgba(255, 255, 255, 0.85);
+        .sensor-value {
+            font-size: 0.95rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: #f8fafc;
         }
 
-        /* ═══════════════════════════════════════════════════════
-           FOOTER NOTE
-           ═══════════════════════════════════════════════════════ */
-        .footer-note {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        /* ══════════════════════════════════════════════
+           QUICK DISPATCH PROMPT SIMULATOR RIBBON
+           ══════════════════════════════════════════════ */
+        .prompt-ribbon-block {
+            margin-bottom: 3.5rem;
         }
 
-        .footer-note p {
-            font-size: 0.72rem;
-            color: rgba(255, 255, 255, 0.2);
+        .ribbon-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
         }
 
-        .footer-note a {
-            color: #a5b4fc;
+        .prompt-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.65rem 1.15rem;
+            background: rgba(28, 20, 58, 0.6);
+            border: 1px solid var(--border-glass);
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .prompt-pill:hover {
+            background: rgba(77, 20, 140, 0.35);
+            border-color: var(--primary-purple-light);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(77, 20, 140, 0.3);
+        }
+
+        .prompt-pill-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--teal-bright);
+        }
+
+        /* ══════════════════════════════════════════════
+           FOOTER
+           ══════════════════════════════════════════════ */
+        .portal-footer {
+            border-top: 1px solid var(--border-glass);
+            padding: 2rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.25rem;
+        }
+        .footer-links a {
+            color: var(--text-muted);
             text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .footer-links a:hover {
+            color: var(--teal-bright);
         }
 
-        .footer-note a:hover {
-            text-decoration: underline;
+        /* Floating Dispatch Instruction Toast */
+        .dispatch-helper-toast {
+            position: fixed;
+            bottom: 105px;
+            right: 28px;
+            background: linear-gradient(135deg, rgba(32, 22, 68, 0.95), rgba(16, 11, 35, 0.98));
+            border: 1px solid var(--border-glass-bright);
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-size: 0.78rem;
+            color: #e2e8f0;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 2147483640;
+            animation: toastFloat 4s infinite ease-in-out;
+            pointer-events: none;
+            max-width: 320px;
         }
 
-        /* ═══════════════════════════════════════════════════════
-           RESPONSIVE
-           ═══════════════════════════════════════════════════════ */
-        @media (max-width: 600px) {
-            .page-wrap {
-                padding: 2rem 1.25rem 5rem;
-            }
+        @keyframes toastFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
 
-            .hero-headline {
-                font-size: 1.8rem;
-            }
+        .toast-icon {
+            font-size: 1.1rem;
+        }
 
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-banner { grid-template-columns: 1fr; }
+            .kpi-row { grid-template-columns: repeat(2, 1fr); }
+            .scenario-grid { grid-template-columns: 1fr; }
+            .corridor-sensor-grid { grid-template-columns: repeat(2, 1fr); }
+        }
 
-            .status-badges {
-                gap: 0.4rem;
-            }
+        @media (max-width: 640px) {
+            .kpi-row { grid-template-columns: 1fr; }
+            .top-navbar { flex-direction: column; align-items: flex-start; }
+            .corridor-stops { font-size: 0.65rem; }
+            .stop-node { width: 26px; height: 26px; font-size: 0.65rem; }
+            .corridor-sensor-grid { grid-template-columns: 1fr; }
+            .dispatch-helper-toast { display: none; }
         }
     </style>
 </head>
 
 <body>
-    <div class="orb orb--1"></div>
-    <div class="orb orb--2"></div>
-    <div class="orb orb--3"></div>
-    <canvas id="particleCanvas"></canvas>
+    <!-- Ambient Background Glows -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
 
-    <div class="page-wrap">
+    <div class="portal-container">
 
-        <!-- ═══ BRAND ═══ -->
-        <a href="/" class="brand-logo">
-            <div class="brand-logo-icon">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="apex-logo-svg">
-  <!-- Top Face (Aerial Freight & Apex Diamond) -->
-  <path d="M12 2.2L20.5 7L12 11.8L3.5 7L12 2.2Z" fill="#ffffff" fill-opacity="0.95"/>
-  <!-- Top Face Velocity Chevron (Apex Delta) -->
-  <path d="M12 4.5L16.5 7.1L12 9.7L7.5 7.1L12 4.5Z" fill="#4d148c"/>
-  <path d="M12 5.8L14.2 7.1L12 8.4L9.8 7.1L12 5.8Z" fill="#38bdf8"/>
+        <!-- ════ TOP NAVIGATION BAR ════ -->
+        <header class="top-navbar">
+            <a href="/" class="brand-block">
+                <div class="brand-logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2.2L20.5 7L12 11.8L3.5 7L12 2.2Z" fill="#ffffff" fill-opacity="0.95"/>
+                        <path d="M12 4.5L16.5 7.1L12 9.7L7.5 7.1L12 4.5Z" fill="#4d148c"/>
+                        <path d="M12 5.8L14.2 7.1L12 8.4L9.8 7.1L12 5.8Z" fill="#38bdf8"/>
+                        <path d="M3.5 8.4L11.2 12.6V21.5L3.5 17.3V8.4Z" fill="#ffffff" fill-opacity="0.75"/>
+                        <line x1="6" y1="12" x2="8.5" y2="18" stroke="#4d148c" stroke-width="1.1" stroke-dasharray="1.5 1.5"/>
+                        <path d="M12.8 12.6L20.5 8.4V17.3L12.8 21.5V12.6Z" fill="#ffffff" fill-opacity="0.52"/>
+                        <line x1="18" y1="12" x2="15.5" y2="18" stroke="#38bdf8" stroke-width="1.1" stroke-dasharray="1.5 1.5"/>
+                        <circle cx="12" cy="12.2" r="2.2" fill="#38bdf8"/>
+                        <circle cx="12" cy="12.2" r="1.1" fill="#ffffff"/>
+                        <circle cx="3.5" cy="17.3" r="1.2" fill="#10b981"/>
+                        <circle cx="20.5" cy="17.3" r="1.2" fill="#38bdf8"/>
+                        <circle cx="12" cy="2.2" r="1.2" fill="#f59e0b"/>
+                    </svg>
+                </div>
+                <div class="brand-titles">
+                    <div class="brand-title-main">
+                        Apex Logistics AI
+                        <span class="brand-badge">Copilot v6.2</span>
+                    </div>
+                    <div class="brand-subtitle">Autonomous Fleet Telemetry & Dispatch Sandbox</div>
+                </div>
+            </a>
 
-  <!-- Left Face (Enterprise Logistics Freight Base) -->
-  <path d="M3.5 8.4L11.2 12.6V21.5L3.5 17.3V8.4Z" fill="#ffffff" fill-opacity="0.75"/>
-  <line x1="6" y1="12" x2="8.5" y2="18" stroke="#4d148c" stroke-width="1.1" stroke-dasharray="1.5 1.5"/>
-
-  <!-- Right Face (Autonomous AI Dispatch Intelligence) -->
-  <path d="M12.8 12.6L20.5 8.4V17.3L12.8 21.5V12.6Z" fill="#ffffff" fill-opacity="0.52"/>
-  <line x1="18" y1="12" x2="15.5" y2="18" stroke="#38bdf8" stroke-width="1.1" stroke-dasharray="1.5 1.5"/>
-
-  <!-- Center Telemetry Beacon (Quantum AI Route Node) -->
-  <circle cx="12" cy="12.2" r="2.2" fill="#38bdf8"/>
-  <circle cx="12" cy="12.2" r="1.1" fill="#ffffff"/>
-
-  <!-- Route Waypoint Milestone Blips -->
-  <circle cx="3.5" cy="17.3" r="1.2" fill="#10b981"/>
-  <circle cx="20.5" cy="17.3" r="1.2" fill="#38bdf8"/>
-  <circle cx="12" cy="2.2" r="1.2" fill="#f59e0b"/>
-</svg>
+            <!-- Live Telemetry Stream -->
+            <div class="nav-telemetry-feed">
+                <div class="telem-pill">
+                    <span class="telem-dot"></span>
+                    <span>D-TAC Engine: <strong>Online</strong></span>
+                </div>
+                <div class="telem-pill">
+                    <span class="telem-dot telem-dot--blue"></span>
+                    <span>Multi-Carrier Feed: <strong>Active</strong></span>
+                </div>
+                <div class="telem-pill">
+                    <span class="telem-dot telem-dot--amber"></span>
+                    <span>Policy Gate G(a): <strong>Enforced</strong></span>
+                </div>
             </div>
-            <span class="brand-logo-text">Apex Logistics AI</span>
-        </a>
 
-        <!-- ═══ HERO ═══ -->
-        <h1 class="hero-headline">
-            Your widget is live,<br><span>test it right here</span>
-        </h1>
-        <p class="hero-subtitle">
-            The chat widget is loaded on this page. Click the purple bubble in the bottom-right corner to start a
-            conversation and watch real-time sentiment analysis in action.
-        </p>
+            <!-- Navigation Links -->
+            <div class="nav-actions">
+                <a href="/pages/client-dashboard.html#logistics" class="btn-nav-action btn-nav-primary">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3z"/><path d="M14 3h7v7h-7z"/><path d="M14 14h7v7h-7z"/><path d="M3 14h7v7H3z"/></svg>
+                    Control Tower UI
+                </a>
+                <a href="/pages/client-dashboard.html#overview" class="btn-nav-action btn-nav-ghost">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    Fleet Overview
+                </a>
+            </div>
+        </header>
 
-        <!-- ═══ STATUS BADGES ═══ -->
-        <div class="status-badges">
-            <div class="status-badge">
-                <span class="status-dot status-dot--green"></span>
-                Widget Connected
-            </div>
-            <div class="status-badge">
-                <span class="status-dot status-dot--blue"></span>
-                Sentiment Engine Active
-            </div>
-            <div class="status-badge">
-                <span class="status-dot status-dot--amber"></span>
-                Escalation Monitoring
-            </div>
-        </div>
-
-        <!-- ═══ INTERACTIVE DEMO CARD ═══ -->
-        <div class="demo-card" id="demoCard">
-            <div class="demo-card-header">
-                <div class="demo-dots"><span></span><span></span><span></span></div>
-                <span class="demo-card-title">Widget Preview — Live Interaction</span>
-            </div>
-            <div class="demo-card-body">
-                <!-- Customer message -->
-                <div class="demo-msg" id="msg1">
-                    <div class="demo-avatar demo-avatar--user">C</div>
-                    <div class="demo-bubble">
-                        <div class="demo-bubble-text" id="typingText"></div>
+        <!-- ════ HERO LOGISTICS DISPATCH COMMAND ════ -->
+        <section class="hero-banner">
+            <div>
+                <div class="hero-tag">
+                    <span class="hero-tag-dot"></span>
+                    Autonomous Multi-Carrier Dispatch Testbed
+                </div>
+                <h1 class="hero-title">
+                    Mission-Critical <span>Freight Intelligence</span> Sandbox
+                </h1>
+                <p class="hero-desc">
+                    Evaluate real-time waybill tracking, multi-carrier kinematic telemetry grounding, dynamic sentiment-modulated ETA reconciliation, and automated exception deflection in an authentic production logistics environment.
+                </p>
+                <div class="hero-status-pills">
+                    <div class="hero-status-pill">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        TCS / DHL / FedEx Active Corridors
+                    </div>
+                    <div class="hero-status-pill">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Sub-second WISMO Deflection (0.76ms)
+                    </div>
+                    <div class="hero-status-pill">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        Policy-Gated Escalations
                     </div>
                 </div>
+            </div>
 
-                <!-- AI response -->
-                <div class="demo-msg demo-msg--ai" id="msg2">
-                    <div class="demo-avatar demo-avatar--ai">AI</div>
-                    <div class="demo-bubble">
-                        <div class="demo-bubble-text">✨ Telemetry sync complete! Waybill SHP-20261022-A1B2 is in transit via DHL Express. Estimated arrival at destination hub: 14.2 hours.</div>
-                        <div class="demo-sentiment demo-sentiment--pos" id="sentiment2" style="display:none;">
-                            <span class="demo-sentiment-dot"></span>
-                            Satisfied
+            <!-- Terminal Telemetry Monitor -->
+            <div class="hero-terminal">
+                <div class="terminal-header">
+                    <div class="terminal-dots"><span></span><span></span><span></span></div>
+                    <span>apex-copilot-telemetry.sys</span>
+                    <span id="liveClockUtc">--:--:-- UTC</span>
+                </div>
+                <div class="terminal-body">
+                    <div class="terminal-line">
+                        <span class="t-dim">[INIT]</span>
+                        <span>Multi-Carrier Telemetry WAL Node 01:</span>
+                        <span class="t-green">SYNCED</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="t-dim">[RADAR]</span>
+                        <span>Carrier Disruption Telemetry:</span>
+                        <span class="t-amber">N-5 SUKKUR STALL DETECTED</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="t-dim">[MODEL]</span>
+                        <span>Emotion-RAG Affective Engine:</span>
+                        <span class="t-blue">s_t Modulated RAG Active</span>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="t-dim">[GATE]</span>
+                        <span>Policy Safety Gate G(a):</span>
+                        <span class="t-purple">0 Unauthorized Commitments</span>
+                    </div>
+                    <div class="terminal-route-box">
+                        <div style="color:var(--teal-bright);font-weight:700;margin-bottom:2px;">▶ ACTIVE WAYBILL TELEMETRY: WB-6B762917</div>
+                        <div style="font-size:0.72rem;color:#cbd5e1;">Carrier: TCS Express Ground · Corridor: Lahore → Karachi</div>
+                        <div style="font-size:0.72rem;color:#fca5a5;">Disruption: Linehaul traffic at Sukkur DC (+28.5 hrs calibrated)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ════ KPI MATRIX ROW ════ -->
+        <section class="kpi-row">
+            <div class="kpi-block kpi--emerald">
+                <div class="kpi-header">
+                    <span>Autonomous Deflection</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <div class="kpi-val">84.5%</div>
+                <div class="kpi-sub">
+                    <span class="kpi-badge-pct">+52.1%</span>
+                    <span>vs Traditional Static TMS</span>
+                </div>
+            </div>
+
+            <div class="kpi-block kpi--cyan">
+                <div class="kpi-header">
+                    <span>D-TAC Point ETA Accuracy</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                </div>
+                <div class="kpi-val">99.4%</div>
+                <div class="kpi-sub">
+                    <span class="kpi-badge-pct">1.87h MAE</span>
+                    <span>Topography-Adaptive Circuity</span>
+                </div>
+            </div>
+
+            <div class="kpi-block">
+                <div class="kpi-header">
+                    <span>Retrieval Precision@5</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <div class="kpi-val">92.6%</div>
+                <div class="kpi-sub">
+                    <span class="kpi-badge-pct">0.894 MRR</span>
+                    <span>Affective Tone Alignment: 94.2%</span>
+                </div>
+            </div>
+
+            <div class="kpi-block kpi--amber">
+                <div class="kpi-header">
+                    <span>Turnaround Latency</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+                <div class="kpi-val">152<span style="font-size:1.1rem;font-weight:600;">ms</span></div>
+                <div class="kpi-sub">
+                    <span class="kpi-badge-pct" style="background:rgba(245,158,11,0.18);color:#fbbf24;">0.76ms</span>
+                    <span>Direct Fast-Path SQLite WAL Read</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ════ DISPATCH TEST SCENARIOS (INTERACTIVE TEST BENCH) ════ -->
+        <section>
+            <div class="section-header-block">
+                <div>
+                    <h2 class="section-title">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--teal-bright)" stroke-width="2.2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                        Multi-Carrier Dispatch Test Scenarios
+                    </h2>
+                    <p class="section-desc">
+                        Select a freight shipment scenario to trigger autonomous tracking, telemetry synthesis, and emotion-gated handling in the live Copilot widget.
+                    </p>
+                </div>
+                <div style="font-size:0.78rem;color:var(--text-muted);display:flex;align-items:center;gap:6px;">
+                    <span class="telem-dot telem-dot--blue"></span>
+                    <span>Interactive Testbed: Click any scenario to run live</span>
+                </div>
+            </div>
+
+            <div class="scenario-grid">
+                <!-- Scenario 1: TCS Ground Delayed (Figure 13 Reference) -->
+                <div class="scenario-card">
+                    <div>
+                        <div class="sc-badge-strip">
+                            <span class="sc-carrier-tag sc-carrier--tcs">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                                TCS Express Ground
+                            </span>
+                            <span class="sc-status-pill sc-status--delayed">DELAYED (+28.5 hrs)</span>
+                        </div>
+                        <div class="sc-waybill-id">
+                            WB-6B762917
+                            <span style="font-size:0.72rem;font-weight:500;color:var(--text-dim);">(Paper 2 Fig 13 Reference)</span>
+                        </div>
+                        <div class="sc-route">
+                            <span>Lahore Fulfillment Hub (PK)</span>
+                            <span class="sc-route-arrow">→</span>
+                            <span>Karachi Port Terminal (PK)</span>
+                        </div>
+                        <div class="sc-telemetry-meta">
+                            <div class="sc-meta-row">
+                                <span>Last Verified Milestone:</span>
+                                <span class="sc-meta-val">Sukkur Hub DC (Oct 31, 06:15 PKT)</span>
+                            </div>
+                            <div class="sc-meta-row">
+                                <span>Root Cause Analysis:</span>
+                                <span class="sc-meta-val" style="color:#fca5a5;">N-5 Highway Heavy Freight Congestion</span>
+                            </div>
+                            <div class="sc-meta-row">
+                                <span>D-TAC Calibrated ETA:</span>
+                                <span class="sc-meta-val" style="color:#34d399;">Tomorrow, 18:30 PKT (High Conf.)</span>
+                            </div>
+                            <div class="sc-meta-row">
+                                <span>Escalation Protocol:</span>
+                                <span class="sc-meta-val">Priority Review ESC-2026-8917</span>
+                            </div>
+                        </div>
+                        <div class="sc-prompt-box">
+                            "Where is my shipment WB-6B762917? It was supposed to arrive yesterday!"
                         </div>
                     </div>
+                    <div class="sc-actions-row">
+                        <button class="btn-test-action btn-test-primary" onclick="testScenario('Where is my shipment WB-6B762917? It was supposed to arrive yesterday!')">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            Run In Copilot Widget
+                        </button>
+                        <button class="btn-test-action btn-test-secondary" onclick="testScenario('THIS IS UNACCEPTABLE!!! I PAID FOR EXPRESS DELIVERY AND IT\'S BEEN 2 DAYS LATE!! I WANT A FULL REFUND RIGHT NOW OR I\'M CALLING MY LAWYER!!!')">
+                            🚨 Anger Spike
+                        </button>
+                    </div>
                 </div>
 
-                <div class="demo-resolve-badge" id="resolveBadge">
-                    ✓ Issue resolved automatically
+                <!-- Scenario 2: DHL Express Air Cargo -->
+                <div class="scenario-card">
+                    <div>
+                        <div class="sc-badge-strip">
+                            <span class="sc-carrier-tag sc-carrier--dhl">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.3c.4-.2.6-.6.5-1.1z"/></svg>
+                                DHL Express Aviation
+                            </span>
+                            <span class="sc-status-pill sc-status--transit">IN-TRANSIT (ON SCHEDULE)</span>
+                        </div>
+                        <div class="sc-waybill-id">
+                            SHP-20261022-A1B2
+                        </div>
+                        <div class="sc-route">
+                            <span>Dubai International Cargo (DXB)</span>
+                            <span class="sc-route-arrow">→</span>
+                            <span>Karachi Air Terminal (KHI)</span>
+                        </div>
+                        <div class="sc-telemetry-meta">
+                            <div class="sc-meta-row">
+                                <span>Flight Waypoint Telemetry:</span>
+                                <span class="sc-meta-val">Gulf Air Corridor (Altitude 34,000 ft)</span>
+                            </div>
+                            <div class="sc-meta-row">
+                                <span>Customs Clearance:</span>
+                                <span class="sc-meta-val" style="color:#34d399;">Pre-Cleared EDI (Electronic EDI-850)</span>
+                            </div>
+                            <div class="sc-meta-row">
+                                <span>Estimated Touchdown:</span>
+                                <span class="sc-meta-val">14.2 Hours to Destination Ramp</span>
+                            </div>
+                            <div class="sc-meta-row">
+                                <span>Automated Resolution:</span>
+                                <span class="sc-meta-val">WISMO Autonomous Deflection</span>
+                            </div>
+                        </div>
+                        <div class="sc-prompt-box">
+                            "Hi! Can you check the live dispatch telemetry for waybill SHP-20261022-A1B2?"
+                        </div>
+                    </div>
+                    <div class="sc-actions-row">
+                        <button class="btn-test-action btn-test-primary" onclick="testScenario('Hi! Can you check the live dispatch telemetry for waybill SHP-20261022-A1B2?')">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            Run In Copilot Widget
+                        </button>
+                        <button class="btn-test-action btn-test-secondary" onclick="copyPrompt('Hi! Can you check the live dispatch telemetry for waybill SHP-20261022-A1B2?')">
+                            📋 Copy Waybill
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- ═══ FEATURE INFO CARDS ═══ -->
-        <div class="info-grid">
-            <div class="info-card">
-                <div class="info-card-icon info-card-icon--purple">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    </svg>
+                <!-- Scenario 3: FedEx Priority Linehaul -->
+                <div class="scenario-card">
+                    <div>
+                        <div class="sc-badge-strip">
+                            <span class="sc-carrier-tag sc-carrier--fedex">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                                FedEx Ground Intermodal
+                            </span>
+                            <span class="sc-status-pill sc-status--ontime">OPTIMAL CONFIDENCE</span>
+                        </div>
+                        <div class="sc-waybill-id">
+                            FX-8849201-US
+                        </div>
+                        <div class="sc-route">
+                            <span>Chicago Intermodal Hub (ORD)</span>
+                            <span class="sc-route-arrow">→</span>
+                            <span>Detroit Linehaul Depot (DTW)</span>
+                        </div>
+                        <div class="sc-telemetry-meta">
+                            <div class="sc-meta-row">
+                                <span>Circuity Ratio (D-TAC):</span>
+                                <span class="sc-meta-val">1.18 (Sub-millisecond Calibrated)</span>
+                            </div>
+                            <div class="sc-meta-row">
+                                <span>Weather Corridor Condition:</span>
+                                <span class="sc-meta-val" style="color:#34d399;">Clear — Lake Blizzard Alert Rescinded</span>
+                            </div>
+                            <div class="sc-meta-row">
+                                <span>Conformal Prediction Interval:</span>
+                                <span class="sc-meta-val">[4.2 hrs, 5.8 hrs] @ 95% Coverage</span>
+                            </div>
+                        </div>
+                        <div class="sc-prompt-box">
+                            "What is the calibrated delivery confidence interval for waybill FX-8849201-US?"
+                        </div>
+                    </div>
+                    <div class="sc-actions-row">
+                        <button class="btn-test-action btn-test-primary" onclick="testScenario('What is the calibrated delivery confidence interval for waybill FX-8849201-US?')">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            Run In Copilot Widget
+                        </button>
+                        <button class="btn-test-action btn-test-secondary" onclick="copyPrompt('What is the calibrated delivery confidence interval for waybill FX-8849201-US?')">
+                            📋 Copy Query
+                        </button>
+                    </div>
                 </div>
-                <h3>Live Chat Widget</h3>
-                <p>The purple bubble in the corner is your actual deployed widget — try it now.</p>
-            </div>
-            <div class="info-card">
-                <div class="info-card-icon info-card-icon--green">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-                    </svg>
-                </div>
-                <h3>Sentiment Detection</h3>
-                <p>Every message is analyzed in real-time for emotional tone and intent.</p>
-            </div>
-            <div class="info-card">
-                <div class="info-card-icon info-card-icon--amber">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                    </svg>
-                </div>
-                <h3>Smart Escalation</h3>
-                <p>Frustrated customers are auto-routed to a human agent when needed.</p>
-            </div>
-            <div class="info-card">
-                <div class="info-card-icon info-card-icon--pink">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                        <path
-                            d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
-                        </path>
-                    </svg>
-                </div>
-                <h3>Multilingual</h3>
-                <p>Supports 130+ languages with automatic translation and detection.</p>
-            </div>
-        </div>
 
-        <!-- ═══ DEBUG NOTICE ═══ -->
-        <div class="widget-notice">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="12" y1="16" x2="12" y2="12"></line>
-                <line x1="12" y1="8" x2="12.01" y2="8"></line>
-            </svg>
-            <div class="widget-notice-text">
-                <strong>Debug Tip:</strong> Open the browser console (<strong>F12 → Console</strong>) to see
-                <code
-                    style="background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;font-size:0.78rem;color:#a5b4fc;">[BehavioralAI]</code>
-                messages — including sentiment scores, escalation triggers, and WebSocket events.
+                <!-- Scenario 4: Cold-Chain Pharmaceutical Reefer -->
+                <div class="scenario-card">
+                    <div>
+                        <div class="sc-badge-strip">
+                            <span class="sc-carrier-tag sc-carrier--cold">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14"/></svg>
+                                Cold-Chain Pharma Linehaul
+                            </span>
+                            <span class="sc-status-pill sc-status--transit">REEFER 3.8°C COMPLIANT</span>
+                        </div>
+                        <div class="sc-waybill-id">
+                            CC-4019-ISB
+                        </div>
+                        <div class="sc-route">
+                            <span>Islamabad Pharma Depots (ISB)</span>
+                            <span class="sc-route-arrow">→</span>
+                            <span>Peshawar Health DC (PEW)</span>
+                        </div>
+                        <div class="sc-telemetry-meta">
+                            <div class="sc-meta-row">
+                                <span>IoT Temperature Telemetry:</span>
+                                <span class="sc-meta-val" style="color:#38bdf8;">3.8°C (Range: 2°C – 8°C GxP OK)</span>
+                            </div>
+                            <div class="sc-meta-row">
+                                <span>Reefer Battery & Fuel:</span>
+                                <span class="sc-meta-val">GenSet 88% Fuel · Battery Optimal</span>
+                            </div>
+                            <div class="sc-meta-row">
+                                <span>Motorway M-1 Corridors:</span>
+                                <span class="sc-meta-val" style="color:#34d399;">Uncongested · ETA 3.4 Hours</span>
+                            </div>
+                        </div>
+                        <div class="sc-prompt-box">
+                            "Confirm temperature log compliance and delivery schedule for Reefer Container CC-4019-ISB"
+                        </div>
+                    </div>
+                    <div class="sc-actions-row">
+                        <button class="btn-test-action btn-test-primary" onclick="testScenario('Confirm temperature log compliance and delivery schedule for Reefer Container CC-4019-ISB')">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            Run In Copilot Widget
+                        </button>
+                        <button class="btn-test-action btn-test-secondary" onclick="copyPrompt('Confirm temperature log compliance and delivery schedule for Reefer Container CC-4019-ISB')">
+                            📋 Copy Query
+                        </button>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <!-- ═══ FOOTER ═══ -->
-        <div class="footer-note">
-            <p>Apex Logistics AI — <a href="/">Back to Home</a></p>
+        <!-- ════ LIVE FREIGHT CORRIDOR & SENSOR TELEMETRY ════ -->
+        <section class="route-telemetry-panel">
+            <div class="corridor-header">
+                <div class="corridor-title-group">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <span class="corridor-title">Corridor Telemetry Monitor: N-5 National Freight Highway</span>
+                    <span class="corridor-badge">ACTIVE LOGISTICS DISRUPTION</span>
+                </div>
+                <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--text-muted);">
+                    Waybill: <strong style="color:#ffffff;">WB-6B762917</strong> · Carrier: <strong style="color:#f87171;">TCS Express</strong>
+                </div>
+            </div>
+
+            <!-- Corridor Visual Mileposts -->
+            <div class="corridor-track-container">
+                <div class="corridor-line-bg"></div>
+                <div class="corridor-line-fill"></div>
+
+                <div class="corridor-stops">
+                    <div class="stop-item stop--completed">
+                        <div class="stop-node">✓</div>
+                        <div class="stop-name">Lahore Hub</div>
+                        <div class="stop-detail">Origin Scan · Oct 29</div>
+                    </div>
+                    <div class="stop-item stop--completed">
+                        <div class="stop-node">✓</div>
+                        <div class="stop-name">Multan Interchange</div>
+                        <div class="stop-detail">Toll Gate · Oct 30</div>
+                    </div>
+                    <div class="stop-item stop--active">
+                        <div class="stop-node">!</div>
+                        <div class="stop-name">Sukkur DC</div>
+                        <div class="stop-detail">Disruption · Oct 31 06:15</div>
+                    </div>
+                    <div class="stop-item">
+                        <div class="stop-node">4</div>
+                        <div class="stop-name">Hyderabad Toll</div>
+                        <div class="stop-detail">En-Route Gateway</div>
+                    </div>
+                    <div class="stop-item">
+                        <div class="stop-node">5</div>
+                        <div class="stop-name">Karachi Terminal</div>
+                        <div class="stop-detail">Final Destination</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sensor Telemetry Bar -->
+            <div class="corridor-sensor-grid">
+                <div class="sensor-item">
+                    <span class="sensor-label">Telemetry Coordinates</span>
+                    <span class="sensor-value">27.7052° N, 68.8574° E</span>
+                </div>
+                <div class="sensor-item">
+                    <span class="sensor-label">Vehicle Velocity & Fuel</span>
+                    <span class="sensor-value">62 km/h · 74% Tank</span>
+                </div>
+                <div class="sensor-item">
+                    <span class="sensor-label">Policy Safety Gate G(a)</span>
+                    <span class="sensor-value" style="color:#34d399;">CONFIRMED PASS (0.00)</span>
+                </div>
+                <div class="sensor-item">
+                    <span class="sensor-label">Escalation Ticket</span>
+                    <span class="sensor-value" style="color:#fbbf24;">ESC-2026-8917</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ════ QUICK DISPATCH SIMULATOR PROMPTS ════ -->
+        <section class="prompt-ribbon-block">
+            <div class="section-header-block">
+                <div>
+                    <h3 class="section-title" style="font-size:1.2rem;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary-purple-light)" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        Quick Dispatch Simulator Prompts
+                    </h3>
+                    <p class="section-desc">Click any prompt pill below to test instant Copilot responses, de-escalation logic, and multilingual WISMO resolution:</p>
+                </div>
+            </div>
+
+            <div class="ribbon-pills">
+                <button class="prompt-pill" onclick="testScenario('Where is my shipment WB-6B762917?')">
+                    <span class="prompt-pill-tag">WISMO</span>
+                    "Where is my shipment WB-6B762917?"
+                </button>
+                <button class="prompt-pill" onclick="testScenario('I paid for express delivery and it is 2 days late! I demand a full refund or I am suing!')">
+                    <span class="prompt-pill-tag" style="color:#f87171;">SHOUTING ESCALATION</span>
+                    "I paid for express and it's late! I demand a full refund!"
+                </button>
+                <button class="prompt-pill" onclick="testScenario('Hi! Can you check the live dispatch telemetry for waybill SHP-20261022-A1B2?')">
+                    <span class="prompt-pill-tag" style="color:#fbbf24;">DHL AIR</span>
+                    "Track DHL Air Freight SHP-20261022-A1B2"
+                </button>
+                <button class="prompt-pill" onclick="testScenario('What is the calibrated delivery confidence interval for waybill FX-8849201-US?')">
+                    <span class="prompt-pill-tag" style="color:#c084fc;">D-TAC ETA</span>
+                    "Calibrated delivery interval for FX-8849201-US"
+                </button>
+                <button class="prompt-pill" onclick="testScenario('Confirm temperature log compliance and delivery schedule for Reefer Container CC-4019-ISB')">
+                    <span class="prompt-pill-tag" style="color:#38bdf8;">COLD-CHAIN</span>
+                    "Confirm Reefer Container CC-4019-ISB temp logs"
+                </button>
+                <button class="prompt-pill" onclick="testScenario('میرا پارسل WB-6B762917 اب کہاں پہنچا ہے؟')">
+                    <span class="prompt-pill-tag" style="color:#34d399;">URDU WISMO</span>
+                    "میرا پارسل WB-6B762917 اب کہاں پہنچا ہے؟"
+                </button>
+            </div>
+        </section>
+
+        <!-- ════ ENTERPRISE FOOTER ════ -->
+        <footer class="portal-footer">
+            <div class="footer-left">
+                <span>Apex Logistics AI © 2026</span>
+                <span>·</span>
+                <span>Emotion-RAG Affective Layer</span>
+                <span>·</span>
+                <span>D-TAC Topography-Adaptive Circuity Engine</span>
+            </div>
+            <div class="footer-links">
+                <a href="/pages/client-dashboard.html#logistics">Live Control Tower</a>
+                <a href="/pages/client-dashboard.html#overview">Overview Analytics</a>
+                <a href="javascript:void(0)" onclick="resetTestSession()">Reset Session Cache</a>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- Floating Helper Toast -->
+    <div class="dispatch-helper-toast">
+        <span class="toast-icon">⚡</span>
+        <div>
+            <strong>Interactive Dispatch Copilot</strong>
+            <div style="font-size:0.7rem;color:#94a3b8;">Click any Waybill scenario or quick prompt above to test autonomous deflection.</div>
         </div>
     </div>
 
-    <!-- ═══════════════════════════════════════════════════════
-         PARTICLE GRAIN SYSTEM
-         ═══════════════════════════════════════════════════════ -->
+    <!-- ════ INTERACTIVE SCRIPTS ════ -->
     <script>
-        (function () {
-            const canvas = document.getElementById('particleCanvas');
-            const ctx = canvas.getContext('2d');
-            let W, H, mouseX = -9999, mouseY = -9999;
-            const COUNT = 100;
-            const particles = [];
-            const HUES = [235, 255, 270, 295, 320, 340, 200, 185];
+        // Live UTC Clock
+        function updateClock() {
+            const now = new Date();
+            const utc = now.toUTCString().split(' ')[4] + ' UTC';
+            const el = document.getElementById('liveClockUtc');
+            if (el) el.textContent = utc;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
 
-            function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-            window.addEventListener('resize', resize); resize();
-            document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
-
-            class P {
-                constructor() { this.init(); }
-                init() {
-                    this.x = Math.random() * W; this.y = Math.random() * H;
-                    this.r0 = 0.5 + Math.random() * 1.3; this.r = this.r0;
-                    this.vx = (Math.random() - 0.5) * 0.18;
-                    this.vy = (Math.random() - 0.5) * 0.18;
-                    this.hi = Math.random() * HUES.length;
-                    this.hs = 0.003 + Math.random() * 0.006;
-                    this.sat = 60 + Math.random() * 30;
-                    this.lit = 55 + Math.random() * 20;
-                    this.a0 = 0.1 + Math.random() * 0.25;
-                    this.a = this.a0;
-                    this.tp = Math.random() * 6.28;
-                    this.ts = 0.008 + Math.random() * 0.012;
-                }
-                update() {
-                    this.x += this.vx; this.y += this.vy;
-                    if (this.x < -5) this.x = W + 5;
-                    if (this.x > W + 5) this.x = -5;
-                    if (this.y < -5) this.y = H + 5;
-                    if (this.y > H + 5) this.y = -5;
-                    this.hi = (this.hi + this.hs) % HUES.length;
-                    this.tp += this.ts;
-                    const tw = 0.7 + 0.3 * Math.sin(this.tp);
-                    const dx = this.x - mouseX, dy = this.y - mouseY;
-                    const inf = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / 150);
-                    this.a = this.a0 * tw + inf * 0.4;
-                    this.r = this.r0 + inf * 2;
-                }
-                draw() {
-                    const i = Math.floor(this.hi), f = this.hi - i;
-                    const h = HUES[i % HUES.length] + (HUES[(i + 1) % HUES.length] - HUES[i % HUES.length]) * f;
-                    ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, 6.28);
-                    ctx.fillStyle = `hsla(${h},${this.sat}%,${this.lit}%,${this.a})`;
-                    ctx.fill();
-                    if (this.a > 0.3) {
-                        ctx.beginPath(); ctx.arc(this.x, this.y, this.r * 2.2, 0, 6.28);
-                        ctx.fillStyle = `hsla(${h},${this.sat}%,${this.lit}%,${(this.a - 0.3) * 0.18})`;
-                        ctx.fill();
-                    }
-                }
-            }
-            for (let i = 0; i < COUNT; i++) particles.push(new P());
-            (function loop() {
-                ctx.clearRect(0, 0, W, H);
-                particles.forEach(p => { p.update(); p.draw(); });
-                requestAnimationFrame(loop);
-            })();
-        })();
-
-        // ═══════════════════════════════════════════════════════
-        // TYPEWRITER EFFECT for demo card
-        // ═══════════════════════════════════════════════════════
-        (function () {
-            const text = "Hi! Can you check the live dispatch telemetry for waybill SHP-20261022-A1B2?";
-            const el = document.getElementById('typingText');
-            const sentiment2 = document.getElementById('sentiment2');
-            let i = 0;
-
-            function type() {
-                if (i < text.length) {
-                    el.textContent += text[i]; i++;
-                    setTimeout(type, 28 + Math.random() * 20);
-                } else {
-                    setTimeout(() => { sentiment2.style.display = 'inline-flex'; }, 600);
-                }
-            }
-            setTimeout(type, 800);
-        })();
-    </script>
-
-    <script>
         // Preset Fig 13 Session for Live Autonomous Evaluation
         try {
             for (let i = localStorage.length - 1; i >= 0; i--) {
@@ -872,7 +1534,7 @@
             }));
         } catch(e) {}
 
-        // Auto-open widget panel
+        // Auto-open widget panel on initial load
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const host = document.getElementById('apex-logistics-ai-widget');
@@ -882,11 +1544,55 @@
                 if (bubble && panel && !panel.classList.contains('open')) {
                     bubble.click();
                 }
-            }, 700);
+            }, 800);
         });
+
+        // Interactive Dispatch Simulator: Send scenario prompt to widget
+        function testScenario(promptText) {
+            const host = document.getElementById('apex-logistics-ai-widget');
+            const root = host ? host.shadowRoot : null;
+            if (!root) {
+                alert('Copilot widget is loading, please try again in a moment.');
+                return;
+            }
+
+            const bubble = root.querySelector('.bai-bubble');
+            const panel = root.querySelector('.bai-panel');
+            if (bubble && panel && !panel.classList.contains('open')) {
+                bubble.click();
+            }
+
+            setTimeout(() => {
+                const input = root.querySelector('#bai-input');
+                const sendBtn = root.querySelector('#bai-send');
+                if (input && sendBtn) {
+                    input.value = promptText;
+                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                    input.focus();
+                    setTimeout(() => {
+                        sendBtn.click();
+                    }, 250);
+                }
+            }, 300);
+        }
+
+        // Copy prompt helper
+        function copyPrompt(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Waybill query copied to clipboard:\n\n' + text);
+            }).catch(() => {
+                testScenario(text);
+            });
+        }
+
+        // Reset session helper
+        function resetTestSession() {
+            localStorage.removeItem('apex_copilot_session_v6_wk_r_8L9');
+            window.location.reload();
+        }
     </script>
 
-    <!-- Apex Logistics AI Chat Widget — Active Tenant Embed -->
+    <!-- Apex Logistics AI Chat Widget — Active Tenant Embed (UNCHANGED) -->
     <script src="http://localhost:8000/widget/embed.js?v=apex6"
         data-widget-key="wk_r_8L9yRpFHZBowcT2EMR-4ZgJRSzhVH6qsLt1pJOl2Y"
         data-api-base="http://localhost:8000"
